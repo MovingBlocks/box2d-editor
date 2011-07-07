@@ -1,0 +1,3 @@
+syntax: glob
+Box2D-Editor/build/classes/*
+Box2D-Editor/dist/*
