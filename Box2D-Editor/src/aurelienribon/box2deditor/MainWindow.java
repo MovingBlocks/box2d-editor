@@ -49,13 +49,16 @@ public class MainWindow extends javax.swing.JFrame {
         eastPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        shape_computeBtn = new javax.swing.JButton();
         shape_clearBtn = new javax.swing.JButton();
         shape_addbtn = new javax.swing.JButton();
         shape_subBtn = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         shape_drawShapeChk = new javax.swing.JCheckBox();
         shape_drawPolysChk = new javax.swing.JCheckBox();
+        shape_drawAssetChk = new javax.swing.JCheckBox();
+        shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
 
@@ -281,16 +284,6 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel6.setText("    Shape creation");
         jLabel6.setOpaque(true);
 
-        shape_computeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_shape.png"))); // NOI18N
-        shape_computeBtn.setText("Compute convex polygons");
-        shape_computeBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        shape_computeBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
-        shape_computeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_computeBtnActionPerformed(evt);
-            }
-        });
-
         shape_clearBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_delete.png"))); // NOI18N
         shape_clearBtn.setText("Clear points");
         shape_clearBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -310,10 +303,10 @@ public class MainWindow extends javax.swing.JFrame {
         shape_subBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
 
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel8.setText("<html>To define an object shape, first use some right clics to add points defining the hull of the shape. Then, clic on \"compute convex shapes\". You're done !<br/><br/> You can select multiple points by dragging the mouse around them. Select 2 points and you will be able to add another one between them with the \"+\" button.<br/><br/>Zoom with mouse wheel, pan by holding the left mouse button.");
+        jLabel8.setText("<html>\n1 &bull; Set the asset root directory<br/>\n2 &bull; Add some asset to the list<br/>\n3 &bull; Select an asset and define its Box2D body by right clicking on the asset area:<br/><br/>\n\nFirst clic defines the gravity center, other clics define the body hull.<br/><br/>\n\nYou have to close the shape to save the result.<br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
 
         shape_drawShapeChk.setSelected(true);
-        shape_drawShapeChk.setText("Draw shape borders");
+        shape_drawShapeChk.setText("Draw shape");
         shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 shape_drawShapeChkActionPerformed(evt);
@@ -328,55 +321,89 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        shape_drawAssetChk.setSelected(true);
+        shape_drawAssetChk.setText("Draw asset");
+        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
+        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetOpacity50ChkActionPerformed(evt);
+            }
+        });
+
+        jSeparator1.setForeground(new java.awt.Color(102, 102, 102));
+
+        jSeparator2.setForeground(new java.awt.Color(102, 102, 102));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_computeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(shape_addbtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_subBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                .addComponent(shape_clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(shape_drawAssetOpacity50Chk))
+                            .addComponent(shape_drawAssetChk))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(shape_drawShapeChk)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(shape_drawPolysChk))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(shape_drawShapeChk)
-                .addContainerGap(61, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_drawPolysChk)
-                .addContainerGap(49, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(shape_computeBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(shape_clearBtn)
                         .addComponent(shape_addbtn))
                     .addComponent(shape_subBtn))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_drawAssetChk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_drawAssetOpacity50Chk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawShapeChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawPolysChk)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(205, Short.MAX_VALUE))
         );
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -475,13 +502,16 @@ public class MainWindow extends javax.swing.JFrame {
 	private void init_setAssetsRootBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setAssetsRootBtnActionPerformed
 		File dir = promptAssetsRootDir();
 		if (dir != null) {
-			for (int i=0; i<assetsListModel.size(); i++) {
+			for (int i=assetsListModel.size()-1; i>=0; i--) {
 				String asset = assetsRootDir != null
 					? assetsRootDir.getPath() + (String) assetsListModel.get(i)
 					: (String) assetsListModel.get(i);
 				String assetRootPath = asset.substring(0, Math.min(dir.getPath().length(), asset.length()));
-				if (isSameString(assetRootPath, dir.getPath()))
+				if (isSameString(assetRootPath, dir.getPath())) {
 					changeAssetName(i, asset.substring(assetRootPath.length()));
+				} else {
+					removeAssetFromlist(i);
+				}
 			}
 
 			assetsRootDir = dir;
@@ -501,10 +531,6 @@ public class MainWindow extends javax.swing.JFrame {
 		AppContext.instance().clearCurrentObject();
 	}//GEN-LAST:event_shape_clearBtnActionPerformed
 
-	private void shape_computeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_computeBtnActionPerformed
-		AppContext.instance().computePolygons();
-	}//GEN-LAST:event_shape_computeBtnActionPerformed
-
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
 		AppContext.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
 	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
@@ -512,6 +538,14 @@ public class MainWindow extends javax.swing.JFrame {
 	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
 		AppContext.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
 	}//GEN-LAST:event_shape_drawPolysChkActionPerformed
+
+	private void shape_drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetChkActionPerformed
+		AppContext.instance().isAssetDrawn = shape_drawAssetChk.isSelected();
+	}//GEN-LAST:event_shape_drawAssetChkActionPerformed
+
+	private void shape_drawAssetOpacity50ChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetOpacity50ChkActionPerformed
+		AppContext.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
+	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
 
 	private void addAssetTolist(String asset) {
 		assetsListModel.addElement(asset);
@@ -558,10 +592,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JButton shape_addbtn;
     private javax.swing.JButton shape_clearBtn;
-    private javax.swing.JButton shape_computeBtn;
+    private javax.swing.JCheckBox shape_drawAssetChk;
+    private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
     private javax.swing.JCheckBox shape_drawPolysChk;
     private javax.swing.JCheckBox shape_drawShapeChk;
     private javax.swing.JButton shape_subBtn;

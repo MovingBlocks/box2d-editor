@@ -22,7 +22,7 @@ public class AppDrawer {
 
 	public void draw() {
 		Vector2[] shape = AppContext.instance().getTempShape();
-		Vector2[][] polys = AppContext.instance().getCurrentModel().getPolygons();
+		Vector2[][] polys = AppContext.instance().getCurrentBodyModel().getPolygons();
 
 		if (AppContext.instance().arePolyDrawn) {
 			drawTempPolys(polys);

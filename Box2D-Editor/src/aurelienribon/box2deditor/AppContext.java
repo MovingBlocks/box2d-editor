@@ -16,6 +16,8 @@ public class AppContext {
 	// Options
 	// -------------------------------------------------------------------------
 
+	public boolean isAssetDrawn = true;
+	public boolean isAssetDrawnWithOpacity50 = false;
 	public boolean isShapeDrawn = true;
 	public boolean arePolyDrawn = true;
 
@@ -23,9 +25,10 @@ public class AppContext {
 	// Body models
 	// -------------------------------------------------------------------------
 
+	private final static BodyModel EMPTY_BODYMODEL = new BodyModel();
 	private final Map<String, BodyModel> bodyModelsMap = new HashMap<String, BodyModel>();
 	private String currentAssetPath;
-	private BodyModel currentModel = new BodyModel();
+	private BodyModel currentModel;
 
 	public void addBodyModel(String path) {
 		bodyModelsMap.put(path, new BodyModel());
@@ -35,7 +38,7 @@ public class AppContext {
 		bodyModelsMap.remove(path);
 		if (path.equals(currentAssetPath)) {
 			currentAssetPath = null;
-			currentModel = new BodyModel();
+			currentModel = null;
 		}
 	}
 
@@ -51,7 +54,9 @@ public class AppContext {
 		currentModel = bodyModelsMap.get(currentAssetPath);
 	}
 
-	public BodyModel getCurrentModel() {
+	public BodyModel getCurrentBodyModel() {
+		if (currentModel == null)
+			currentModel = EMPTY_BODYMODEL;
 		return currentModel;
 	}
 
@@ -64,10 +69,14 @@ public class AppContext {
 	private Vector2 tempShapeNearestPoint;
 
 	public void addTempShapePoint(Vector2 p) {
+		if (currentModel == EMPTY_BODYMODEL)
+			return;
+		
 		tempShape.add(p);
 		if (currentAssetPath != null && isTempShapeClosed()) {
 			BodyModel bm = bodyModelsMap.get(currentAssetPath);
 			bm.setPoints(tempShape.toArray(new Vector2[tempShape.size()]));
+			bm.computePolygons();
 		}
 	}
 
@@ -121,16 +130,5 @@ public class AppContext {
 
 	public Vector2 getTempShapeNearestPoint() {
 		return tempShapeNearestPoint;
-	}
-
-	public void computePolygons() {
-		if (!isTempShapeClosed())
-			return;
-
-		Vector2[] shape = getTempShape();
-		Vector2[] shape2 = new Vector2[shape.length-1];
-		for (int i=0; i<shape2.length; i++)
-			shape2[i] = shape[shape.length-2 - i];
-		currentModel.setPolygons(Clipper.polygonize(shape2));
 	}
 }

@@ -49,6 +49,9 @@ public class App implements ApplicationListener {
 
 	@Override
 	public void render() {
+		if (assetSprite != null)
+			assetSprite.setColor(1, 1, 1, AppContext.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
+
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -68,7 +71,8 @@ public class App implements ApplicationListener {
 
 		sb.setProjectionMatrix(camera.combined);
 		sb.begin();
-		if (assetSprite != null) assetSprite.draw(sb);
+		if (assetSprite != null && AppContext.instance().isAssetDrawn)
+			assetSprite.draw(sb);
 		sb.end();
 
 		camera.apply(gl);
