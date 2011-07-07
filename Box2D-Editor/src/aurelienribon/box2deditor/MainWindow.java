@@ -47,14 +47,6 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         export_saveBtn = new javax.swing.JButton();
         eastPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
-        jSpinner3 = new javax.swing.JSpinner();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         shape_computeBtn = new javax.swing.JButton();
@@ -62,6 +54,8 @@ public class MainWindow extends javax.swing.JFrame {
         shape_addbtn = new javax.swing.JButton();
         shape_subBtn = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        shape_drawShapeChk = new javax.swing.JCheckBox();
+        shape_drawPolysChk = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
 
@@ -282,63 +276,20 @@ public class MainWindow extends javax.swing.JFrame {
 
         eastPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(0, 0, 0)));
 
-        jLabel2.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("    Fixture parameters");
-        jLabel2.setOpaque(true);
-
-        jLabel3.setText("Density:");
-
-        jLabel4.setText("Friction:");
-
-        jLabel5.setText("Restitution:");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addGap(22, 22, 22)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jLabel6.setBackground(new java.awt.Color(102, 102, 102));
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("    Shape creation");
         jLabel6.setOpaque(true);
 
         shape_computeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_shape.png"))); // NOI18N
-        shape_computeBtn.setText("Compute convex shapes");
+        shape_computeBtn.setText("Compute convex polygons");
         shape_computeBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         shape_computeBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        shape_computeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_computeBtnActionPerformed(evt);
+            }
+        });
 
         shape_clearBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_delete.png"))); // NOI18N
         shape_clearBtn.setText("Clear points");
@@ -361,14 +312,30 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
         jLabel8.setText("<html>To define an object shape, first use some right clics to add points defining the hull of the shape. Then, clic on \"compute convex shapes\". You're done !<br/><br/> You can select multiple points by dragging the mouse around them. Select 2 points and you will be able to add another one between them with the \"+\" button.<br/><br/>Zoom with mouse wheel, pan by holding the left mouse button.");
 
+        shape_drawShapeChk.setSelected(true);
+        shape_drawShapeChk.setText("Draw shape borders");
+        shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawShapeChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawPolysChk.setSelected(true);
+        shape_drawPolysChk.setText("Draw convex polygons");
+        shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawPolysChkActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(shape_computeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(shape_computeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
@@ -376,11 +343,19 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_subBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addComponent(shape_clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(shape_drawShapeChk)
+                .addContainerGap(61, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(shape_drawPolysChk)
+                .addContainerGap(49, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -396,8 +371,12 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(shape_addbtn))
                     .addComponent(shape_subBtn))
                 .addGap(18, 18, 18)
+                .addComponent(shape_drawShapeChk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_drawPolysChk)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -409,7 +388,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -425,7 +404,6 @@ public class MainWindow extends javax.swing.JFrame {
         eastPanelLayout.setHorizontalGroup(
             eastPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         eastPanelLayout.setVerticalGroup(
@@ -433,10 +411,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(eastPanelLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(eastPanel, java.awt.BorderLayout.EAST);
@@ -480,7 +455,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_export_saveBtnActionPerformed
 
 	private void assets_assetListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_assets_assetListValueChanged
-		AppContext.instance().clearTempShape();
+		AppContext.instance().clearTempObjects();
 
 		if (assets_assetList.isSelectionEmpty()) {
 			App.instance().clearAsset();
@@ -522,8 +497,21 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_assets_removeAssetBtnActionPerformed
 
 	private void shape_clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_clearBtnActionPerformed
-		AppContext.instance().clearTempShape();
+		AppContext.instance().clearTempObjects();
+		AppContext.instance().clearCurrentObject();
 	}//GEN-LAST:event_shape_clearBtnActionPerformed
+
+	private void shape_computeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_computeBtnActionPerformed
+		AppContext.instance().computePolygons();
+	}//GEN-LAST:event_shape_computeBtnActionPerformed
+
+	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
+		AppContext.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
+	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
+
+	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
+		AppContext.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
+	}//GEN-LAST:event_shape_drawPolysChkActionPerformed
 
 	private void addAssetTolist(String asset) {
 		assetsListModel.addElement(asset);
@@ -562,26 +550,20 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JButton shape_addbtn;
     private javax.swing.JButton shape_clearBtn;
     private javax.swing.JButton shape_computeBtn;
+    private javax.swing.JCheckBox shape_drawPolysChk;
+    private javax.swing.JCheckBox shape_drawShapeChk;
     private javax.swing.JButton shape_subBtn;
     private javax.swing.JPanel westPanel;
     // End of variables declaration//GEN-END:variables

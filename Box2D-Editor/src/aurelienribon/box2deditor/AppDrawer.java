@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class AppDrawer {
 	private static final Color SHAPE_LINE_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
+	private static final Color SHAPE_POLY_COLOR = new Color(0.2f, 0.8f, 0.2f, 1);
 
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
@@ -21,9 +22,15 @@ public class AppDrawer {
 
 	public void draw() {
 		Vector2[] shape = AppContext.instance().getTempShape();
+		Vector2[][] polys = AppContext.instance().getCurrentModel().getPolygons();
 
-		drawTempShape(shape);
-		drawTempPoints(shape);
+		if (AppContext.instance().arePolyDrawn) {
+			drawTempPolys(polys);
+		}
+		if (AppContext.instance().isShapeDrawn) {
+			drawTempShape(shape);
+			drawTempPoints(shape);
+		}
 	}
 
 	private void drawTempShape(Vector2[] shape) {
@@ -48,6 +55,15 @@ public class AppDrawer {
 			if (p == np)
 				fillRect(p, w, w, SHAPE_LINE_COLOR);
 			drawRect(p, w, w, SHAPE_LINE_COLOR, 2);
+		}
+	}
+
+	private void drawTempPolys(Vector2[][] polys) {
+		for (Vector2[] poly : polys) {
+			for (int i=1; i<poly.length; i++)
+				drawLine(poly[i], poly[i-1], SHAPE_POLY_COLOR, 2);
+			if (poly.length > 0)
+				drawLine(poly[0], poly[poly.length-1], SHAPE_POLY_COLOR, 2);
 		}
 	}
 

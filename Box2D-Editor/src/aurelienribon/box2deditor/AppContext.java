@@ -1,5 +1,6 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,11 +13,19 @@ public class AppContext {
 	public static AppContext instance() { return instance; }
 
 	// -------------------------------------------------------------------------
+	// Options
+	// -------------------------------------------------------------------------
+
+	public boolean isShapeDrawn = true;
+	public boolean arePolyDrawn = true;
+
+	// -------------------------------------------------------------------------
 	// Body models
 	// -------------------------------------------------------------------------
 
 	private final Map<String, BodyModel> bodyModelsMap = new HashMap<String, BodyModel>();
 	private String currentAssetPath;
+	private BodyModel currentModel = new BodyModel();
 
 	public void addBodyModel(String path) {
 		bodyModelsMap.put(path, new BodyModel());
@@ -24,6 +33,10 @@ public class AppContext {
 
 	public void removeBodyModel(String path) {
 		bodyModelsMap.remove(path);
+		if (path.equals(currentAssetPath)) {
+			currentAssetPath = null;
+			currentModel = new BodyModel();
+		}
 	}
 
 	public void changeBodyModelPath(String oldPath, String newPath) {
@@ -35,10 +48,11 @@ public class AppContext {
 
 	public void setCurrentAssetPath(String currentAssetPath) {
 		this.currentAssetPath = currentAssetPath;
+		currentModel = bodyModelsMap.get(currentAssetPath);
 	}
 
-	public String getCurrentAssetPath() {
-		return currentAssetPath;
+	public BodyModel getCurrentModel() {
+		return currentModel;
 	}
 
 	// -------------------------------------------------------------------------
@@ -67,8 +81,20 @@ public class AppContext {
 		tempShape.add(tempShape.indexOf(previousP)+1, p);
 	}
 
-	public void clearTempShape() {
+	public void clearTempObjects() {
 		tempShape.clear();
+	}
+
+	public void clearCurrentObject() {
+		if (bodyModelsMap.containsKey(currentAssetPath)) {
+			bodyModelsMap.get(currentAssetPath).clearAll();
+		}
+	}
+
+	public void clearCurrentObjectPolys() {
+		if (bodyModelsMap.containsKey(currentAssetPath)) {
+			bodyModelsMap.get(currentAssetPath).clearPolys();
+		}
 	}
 
 	public Vector2[] getTempShape() {
@@ -95,5 +121,16 @@ public class AppContext {
 
 	public Vector2 getTempShapeNearestPoint() {
 		return tempShapeNearestPoint;
+	}
+
+	public void computePolygons() {
+		if (!isTempShapeClosed())
+			return;
+
+		Vector2[] shape = getTempShape();
+		Vector2[] shape2 = new Vector2[shape.length-1];
+		for (int i=0; i<shape2.length; i++)
+			shape2[i] = shape[shape.length-2 - i];
+		currentModel.setPolygons(Clipper.polygonize(shape2));
 	}
 }
