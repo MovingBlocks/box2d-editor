@@ -1,7 +1,7 @@
 package aurelienribon.box2deditor;
 
-import aurelienribon.box2deditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +15,8 @@ public class AppContext {
 	// -------------------------------------------------------------------------
 	// Options
 	// -------------------------------------------------------------------------
+	public File assetsRootDir;
+	public File outputFile;
 
 	public boolean isAssetDrawn = true;
 	public boolean isAssetDrawnWithOpacity50 = false;
@@ -22,10 +24,16 @@ public class AppContext {
 	public boolean arePolyDrawn = true;
 
 	// -------------------------------------------------------------------------
+	// Mouse path + selected points
+	// -------------------------------------------------------------------------
+
+	public final List<Vector2> mousePath = new ArrayList<Vector2>();
+	public final List<Vector2> selectedPoints = new ArrayList<Vector2>();
+
+	// -------------------------------------------------------------------------
 	// Body models
 	// -------------------------------------------------------------------------
 
-	private final static BodyModel EMPTY_BODYMODEL = new BodyModel();
 	private final Map<String, BodyModel> bodyModelsMap = new HashMap<String, BodyModel>();
 	private String currentAssetPath;
 	private BodyModel currentModel;
@@ -56,8 +64,12 @@ public class AppContext {
 
 	public BodyModel getCurrentBodyModel() {
 		if (currentModel == null)
-			currentModel = EMPTY_BODYMODEL;
+			currentModel = BodyModel.EMPTY;
 		return currentModel;
+	}
+
+	public Map<String, BodyModel> getBodyModelsMap() {
+		return bodyModelsMap;
 	}
 
 	// -------------------------------------------------------------------------
@@ -67,43 +79,69 @@ public class AppContext {
 	private final List<Vector2> tempShape = new ArrayList<Vector2>();
 	private final Vector2 tempShapeNextPoint = new Vector2();
 	private Vector2 tempShapeNearestPoint;
+	private Vector2 tempCenter;
 
 	public void addTempShapePoint(Vector2 p) {
-		if (currentModel == EMPTY_BODYMODEL)
-			return;
-		
-		tempShape.add(p);
-		if (currentAssetPath != null && isTempShapeClosed()) {
-			BodyModel bm = bodyModelsMap.get(currentAssetPath);
-			bm.setPoints(tempShape.toArray(new Vector2[tempShape.size()]));
-			bm.computePolygons();
+		BodyModel bm = getCurrentBodyModel();
+		if (bm != BodyModel.EMPTY) {
+			tempShape.add(p);
+			if (isTempShapeClosed())
+				updateCurrentBodyModel();
 		}
 	}
 
-	public void loadTempShapePoints() {
-		Vector2[] ps = bodyModelsMap.get(currentAssetPath).getPoints();
-		tempShape.clear();
-		tempShape.addAll(Arrays.asList(ps));
+	public boolean removeSelectedPoints() {
+		if (tempShape.size() - selectedPoints.size() < 3)
+			return false;
+		tempShape.remove(tempShape.size()-1);
+		tempShape.removeAll(selectedPoints);
+		tempShape.add(tempShape.get(0));
+		updateCurrentBodyModel();
+		return true;
 	}
 
-	public void addTempShapePointAfter(Vector2 p, Vector2 previousP) {
-		tempShape.add(tempShape.indexOf(previousP)+1, p);
+	public void insertPointBetweenSelected() {
+		if (selectedPoints.size() < 2)
+			return;
+
+		List<Vector2> toAdd = new ArrayList<Vector2>();
+
+		for (int i=0; i<tempShape.size(); i++) {
+			Vector2 p1 = i == 0 ? tempShape.get(tempShape.size()-2) : tempShape.get(i-1);
+			Vector2 p2 = tempShape.get(i);
+			Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+			assert p1 != p2;
+
+			if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
+				tempShape.add(i == 0 ? tempShape.size()-1 : i, p);
+				toAdd.add(p);
+			}
+		}
+
+		selectedPoints.addAll(toAdd);
+		updateCurrentBodyModel();
+	}
+
+	public void loadTempShapePoints() {
+		Vector2 center = getCurrentBodyModel().getCenter();
+		Vector2[] ps = getCurrentBodyModel().getPoints();
+
+		tempCenter = center;
+		tempShape.clear();
+
+		if (ps != null) {
+			tempShape.addAll(Arrays.asList(ps));
+			tempShape.add(ps[0]);
+		}
 	}
 
 	public void clearTempObjects() {
 		tempShape.clear();
+		tempCenter = null;
 	}
 
-	public void clearCurrentObject() {
-		if (bodyModelsMap.containsKey(currentAssetPath)) {
-			bodyModelsMap.get(currentAssetPath).clearAll();
-		}
-	}
-
-	public void clearCurrentObjectPolys() {
-		if (bodyModelsMap.containsKey(currentAssetPath)) {
-			bodyModelsMap.get(currentAssetPath).clearPolys();
-		}
+	public void computeCurrentObjectPolys() {
+		getCurrentBodyModel().computePolygons();
 	}
 
 	public Vector2[] getTempShape() {
@@ -116,8 +154,8 @@ public class AppContext {
 		return tempShape.get(tempShape.size()-1) == tempShape.get(0);
 	}
 
-	public void setTempShapeNextPoint(float x, float y) {
-		tempShapeNextPoint.set(x, y);
+	public void setTempShapeNextPoint(Vector2 p) {
+		tempShapeNextPoint.set(p);
 	}
 
 	public Vector2 getTempShapeNextPoint() {
@@ -130,5 +168,27 @@ public class AppContext {
 
 	public Vector2 getTempShapeNearestPoint() {
 		return tempShapeNearestPoint;
+	}
+
+	public void setTempCenter(Vector2 tempCenter) {
+		if (getCurrentBodyModel() != BodyModel.EMPTY)
+			this.tempCenter = tempCenter;
+	}
+
+	public Vector2 getTempCenter() {
+		return tempCenter;
+	}
+
+	private void updateCurrentBodyModel() {
+		BodyModel bm = getCurrentBodyModel();
+		bm.clearAll();
+		bm.setCenter(tempCenter);
+
+		Vector2[] ps = new Vector2[tempShape.size()-1];
+		for (int i=0; i<ps.length; i++)
+			ps[i] = tempShape.get(i);
+
+		bm.setPoints(ps);
+		bm.computePolygons();
 	}
 }

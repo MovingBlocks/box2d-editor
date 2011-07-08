@@ -405,29 +405,15 @@
                   </Group>
                   <Component id="jSeparator2" alignment="0" pref="196" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="21" pref="21" max="21" attributes="0"/>
-                                      <Component id="shape_drawAssetOpacity50Chk" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="shape_drawAssetChk" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                              <Component id="shape_drawAssetOpacity50Chk" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="shape_drawShapeChk" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="52" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="shape_drawPolysChk" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace pref="21" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="shape_drawAssetChk" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="shape_drawShapeChk" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="shape_drawPolysChk" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -508,6 +494,9 @@
                   <Insets value="[2, 3, 2, 2]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shape_addbtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="shape_subBtn">
               <Properties>
@@ -519,13 +508,16 @@
                   <Insets value="[2, 3, 2, 2]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shape_subBtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;1 &amp;bull; Set the asset root directory&lt;br/&gt;&#xa;2 &amp;bull; Add some asset to the list&lt;br/&gt;&#xa;3 &amp;bull; Select an asset and define its Box2D body by right clicking on the asset area:&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;First clic defines the gravity center, other clics define the body hull.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;You have to close the shape to save the result.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;Zoom with mouse wheel, pan by holding the left mouse button."/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;1 &amp;bull; Set the asset root directory&lt;br/&gt;&#xa;2 &amp;bull; Add some asset to the list&lt;br/&gt;&#xa;3 &amp;bull; Select an asset and define its Box2D body by right clicking on the asset area:&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;First clic defines the gravity center, other clics define the body hull.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;You have to close the shape for the result to be saved.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;Zoom with mouse wheel, pan by holding the left mouse button."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="shape_drawShapeChk">
@@ -586,7 +578,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel10" pref="170" max="32767" attributes="0"/>
+                      <Component id="jLabel10" pref="176" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

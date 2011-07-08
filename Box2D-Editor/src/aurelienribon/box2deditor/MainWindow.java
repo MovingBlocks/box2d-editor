@@ -3,6 +3,7 @@ package aurelienribon.box2deditor;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.BorderLayout;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,8 +14,6 @@ import javax.swing.filechooser.FileFilter;
 
 public class MainWindow extends javax.swing.JFrame {
 	private final DefaultListModel assetsListModel;
-	private File assetsRootDir;
-	private File outputFile;
 
     public MainWindow(final LwjglCanvas glCanvas) {
         initComponents();
@@ -22,6 +21,18 @@ public class MainWindow extends javax.swing.JFrame {
 
 		assetsListModel = new DefaultListModel();
 		assets_assetList.setModel(assetsListModel);
+
+		File rootDir = AppContext.instance().assetsRootDir;
+		if (rootDir != null && rootDir.isDirectory())
+			init_assetsRootDirLbl.setText(rootDir.getPath());
+		else if (rootDir != null)
+			JOptionPane.showMessageDialog(this,
+				"The provided path for '--rootdir' option either "
+				+ "does not exist or is not a valid directory");
+
+		File outputFile = AppContext.instance().outputFile;
+		if (outputFile != null)
+			init_outputFileLbl.setText(outputFile.getPath());
     }
 
     @SuppressWarnings("unchecked")
@@ -297,13 +308,23 @@ public class MainWindow extends javax.swing.JFrame {
         shape_addbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
         shape_addbtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         shape_addbtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        shape_addbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_addbtnActionPerformed(evt);
+            }
+        });
 
         shape_subBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_remove.png"))); // NOI18N
         shape_subBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         shape_subBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        shape_subBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_subBtnActionPerformed(evt);
+            }
+        });
 
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel8.setText("<html>\n1 &bull; Set the asset root directory<br/>\n2 &bull; Add some asset to the list<br/>\n3 &bull; Select an asset and define its Box2D body by right clicking on the asset area:<br/><br/>\n\nFirst clic defines the gravity center, other clics define the body hull.<br/><br/>\n\nYou have to close the shape to save the result.<br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
+        jLabel8.setText("<html>\n1 &bull; Set the asset root directory<br/>\n2 &bull; Add some asset to the list<br/>\n3 &bull; Select an asset and define its Box2D body by right clicking on the asset area:<br/><br/>\n\nFirst clic defines the gravity center, other clics define the body hull.<br/><br/>\n\nYou have to close the shape for the result to be saved.<br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
 
         shape_drawShapeChk.setSelected(true);
         shape_drawShapeChk.setText("Draw shape");
@@ -355,23 +376,14 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
             .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(shape_drawAssetOpacity50Chk))
-                            .addComponent(shape_drawAssetChk))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(shape_drawShapeChk)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(shape_drawPolysChk))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
+                        .addGap(21, 21, 21)
+                        .addComponent(shape_drawAssetOpacity50Chk))
+                    .addComponent(shape_drawAssetChk)
+                    .addComponent(shape_drawShapeChk)
+                    .addComponent(shape_drawPolysChk))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
@@ -415,7 +427,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -448,6 +460,8 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void init_addAssetsByFilesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByFilesBtnActionPerformed
 		String[] assets = promptAssetsByFiles();
+		File assetsRootDir = AppContext.instance().assetsRootDir;
+
 		if (assets != null) {
 			for (String asset : assets) {
 				if (assetsRootDir != null) {
@@ -469,15 +483,24 @@ public class MainWindow extends javax.swing.JFrame {
 	private void init_setOutputFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setOutputFileBtnActionPerformed
 		File file = promptOutputFile();
 		if (file != null) {
-			outputFile = file;
+			AppContext.instance().outputFile = file;
 			init_outputFileLbl.setText(file.getPath());
 		}
 	}//GEN-LAST:event_init_setOutputFileBtnActionPerformed
 
 	private void export_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_saveBtnActionPerformed
+		File outputFile = AppContext.instance().outputFile;
 		if (outputFile == null) {
-			JOptionPane.showMessageDialog(this, "Output file has not been set.");
+			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
+		}
+
+		try {
+			IO.exportFile();
+			JOptionPane.showMessageDialog(this, "Save successfully done !");
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(this, "Something went wrong while writing the file, sorry :/"
+				+ "\n(nah, don't expect more details)");
 		}
 	}//GEN-LAST:event_export_saveBtnActionPerformed
 
@@ -489,6 +512,7 @@ public class MainWindow extends javax.swing.JFrame {
 			return;
 		}
 
+		File assetsRootDir = AppContext.instance().assetsRootDir;
 		String assetName = (String) assets_assetList.getSelectedValue();
 		AppContext.instance().setCurrentAssetPath(assetName);
 		AppContext.instance().loadTempShapePoints();
@@ -501,6 +525,8 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void init_setAssetsRootBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setAssetsRootBtnActionPerformed
 		File dir = promptAssetsRootDir();
+		File assetsRootDir = AppContext.instance().assetsRootDir;
+		
 		if (dir != null) {
 			for (int i=assetsListModel.size()-1; i>=0; i--) {
 				String asset = assetsRootDir != null
@@ -514,8 +540,8 @@ public class MainWindow extends javax.swing.JFrame {
 				}
 			}
 
-			assetsRootDir = dir;
-			init_assetsRootDirLbl.setText(assetsRootDir.getPath());
+			AppContext.instance().assetsRootDir = dir;
+			init_assetsRootDirLbl.setText(dir.getPath());
 		}
 	}//GEN-LAST:event_init_setAssetsRootBtnActionPerformed
 
@@ -528,7 +554,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void shape_clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_clearBtnActionPerformed
 		AppContext.instance().clearTempObjects();
-		AppContext.instance().clearCurrentObject();
+		AppContext.instance().getCurrentBodyModel().clearAll();
 	}//GEN-LAST:event_shape_clearBtnActionPerformed
 
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
@@ -546,6 +572,17 @@ public class MainWindow extends javax.swing.JFrame {
 	private void shape_drawAssetOpacity50ChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetOpacity50ChkActionPerformed
 		AppContext.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
+
+	private void shape_addbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_addbtnActionPerformed
+		AppContext.instance().insertPointBetweenSelected();
+	}//GEN-LAST:event_shape_addbtnActionPerformed
+
+	private void shape_subBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_subBtnActionPerformed
+		if (!AppContext.instance().removeSelectedPoints())
+			JOptionPane.showMessageDialog(this,
+				"You have to leave at least 3 points in the shape.\n"
+				+ "Use the 'clear points' button instead.");
+	}//GEN-LAST:event_shape_subBtnActionPerformed
 
 	private void addAssetTolist(String asset) {
 		assetsListModel.addElement(asset);
@@ -628,6 +665,7 @@ public class MainWindow extends javax.swing.JFrame {
 	};
 
     private File promptAssetsRootDir() {
+		File assetsRootDir = AppContext.instance().assetsRootDir;
 		File startupDir = assetsRootDir != null && assetsRootDir.exists()
 			? assetsRootDir
 			: new File(".");
@@ -642,6 +680,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 	
     private String[] promptAssetsByFiles() {
+		File assetsRootDir = AppContext.instance().assetsRootDir;
 		File startupDir = assetsRootDir != null && assetsRootDir.exists()
 			? assetsRootDir
 			: new File(".");

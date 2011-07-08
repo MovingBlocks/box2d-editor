@@ -4,6 +4,14 @@ import aurelienribon.box2deditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
 
 public class BodyModel {
+	public static final BodyModel EMPTY = new BodyModel() {
+		@Override public void setCenter(Vector2 center) {}
+		@Override public void setPoints(Vector2[] points) {}
+		@Override public void computePolygons() {}
+	};
+
+	// -------------------------------------------------------------------------
+
 	private Vector2 center;
 	private Vector2[] points;
 	private Vector2[][] polygons;
@@ -31,21 +39,20 @@ public class BodyModel {
 	}
 
 	public Vector2[] getPoints() {
-		if (points == null)
-			return new Vector2[0];
 		return points;
 	}
 
 	public Vector2[][] getPolygons() {
-		if (polygons == null)
-			return new Vector2[0][];
 		return polygons;
 	}
 
 	public void computePolygons() {
-		Vector2[] shape = new Vector2[points.length-1];
+		if (points == null || points.length < 3)
+			return;
+		
+		Vector2[] shape = new Vector2[points.length];
 		for (int i=0; i<shape.length; i++)
-			shape[i] = points[points.length-2 - i];
+			shape[i] = points[points.length-1 - i];
 		polygons = Clipper.polygonize(shape);
 	}
 }
