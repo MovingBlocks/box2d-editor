@@ -42,6 +42,10 @@ public class BodyModel {
 		return points;
 	}
 
+	public void setPolygons(Vector2[][] polygons) {
+		this.polygons = polygons;
+	}
+
 	public Vector2[][] getPolygons() {
 		return polygons;
 	}

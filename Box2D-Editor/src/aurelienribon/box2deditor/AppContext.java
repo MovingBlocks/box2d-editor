@@ -34,16 +34,21 @@ public class AppContext {
 	// Body models
 	// -------------------------------------------------------------------------
 
-	private final Map<String, BodyModel> bodyModelsMap = new HashMap<String, BodyModel>();
+	private final Map<String, BodyModel> bodyModelMap = new HashMap<String, BodyModel>();
 	private String currentAssetPath;
 	private BodyModel currentModel;
 
+	public void loadBodyModels(Map<String, BodyModel> map) {
+		for (String str : map.keySet())
+			bodyModelMap.put(str, map.get(str));
+	}
+
 	public void addBodyModel(String path) {
-		bodyModelsMap.put(path, new BodyModel());
+		bodyModelMap.put(path, new BodyModel());
 	}
 
 	public void removeBodyModel(String path) {
-		bodyModelsMap.remove(path);
+		bodyModelMap.remove(path);
 		if (path.equals(currentAssetPath)) {
 			currentAssetPath = null;
 			currentModel = null;
@@ -53,13 +58,13 @@ public class AppContext {
 	public void changeBodyModelPath(String oldPath, String newPath) {
 		if (oldPath.equals(currentAssetPath))
 			currentAssetPath = newPath;
-		BodyModel bm = bodyModelsMap.remove(oldPath);
-		bodyModelsMap.put(newPath, bm);
+		BodyModel bm = bodyModelMap.remove(oldPath);
+		bodyModelMap.put(newPath, bm);
 	}
 
 	public void setCurrentAssetPath(String currentAssetPath) {
 		this.currentAssetPath = currentAssetPath;
-		currentModel = bodyModelsMap.get(currentAssetPath);
+		currentModel = bodyModelMap.get(currentAssetPath);
 	}
 
 	public BodyModel getCurrentBodyModel() {
@@ -69,7 +74,7 @@ public class AppContext {
 	}
 
 	public Map<String, BodyModel> getBodyModelsMap() {
-		return bodyModelsMap;
+		return bodyModelMap;
 	}
 
 	// -------------------------------------------------------------------------

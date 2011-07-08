@@ -31,8 +31,20 @@ public class MainWindow extends javax.swing.JFrame {
 				+ "does not exist or is not a valid directory");
 
 		File outputFile = AppContext.instance().outputFile;
-		if (outputFile != null)
+		if (outputFile != null) {
 			init_outputFileLbl.setText(outputFile.getPath());
+			if (outputFile.isFile()) {
+				try {
+					IO.importFile();
+					for (String name : AppContext.instance().getBodyModelsMap().keySet()) {
+						assetsListModel.addElement(name);
+					}
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(this, "Something went wrong while reading the output file, sorry :/"
+						+ "\n(nah, don't expect more details)");
+				}
+			}
+		}
     }
 
     @SuppressWarnings("unchecked")
