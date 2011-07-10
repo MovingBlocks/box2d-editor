@@ -2,13 +2,16 @@ package aurelienribon.box2deditor;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class App implements ApplicationListener {
 	private static App instance = new App();
@@ -18,8 +21,11 @@ public class App implements ApplicationListener {
 	private SpriteBatch sb;
 	private BitmapFont font;
 	private Texture backgroundTexture;
+
+	private Pixmap assetPixmap;
 	private Texture assetTexture;
 	private Sprite assetSprite;
+	int[] potWidths = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 5096};
 
 	OrthographicCamera camera;
 	int zoom = 100;
@@ -94,24 +100,48 @@ public class App implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		clearAsset();
 		backgroundTexture.dispose();
 		sb.dispose();
 		font.dispose();
 	}
 
 	public void clearAsset() {
-		if (assetTexture != null)
+		if (assetPixmap != null) {
+			assetPixmap.dispose();
+			assetPixmap = null;
+		}
+		if (assetTexture != null) {
 			assetTexture.dispose();
-		assetTexture = null;
+			assetTexture = null;
+		}
 		assetSprite = null;
 	}
 
-	public void setAssetByFile(String fullpath) {
-		if (assetTexture != null)
-			assetTexture.dispose();
-		assetTexture = new Texture(Gdx.files.absolute(fullpath));
+	public Vector2 setAssetByFile(String fullpath) {
+		clearAsset();
+
+		Pixmap tempPm = new Pixmap(Gdx.files.absolute(fullpath));
+		int origW = tempPm.getWidth();
+		int origH = tempPm.getHeight();
+		int w = getNearestPOT(origW);
+		int h = getNearestPOT(origH);
+		assetPixmap = new Pixmap(w, h, tempPm.getFormat());
+		assetPixmap.drawPixmap(tempPm, 0, 0, 0, 0, origW, origH);
+		tempPm.dispose();
+
+		assetTexture = new Texture(assetPixmap);
 		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		assetSprite = new Sprite(assetTexture);
-		assetSprite.setPosition(-assetSprite.getWidth()/2, -assetSprite.getHeight()/2);
+		assetSprite.setPosition(-origW/2, -origH/2);
+
+		return new Vector2(origW, origH);
+	}
+
+	private int getNearestPOT(int d) {
+		for (int i=0; i<potWidths.length; i++)
+			if (d <= potWidths[i])
+				return potWidths[i];
+		return -1;
 	}
 }

@@ -1,13 +1,10 @@
 package aurelienribon.box2deditor;
 
-import aurelienribon.box2deditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
 
 public class BodyModel {
 	public static final BodyModel EMPTY = new BodyModel() {
-		@Override public void setCenter(Vector2 center) {}
-		@Override public void setPoints(Vector2[] points) {}
-		@Override public void computePolygons() {}
+		@Override public void set(Vector2 center, Vector2[] points, Vector2[][] polygons) {}
 	};
 
 	// -------------------------------------------------------------------------
@@ -22,41 +19,51 @@ public class BodyModel {
 		polygons = null;
 	}
 
-	public void clearPolys() {
-		polygons = null;
-	}
-
-	public void setCenter(Vector2 center) {
-		this.center = center;
+	public void set(Vector2 center, Vector2[] points, Vector2[][] polygons) {
+		clearAll();
+		this.center = getCopy(center);
+		this.points = getCopy(points);
+		this.polygons = getCopy(polygons);
 	}
 
 	public Vector2 getCenter() {
-		return center;
-	}
-
-	public void setPoints(Vector2[] points) {
-		this.points = points;
+		return getCopy(center);
 	}
 
 	public Vector2[] getPoints() {
-		return points;
-	}
-
-	public void setPolygons(Vector2[][] polygons) {
-		this.polygons = polygons;
+		return getCopy(points);
 	}
 
 	public Vector2[][] getPolygons() {
-		return polygons;
+		return getCopy(polygons);
 	}
 
-	public void computePolygons() {
-		if (points == null || points.length < 3)
-			return;
-		
-		Vector2[] shape = new Vector2[points.length];
-		for (int i=0; i<shape.length; i++)
-			shape[i] = points[points.length-1 - i];
-		polygons = Clipper.polygonize(shape);
+	// -------------------------------------------------------------------------
+
+	private static Vector2 getCopy(Vector2 v) {
+		if (v == null)
+			return null;
+
+		return v.cpy();
+	}
+
+	private static Vector2[] getCopy(Vector2[] vs) {
+		if (vs == null)
+			return vs;
+
+		Vector2[] ret = new Vector2[vs.length];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = vs[i].cpy();
+		return ret;
+	}
+
+	private static Vector2[][] getCopy(Vector2[][] vss) {
+		if (vss == null)
+			return vss;
+
+		Vector2[][] ret = new Vector2[vss.length][];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = getCopy(vss[i]);
+		return ret;
 	}
 }

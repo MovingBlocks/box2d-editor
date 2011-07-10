@@ -25,9 +25,9 @@ public class AppInputProcessor extends InputAdapter {
 			.mul(app.camera.zoom)
 			.add(app.camera.position.x, app.camera.position.y);
 
-		Vector2[] shape = AppContext.instance().getTempShape();
-		Vector2 nearestP = AppContext.instance().getTempShapeNearestPoint();
 		Vector2 center = AppContext.instance().getTempCenter();
+		Vector2[] shape = AppContext.instance().getTempShape();
+		Vector2 nearestP = AppContext.instance().nearestPoint;
 
 		switch (button) {
 			case Buttons.LEFT:
@@ -62,7 +62,7 @@ public class AppInputProcessor extends InputAdapter {
 		switch (button) {
 			case Buttons.LEFT:
 				if (draggedPoint != null) {
-					AppContext.instance().computeCurrentObjectPolys();
+					AppContext.instance().saveCurrentModel();
 					draggedPoint = null;
 				}
 
@@ -89,7 +89,7 @@ public class AppInputProcessor extends InputAdapter {
 			.sub(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2)
 			.mul(app.camera.zoom)
 			.add(app.camera.position.x, app.camera.position.y);
-		AppContext.instance().setTempShapeNextPoint(p);
+		AppContext.instance().nextPoint = p;
 
 		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) {
 			Vector2 delta = new Vector2(x, y).sub(lastTouch).mul(app.camera.zoom);
@@ -99,7 +99,7 @@ public class AppInputProcessor extends InputAdapter {
 
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			if (draggedPoint != null) {
-				AppContext.instance().getCurrentBodyModel().clearPolys();
+				AppContext.instance().clearTempPolygons();
 
 				float dx = p.x - draggedPoint.x;
 				float dy = p.y - draggedPoint.y;
@@ -128,19 +128,19 @@ public class AppInputProcessor extends InputAdapter {
 			.add(app.camera.position.x, app.camera.position.y);	
 
 		// Nearest point computation
-		AppContext.instance().setTempShapeNearestPoint(null);
+		AppContext.instance().nearestPoint = null;
 		Vector2[] shape = AppContext.instance().getTempShape();
 		if (shape != null)
 			for (Vector2 v : shape)
 				if (v.dst(p) < 10 * App.instance().camera.zoom)
-					AppContext.instance().setTempShapeNearestPoint(v);
+					AppContext.instance().nearestPoint = v;
 		Vector2 center = AppContext.instance().getTempCenter();
 		if (center != null && center.dst(p) < 10 * App.instance().camera.zoom)
-				AppContext.instance().setTempShapeNearestPoint(center);
+				AppContext.instance().nearestPoint = center;
 
 		// Next point assignment
 		if (!AppContext.instance().isTempShapeClosed())
-			AppContext.instance().setTempShapeNextPoint(p);
+			AppContext.instance().nextPoint = p;
 
 		return false;
 	}

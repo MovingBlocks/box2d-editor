@@ -27,17 +27,20 @@ public class AppDrawer {
 
 	public void draw() {
 		Vector2 center = AppContext.instance().getTempCenter();
-		Vector2[] shape = AppContext.instance().getTempShape();
-		Vector2[][] polys = AppContext.instance().getCurrentBodyModel().getPolygons();
 
-		if (AppContext.instance().arePolyDrawn && polys != null) {
-			drawPolys(polys);
-		}
+		if (center != null) {
+			Vector2[] shape = AppContext.instance().getTempShape();
+			Vector2[][] polys = AppContext.instance().getTempPolygons();
 
-		if (AppContext.instance().isShapeDrawn && center != null && shape != null) {
-			drawShape(shape);
-			drawPoints(shape);
-			drawCenter(center);
+			if (AppContext.instance().arePolyDrawn) {
+				drawPolys(polys);
+			}
+
+			if (AppContext.instance().isShapeDrawn) {
+				drawShape(shape);
+				drawPoints(shape);
+				drawCenter(center);
+			}
 		}
 
 		drawMousePath();
@@ -51,14 +54,14 @@ public class AppDrawer {
 			if (AppContext.instance().isTempShapeClosed()) {
 				drawLine(shape[0], shape[shape.length-1], SHAPE_LINE_COLOR, 2);
 			} else {
-				Vector2 p = AppContext.instance().getTempShapeNextPoint();
+				Vector2 p = AppContext.instance().nextPoint;
 				drawLine(shape[shape.length-1], p, SHAPE_LASTLINE_COLOR, 2);
 			}
 		}
 	}
 
 	private void drawPoints(Vector2[] shape) {
-		Vector2 np = AppContext.instance().getTempShapeNearestPoint();
+		Vector2 np = AppContext.instance().nearestPoint;
 		List<Vector2> sp = AppContext.instance().selectedPoints;
 		float w = 10 * camera.zoom;
 
@@ -79,7 +82,7 @@ public class AppDrawer {
 	}
 
 	private void drawCenter(Vector2 p) {
-		Vector2 nearestP = AppContext.instance().getTempShapeNearestPoint();
+		Vector2 nearestP = AppContext.instance().nearestPoint;
 		float w = 10 * camera.zoom;
 
 		tp1.set(p).sub(w, 0);

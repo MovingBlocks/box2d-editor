@@ -1,21 +1,23 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class AppContext {
     private static AppContext instance = new AppContext();
 	public static AppContext instance() { return instance; }
 
 	// -------------------------------------------------------------------------
-	// Options
+	// Parameters
 	// -------------------------------------------------------------------------
-	public File assetsRootDir;
+	public File rootDir;
 	public File outputFile;
 
 	public boolean isAssetDrawn = true;
@@ -34,66 +36,219 @@ public class AppContext {
 	// Body models
 	// -------------------------------------------------------------------------
 
-	private final Map<String, BodyModel> bodyModelMap = new HashMap<String, BodyModel>();
-	private String currentAssetPath;
+	private final Map<String, BodyModel> modelMap = new TreeMap<String, BodyModel>();
+	private String currentName;
 	private BodyModel currentModel;
+	private Vector2 currentSize;
 
-	public void loadBodyModels(Map<String, BodyModel> map) {
-		for (String str : map.keySet())
-			bodyModelMap.put(str, map.get(str));
+	public void addModel(String name) {
+		if (!modelMap.containsKey(name))
+			modelMap.put(name, new BodyModel());
 	}
 
-	public void addBodyModel(String path) {
-		bodyModelMap.put(path, new BodyModel());
-	}
-
-	public void removeBodyModel(String path) {
-		bodyModelMap.remove(path);
-		if (path.equals(currentAssetPath)) {
-			currentAssetPath = null;
+	public void removeModel(String name) {
+		modelMap.remove(name);
+		if (name.equals(currentName)) {
+			currentName = null;
 			currentModel = null;
 		}
 	}
 
-	public void changeBodyModelPath(String oldPath, String newPath) {
-		if (oldPath.equals(currentAssetPath))
-			currentAssetPath = newPath;
-		BodyModel bm = bodyModelMap.remove(oldPath);
-		bodyModelMap.put(newPath, bm);
+	public void changeModelName(String oldName, String newName) {
+		if (oldName.equals(currentName))
+			currentName = newName;
+		BodyModel bm = modelMap.remove(oldName);
+		modelMap.put(newName, bm);
 	}
 
-	public void setCurrentAssetPath(String currentAssetPath) {
-		this.currentAssetPath = currentAssetPath;
-		currentModel = bodyModelMap.get(currentAssetPath);
+	public void setCurrentName(String name) {
+		this.currentName = name;
+		currentModel = modelMap.get(name);
 	}
 
-	public BodyModel getCurrentBodyModel() {
+	public void setCurrentSize(Vector2 currentSize) {
+		this.currentSize = currentSize;
+	}
+
+	private BodyModel getCurrentModel() {
 		if (currentModel == null)
 			currentModel = BodyModel.EMPTY;
 		return currentModel;
 	}
 
-	public Map<String, BodyModel> getBodyModelsMap() {
-		return bodyModelMap;
+	public String[] getNames() {
+		return modelMap.keySet().toArray(new String[0]);
+	}
+
+	public void exportToFile() throws IOException {
+		IO.exportToFile(outputFile, modelMap);
+	}
+
+	public void importFromFile() throws IOException {
+		Map<String, BodyModel> map = IO.importFromFile(outputFile);
+		for (String str : map.keySet())
+			modelMap.put(str, map.get(str));
 	}
 
 	// -------------------------------------------------------------------------
-	// Temp. shape
+	// Temp. objects
 	// -------------------------------------------------------------------------
 
-	private final List<Vector2> tempShape = new ArrayList<Vector2>();
-	private final Vector2 tempShapeNextPoint = new Vector2();
-	private Vector2 tempShapeNearestPoint;
 	private Vector2 tempCenter;
+	private final List<Vector2> tempShape = new ArrayList<Vector2>();
+	private final List<Vector2[]> tempPolygons = new ArrayList<Vector2[]>();
+
+	public Vector2 nextPoint;
+	public Vector2 nearestPoint;
+
+	// -------------------------------------------------------------------------
+
+	public void clearTempObjects() {
+		tempCenter = null;
+		tempShape.clear();
+		tempPolygons.clear();
+	}
+
+	public void loadCurrentModel() {
+		clearTempObjects();
+
+		Vector2 center = getCurrentModel().getCenter();
+		Vector2[] points = getCurrentModel().getPoints();
+		Vector2[][] polygons = getCurrentModel().getPolygons();
+
+		if (center != null) {
+			center = invNormalize(center);
+			tempCenter = center;
+		}
+
+		if (points != null) {
+			points = invNormalize(points);
+			tempShape.addAll(Arrays.asList(points));
+			tempShape.add(points[0]);
+		}
+
+		if (polygons != null) {
+			polygons = invNormalize(polygons);
+			tempPolygons.addAll(Arrays.asList(polygons));
+		}
+	}
+
+	public void saveCurrentModel() {
+		if (tempCenter == null) {
+			BodyModel bm = getCurrentModel();
+			bm.set(null, null, null);
+		} else {
+			computeTempPolygons();
+
+			Vector2 center = tempCenter;
+			center = normalize(center);
+
+			Vector2[] points = new Vector2[tempShape.size()-1];
+			for (int i=0; i<points.length; i++)
+				points[i] = tempShape.get(i);
+			points = normalize(points);
+
+			Vector2[][] polygons = tempPolygons.toArray(new Vector2[tempPolygons.size()][]);
+			polygons = normalize(polygons);
+
+			BodyModel bm = getCurrentModel();
+			bm.set(center, points, polygons);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	private Vector2 normalize(Vector2 v) {
+		return new Vector2(v).mul(100f / currentSize.x);
+	}
+
+	private Vector2[] normalize(Vector2[] vs) {
+		Vector2[] ret = new Vector2[vs.length];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = normalize(vs[i]);
+		return ret;
+	}
+
+	private Vector2[][] normalize(Vector2[][] vss) {
+		Vector2[][] ret = new Vector2[vss.length][];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = normalize(vss[i]);
+		return ret;
+	}
+
+	private Vector2 invNormalize(Vector2 v) {
+		return new Vector2(v).mul(currentSize.x / 100f);
+	}
+
+	private Vector2[] invNormalize(Vector2[] vs) {
+		Vector2[] ret = new Vector2[vs.length];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = invNormalize(vs[i]);
+		return ret;
+	}
+
+	private Vector2[][] invNormalize(Vector2[][] vss) {
+		Vector2[][] ret = new Vector2[vss.length][];
+		for (int i=0; i<ret.length; i++)
+			ret[i] = invNormalize(vss[i]);
+		return ret;
+	}
+
+	// -------------------------------------------------------------------------
+
+	public Vector2 getTempCenter() {
+		return tempCenter;
+	}
+
+	public void setTempCenter(Vector2 tempCenter) {
+		if (getCurrentModel() != BodyModel.EMPTY)
+			this.tempCenter = tempCenter;
+	}
+
+	// -------------------------------------------------------------------------
+
+	public Vector2[] getTempShape() {
+		return tempShape.toArray(new Vector2[tempShape.size()]);
+	}
+
+	public boolean isTempShapeClosed() {
+		if (tempShape.isEmpty() || tempShape.size() < 3)
+			return false;
+		return tempShape.get(tempShape.size()-1) == tempShape.get(0);
+	}
 
 	public void addTempShapePoint(Vector2 p) {
-		BodyModel bm = getCurrentBodyModel();
+		BodyModel bm = getCurrentModel();
 		if (bm != BodyModel.EMPTY) {
 			tempShape.add(p);
 			if (isTempShapeClosed())
-				updateCurrentBodyModel();
+				saveCurrentModel();
 		}
 	}
+
+	// -------------------------------------------------------------------------
+
+	public Vector2[][] getTempPolygons() {
+		return tempPolygons.toArray(new Vector2[tempPolygons.size()][]);
+	}
+
+	public void clearTempPolygons() {
+		tempPolygons.clear();
+	}
+
+	private void computeTempPolygons() {
+		if (tempShape.size() < 3)
+			return;
+
+		Vector2[] shape = new Vector2[tempShape.size()-1];
+		for (int i=0; i<shape.length; i++)
+			shape[i] = tempShape.get(tempShape.size()-2 - i);
+
+		tempPolygons.clear();
+		tempPolygons.addAll(Arrays.asList(Clipper.polygonize(shape)));
+	}
+
+	// -------------------------------------------------------------------------
 
 	public boolean removeSelectedPoints() {
 		if (tempShape.size() - selectedPoints.size() < 3)
@@ -101,7 +256,7 @@ public class AppContext {
 		tempShape.remove(tempShape.size()-1);
 		tempShape.removeAll(selectedPoints);
 		tempShape.add(tempShape.get(0));
-		updateCurrentBodyModel();
+		saveCurrentModel();
 		return true;
 	}
 
@@ -124,76 +279,6 @@ public class AppContext {
 		}
 
 		selectedPoints.addAll(toAdd);
-		updateCurrentBodyModel();
-	}
-
-	public void loadTempShapePoints() {
-		Vector2 center = getCurrentBodyModel().getCenter();
-		Vector2[] ps = getCurrentBodyModel().getPoints();
-
-		tempCenter = center;
-		tempShape.clear();
-
-		if (ps != null) {
-			tempShape.addAll(Arrays.asList(ps));
-			tempShape.add(ps[0]);
-		}
-	}
-
-	public void clearTempObjects() {
-		tempShape.clear();
-		tempCenter = null;
-	}
-
-	public void computeCurrentObjectPolys() {
-		getCurrentBodyModel().computePolygons();
-	}
-
-	public Vector2[] getTempShape() {
-		return tempShape.toArray(new Vector2[tempShape.size()]);
-	}
-
-	public boolean isTempShapeClosed() {
-		if (tempShape.isEmpty() || tempShape.size() < 3)
-			return false;
-		return tempShape.get(tempShape.size()-1) == tempShape.get(0);
-	}
-
-	public void setTempShapeNextPoint(Vector2 p) {
-		tempShapeNextPoint.set(p);
-	}
-
-	public Vector2 getTempShapeNextPoint() {
-		return tempShapeNextPoint;
-	}
-
-	public void setTempShapeNearestPoint(Vector2 p) {
-		this.tempShapeNearestPoint = p;
-	}
-
-	public Vector2 getTempShapeNearestPoint() {
-		return tempShapeNearestPoint;
-	}
-
-	public void setTempCenter(Vector2 tempCenter) {
-		if (getCurrentBodyModel() != BodyModel.EMPTY)
-			this.tempCenter = tempCenter;
-	}
-
-	public Vector2 getTempCenter() {
-		return tempCenter;
-	}
-
-	private void updateCurrentBodyModel() {
-		BodyModel bm = getCurrentBodyModel();
-		bm.clearAll();
-		bm.setCenter(tempCenter);
-
-		Vector2[] ps = new Vector2[tempShape.size()-1];
-		for (int i=0; i<ps.length; i++)
-			ps[i] = tempShape.get(i);
-
-		bm.setPoints(ps);
-		bm.computePolygons();
+		saveCurrentModel();
 	}
 }

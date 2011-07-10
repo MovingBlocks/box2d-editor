@@ -33,7 +33,7 @@ public class Main {
 	private static void parseArgs(String[] args) {
 		for (int i=0; i<args.length; i++) {
 			if (args[i].startsWith("--rootdir=")) {
-				AppContext.instance().assetsRootDir = new File(args[i].substring("--rootdir=".length()));
+				AppContext.instance().rootDir = new File(args[i].substring("--rootdir=".length()));
 
 			} else if (args[i].startsWith("--outputfile=")) {
 				AppContext.instance().outputFile = new File(args[i].substring("--outputfile=".length()));

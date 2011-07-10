@@ -1,10 +1,15 @@
 package aurelienribon.box2deditor;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.math.Vector2;
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -15,6 +20,8 @@ import javax.swing.filechooser.FileFilter;
 public class MainWindow extends javax.swing.JFrame {
 	private final DefaultListModel assetsListModel;
 
+	// -------------------------------------------------------------------------
+
     public MainWindow(final LwjglCanvas glCanvas) {
         initComponents();
 		renderPanel.add(glCanvas.getCanvas(), BorderLayout.CENTER);
@@ -22,30 +29,43 @@ public class MainWindow extends javax.swing.JFrame {
 		assetsListModel = new DefaultListModel();
 		assets_assetList.setModel(assetsListModel);
 
-		File rootDir = AppContext.instance().assetsRootDir;
-		if (rootDir != null && rootDir.isDirectory())
-			init_assetsRootDirLbl.setText(rootDir.getPath());
-		else if (rootDir != null)
-			JOptionPane.showMessageDialog(this,
-				"The provided path for '--rootdir' option either "
-				+ "does not exist or is not a valid directory");
+		addComponentListener(componentListener);
+    }
 
-		File outputFile = AppContext.instance().outputFile;
-		if (outputFile != null) {
-			init_outputFileLbl.setText(outputFile.getPath());
-			if (outputFile.isFile()) {
-				try {
-					IO.importFile();
-					for (String name : AppContext.instance().getBodyModelsMap().keySet()) {
-						assetsListModel.addElement(name);
+	// -------------------------------------------------------------------------
+
+	private final ComponentListener componentListener = new ComponentAdapter() {
+		@Override
+		public void componentShown(ComponentEvent e) {
+			File rootDir = AppContext.instance().rootDir;
+			if (rootDir != null && rootDir.isDirectory()) {
+				init_assetsRootDirLbl.setText(rootDir.getPath());
+			} else if (rootDir != null) {
+				JOptionPane.showMessageDialog(e.getComponent(),
+					"The provided path for '--rootdir' option either "
+					+ "does not exist or is not a valid directory");
+			}
+
+			File outputFile = AppContext.instance().outputFile;
+			if (outputFile != null) {
+				init_outputFileLbl.setText(outputFile.getPath());
+				if (outputFile.isFile()) {
+					try {
+						AppContext.instance().importFromFile();
+						for (String name : AppContext.instance().getNames())
+							addAsset(name);
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(e.getComponent(),
+							"Something went wrong while reading the output "
+							+ "file, sorry :/"
+							+ "\n(nah, don't expect more details)");
 					}
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(this, "Something went wrong while reading the output file, sorry :/"
-						+ "\n(nah, don't expect more details)");
 				}
 			}
 		}
-    }
+	};
+
+	// -------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -69,6 +89,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         export_saveBtn = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
         eastPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -102,7 +123,6 @@ public class MainWindow extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        assets_assetList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         assets_assetList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 assets_assetListValueChanged(evt);
@@ -111,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
         assets_assetListScrollPane.setViewportView(assets_assetList);
 
         assets_removeAssetBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_delete.png"))); // NOI18N
-        assets_removeAssetBtn.setText("Remove selected asset");
+        assets_removeAssetBtn.setText("Remove selected asset(s)");
         assets_removeAssetBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         assets_removeAssetBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
         assets_removeAssetBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -139,7 +159,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(assets_removeAssetBtn)
                 .addContainerGap())
@@ -261,6 +281,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jCheckBox1.setText("Remove unknown \"[?]\" files, if any");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -270,6 +292,10 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(export_saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBox1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,6 +303,8 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(export_saveBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -427,7 +455,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -472,20 +500,9 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void init_addAssetsByFilesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByFilesBtnActionPerformed
 		String[] assets = promptAssetsByFiles();
-		File assetsRootDir = AppContext.instance().assetsRootDir;
-
-		if (assets != null) {
-			for (String asset : assets) {
-				if (assetsRootDir != null) {
-					String assetRootPath = asset.substring(0, Math.min(assetsRootDir.getPath().length(), asset.length()));
-					String assetTruncatedPath = asset.substring(assetRootPath.length());
-					if (isSameString(assetRootPath, assetsRootDir.getPath()) && !assetsListModel.contains(assetTruncatedPath))
-						addAssetTolist(assetTruncatedPath);
-				} else if (!assetsListModel.contains(asset)) {
-					addAssetTolist(asset);
-				}
-			}
-		}
+		if (assets != null)
+			for (String asset : assets)
+				addAsset(asset);
 	}//GEN-LAST:event_init_addAssetsByFilesBtnActionPerformed
 
 	private void init_addAssetsByPackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByPackBtnActionPerformed
@@ -508,8 +525,14 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 
 		try {
-			IO.exportFile();
+			String rootDir = AppContext.instance().rootDir != null
+				? AppContext.instance().rootDir.getPath()
+				: "";
+			
+			AppContext.instance().exportToFile();
+			updateAssets(rootDir, rootDir);
 			JOptionPane.showMessageDialog(this, "Save successfully done !");
+
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Something went wrong while writing the file, sorry :/"
 				+ "\n(nah, don't expect more details)");
@@ -518,55 +541,50 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void assets_assetListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_assets_assetListValueChanged
 		AppContext.instance().clearTempObjects();
+		App.instance().clearAsset();
 
-		if (assets_assetList.isSelectionEmpty()) {
-			App.instance().clearAsset();
+		if (assets_assetList.isSelectionEmpty())
 			return;
-		}
 
-		File assetsRootDir = AppContext.instance().assetsRootDir;
-		String assetName = (String) assets_assetList.getSelectedValue();
-		AppContext.instance().setCurrentAssetPath(assetName);
-		AppContext.instance().loadTempShapePoints();
-		
-		String assetPath = assetsRootDir != null
-			? assetsRootDir.getPath() + assetName
-			: assetName;
-		App.instance().setAssetByFile(assetPath);
+		int idx = assets_assetList.getSelectedIndex();
+		if (isAssetValid(idx)) {
+			String name = (String) assetsListModel.get(idx);
+			String rootDir = AppContext.instance().rootDir != null
+				? AppContext.instance().rootDir.getPath()
+				: "";
+
+			Vector2 size = App.instance().setAssetByFile(rootDir + name);
+			AppContext.instance().setCurrentSize(size);
+			AppContext.instance().setCurrentName(name);
+			AppContext.instance().loadCurrentModel();
+		}
 	}//GEN-LAST:event_assets_assetListValueChanged
 
 	private void init_setAssetsRootBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setAssetsRootBtnActionPerformed
-		File dir = promptAssetsRootDir();
-		File assetsRootDir = AppContext.instance().assetsRootDir;
+		String oldRoot = AppContext.instance().rootDir != null
+			? AppContext.instance().rootDir.getPath()
+			: "";
 		
-		if (dir != null) {
-			for (int i=assetsListModel.size()-1; i>=0; i--) {
-				String asset = assetsRootDir != null
-					? assetsRootDir.getPath() + (String) assetsListModel.get(i)
-					: (String) assetsListModel.get(i);
-				String assetRootPath = asset.substring(0, Math.min(dir.getPath().length(), asset.length()));
-				if (isSameString(assetRootPath, dir.getPath())) {
-					changeAssetName(i, asset.substring(assetRootPath.length()));
-				} else {
-					removeAssetFromlist(i);
-				}
-			}
-
-			AppContext.instance().assetsRootDir = dir;
-			init_assetsRootDirLbl.setText(dir.getPath());
+		File newRootDir = promptAssetsRootDir();
+		if (newRootDir != null) {
+			AppContext.instance().rootDir = newRootDir;
+			init_assetsRootDirLbl.setText(newRootDir.getPath());
+			updateAssets(oldRoot, newRootDir.getPath());
 		}
 	}//GEN-LAST:event_init_setAssetsRootBtnActionPerformed
 
 	private void assets_removeAssetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assets_removeAssetBtnActionPerformed
 		if (!assets_assetList.isSelectionEmpty()) {
-			int idx = assets_assetList.getSelectedIndex();
-			removeAssetFromlist(idx);
+			int[] idxs = assets_assetList.getSelectedIndices();
+			Arrays.sort(idxs);
+			for (int i=idxs.length-1; i>=0; i--)
+				removeAsset(idxs[i]);
 		}
 	}//GEN-LAST:event_assets_removeAssetBtnActionPerformed
 
 	private void shape_clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_clearBtnActionPerformed
 		AppContext.instance().clearTempObjects();
-		AppContext.instance().getCurrentBodyModel().clearAll();
+		AppContext.instance().saveCurrentModel();
 	}//GEN-LAST:event_shape_clearBtnActionPerformed
 
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
@@ -596,14 +614,33 @@ public class MainWindow extends javax.swing.JFrame {
 				+ "Use the 'clear points' button instead.");
 	}//GEN-LAST:event_shape_subBtnActionPerformed
 
-	private void addAssetTolist(String asset) {
-		assetsListModel.addElement(asset);
-		AppContext.instance().addBodyModel(asset);
+	// -------------------------------------------------------------------------
+
+	private static final String UNKNOWN_PREFIX = "[?] ";
+
+	private void addAsset(String name) {
+		String rootDir = AppContext.instance().rootDir != null
+			? AppContext.instance().rootDir.getPath()
+			: "";
+
+		if (name.startsWith(rootDir))
+			name = name.substring(rootDir.length());
+
+		File file = new File(rootDir + name);
+		if (file.exists()) {
+			if (!assetsListModel.contains(name))
+				assetsListModel.addElement(name);
+			AppContext.instance().addModel(name);
+		} else {
+			if (!assetsListModel.contains(UNKNOWN_PREFIX + name))
+				assetsListModel.addElement(UNKNOWN_PREFIX + name);
+			AppContext.instance().addModel(name);
+		}
 	}
 
-	private void removeAssetFromlist(int idx) {
+	private void removeAsset(int idx) {
 		String oldName = (String) assetsListModel.get(idx);
-		AppContext.instance().removeBodyModel(oldName);
+		AppContext.instance().removeModel(oldName);
 
 		assetsListModel.remove(idx);
 		if (assetsListModel.size() > idx)
@@ -612,11 +649,54 @@ public class MainWindow extends javax.swing.JFrame {
 			assets_assetList.setSelectedIndex(idx-1);
 	}
 
-	private void changeAssetName(int idx, String newName) {
-		String oldName = (String) assetsListModel.get(idx);
-		AppContext.instance().changeBodyModelPath(oldName, newName);
-		assetsListModel.set(idx, newName);
+	private boolean isAssetValid(int idx) {
+		String name = (String) assetsListModel.get(idx);
+		
+		if (name.startsWith(UNKNOWN_PREFIX))
+			return false;
+		
+		String rootDir = AppContext.instance().rootDir != null
+			? AppContext.instance().rootDir.getPath()
+			: "";
+
+		File file = new File(rootDir + name);
+		if (!file.exists()) {
+			assetsListModel.set(idx, UNKNOWN_PREFIX + name);
+			return false;
+		}
+
+		return true;
 	}
+
+	private void updateAssets(String oldRoot, String newRoot) {
+		for (int i=assetsListModel.getSize()-1; i>=0; i--) {
+			String oldName = (String) assetsListModel.get(i);
+
+			if (oldName.startsWith(UNKNOWN_PREFIX)) {
+				oldName = oldName.substring(UNKNOWN_PREFIX.length());
+				File f = new File(newRoot + oldName);
+				if (f.exists())
+					assetsListModel.set(i, oldName);
+			} else {
+				String newName = oldRoot + oldName;
+				if (newName.startsWith(newRoot)) {
+					newName = newName.substring(newRoot.length());
+					assetsListModel.set(i, newName);
+					AppContext.instance().changeModelName(oldName, newName);
+				} else {
+					assetsListModel.set(i, UNKNOWN_PREFIX + oldName);
+				}
+			}
+		}
+
+		int idx = assets_assetList.getSelectedIndex();
+		if (idx > -1) {
+			assets_assetList.clearSelection();
+			assets_assetList.setSelectedIndex(idx);
+		}
+	}
+
+	// -------------------------------------------------------------------------
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList assets_assetList;
@@ -630,6 +710,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField init_outputFileLbl;
     private javax.swing.JButton init_setAssetsRootBtn;
     private javax.swing.JButton init_setOutputFileBtn;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -677,7 +758,7 @@ public class MainWindow extends javax.swing.JFrame {
 	};
 
     private File promptAssetsRootDir() {
-		File assetsRootDir = AppContext.instance().assetsRootDir;
+		File assetsRootDir = AppContext.instance().rootDir;
 		File startupDir = assetsRootDir != null && assetsRootDir.exists()
 			? assetsRootDir
 			: new File(".");
@@ -692,7 +773,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 	
     private String[] promptAssetsByFiles() {
-		File assetsRootDir = AppContext.instance().assetsRootDir;
+		File assetsRootDir = AppContext.instance().rootDir;
 		File startupDir = assetsRootDir != null && assetsRootDir.exists()
 			? assetsRootDir
 			: new File(".");
@@ -707,7 +788,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 			Collections.addAll(remainingFiles, chooser.getSelectedFiles());
 			int deepness = 0;
-			int maxDeepness = 5;
+			int maxDeepness = 8;
 
 			while (!remainingFiles.isEmpty()) {
 				File currentFile = remainingFiles.remove(0);

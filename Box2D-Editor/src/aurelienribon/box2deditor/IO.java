@@ -4,20 +4,25 @@ import com.badlogic.gdx.math.Vector2;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 
 public class IO {
-    public static void exportFile() throws IOException {
+	/**
+	 * Exports a list of BodyModels to a file.
+	 * @param outputFile The file to write. Does not need to exist.
+	 * @param map A map of BodyModels associated to names.
+	 * @throws IOException
+	 */
+    public static void exportToFile(File outputFile, Map<String, BodyModel> map) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		Map<String, BodyModel> bodyModelMap = AppContext.instance().getBodyModelsMap();
 
-		for (String name : bodyModelMap.keySet()) {
-			BodyModel bm = bodyModelMap.get(name);
+		for (String name : map.keySet()) {
+			BodyModel bm = map.get(name);
 
 			sb.append("name:     ").append(name).append("\n");
 
@@ -43,15 +48,18 @@ public class IO {
 			sb.append("\n");
 		}
 
-		File outputFile = AppContext.instance().outputFile;
 		FileUtils.writeStringToFile(outputFile, sb.toString());
 	}
 
-	public static void importFile() throws IOException {
-		File outputFile = AppContext.instance().outputFile;
-		String content = FileUtils.readFileToString(outputFile);
-
-		Map<String, BodyModel> bodyModelMap = new HashMap<String, BodyModel>();
+	/**
+	 * Imports a list of BodyModels from a file.
+	 * @param inputFile The file to read.
+	 * @return A map of BodyModels associated to names.
+	 * @throws IOException
+	 */
+	public static Map<String, BodyModel> importFromFile(File inputFile) throws IOException {
+		String content = FileUtils.readFileToString(inputFile);
+		Map<String, BodyModel> map = new TreeMap<String, BodyModel>();
 
 		Pattern p = Pattern.compile(
 			"^ name: [\\ ]* (.+) \\s*"
@@ -73,25 +81,13 @@ public class IO {
 				polygons.add(parseVecs(mm.group(1)));
 
 			BodyModel bm = new BodyModel();
-			bm.setCenter(center);
-			bm.setPoints(points);
-			bm.setPolygons(polygons.toArray(new Vector2[polygons.size()][]));
-			bodyModelMap.put(name, bm);
-
-			AppContext.instance().loadBodyModels(bodyModelMap);
-
-			/*System.out.println("name: " + name);
-			System.out.println("center: " + center);
-			System.out.print("points: ");
-			for (Vector2 v : points)
-				System.out.print(v);
-			for (Vector2[] poly : polygons) {
-				System.out.print("\npolygon: ");
-				for (Vector2 v : poly)
-					System.out.print(v);
-			}
-			System.out.println("\n");*/
+			bm.set(center, 
+				points,
+				polygons.toArray(new Vector2[polygons.size()][]));
+			map.put(name, bm);
 		}
+		
+		return map;
 	}
 
 	private static Vector2 parseVec(String str) {
