@@ -1,5 +1,6 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;

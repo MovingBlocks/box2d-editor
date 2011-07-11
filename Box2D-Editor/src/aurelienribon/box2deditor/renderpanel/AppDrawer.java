@@ -1,5 +1,6 @@
-package aurelienribon.box2deditor;
+package aurelienribon.box2deditor.renderpanel;
 
+import aurelienribon.box2deditor.AppContext;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -14,6 +15,7 @@ public class AppDrawer {
 	private static final Color SHAPE_POLY_COLOR = new Color(0.2f, 0.8f, 0.2f, 1);
 	private static final Color SHAPE_CENTER_COLOR = new Color(0.8f, 0.2f, 0.2f, 1);
 	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
+	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
@@ -44,6 +46,7 @@ public class AppDrawer {
 		}
 
 		drawMousePath();
+		drawBallThrowPath();
 	}
 
 	private void drawShape(Vector2[] shape) {
@@ -104,6 +107,17 @@ public class AppDrawer {
 			drawLine(mp.get(i), mp.get(i-1), MOUSEPATH_COLOR, 1);
 		if (mp.size() > 1)
 			drawLine(mp.get(0), mp.get(mp.size()-1), MOUSEPATH_COLOR, 1);
+	}
+
+	private void drawBallThrowPath() {
+		Vector2 v1 = AppContext.instance().ballThrowFirstPoint;
+		Vector2 v2 = AppContext.instance().ballThrowLastPoint;
+		float w = 10 * camera.zoom;
+
+		if (v1 != null && v2 != null) {
+			drawLine(v1, v2, BALLTHROWPATH_COLOR, 3);
+			drawRect(v2, w, w, BALLTHROWPATH_COLOR, 3);
+		}
 	}
 
 	public void drawLine(Vector2 p1, Vector2 p2, Color c, float lineWidth) {

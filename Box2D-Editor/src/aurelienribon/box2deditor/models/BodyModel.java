@@ -1,4 +1,4 @@
-package aurelienribon.box2deditor;
+package aurelienribon.box2deditor.models;
 
 import com.badlogic.gdx.math.Vector2;
 

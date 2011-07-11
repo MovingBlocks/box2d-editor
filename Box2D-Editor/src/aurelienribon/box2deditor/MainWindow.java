@@ -1,5 +1,6 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.BorderLayout;
@@ -49,18 +50,7 @@ public class MainWindow extends javax.swing.JFrame {
 			File outputFile = AppContext.instance().outputFile;
 			if (outputFile != null) {
 				init_outputFileLbl.setText(outputFile.getPath());
-				if (outputFile.isFile()) {
-					try {
-						AppContext.instance().importFromFile();
-						for (String name : AppContext.instance().getNames())
-							addAsset(name);
-					} catch (IOException ex) {
-						JOptionPane.showMessageDialog(e.getComponent(),
-							"Something went wrong while reading the output "
-							+ "file, sorry :/"
-							+ "\n(nah, don't expect more details)");
-					}
-				}
+				loadAssets();
 			}
 		}
 	};
@@ -81,15 +71,14 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         init_setAssetsRootBtn = new javax.swing.JButton();
         init_addAssetsByFilesBtn = new javax.swing.JButton();
-        init_addAssetsByPackBtn = new javax.swing.JButton();
         init_setOutputFileBtn = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         init_assetsRootDirLbl = new javax.swing.JTextField();
         init_outputFileLbl = new javax.swing.JTextField();
+        jSeparator3 = new javax.swing.JSeparator();
         jPanel6 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         export_saveBtn = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
         eastPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -159,7 +148,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(assets_removeAssetBtn)
                 .addContainerGap())
@@ -175,24 +164,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        init_addAssetsByFilesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_import.png"))); // NOI18N
+        init_addAssetsByFilesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
         init_addAssetsByFilesBtn.setText("Add assets by image files or dirs");
         init_addAssetsByFilesBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         init_addAssetsByFilesBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
         init_addAssetsByFilesBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 init_addAssetsByFilesBtnActionPerformed(evt);
-            }
-        });
-
-        init_addAssetsByPackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_import.png"))); // NOI18N
-        init_addAssetsByPackBtn.setText("Add assets by image packs");
-        init_addAssetsByPackBtn.setEnabled(false);
-        init_addAssetsByPackBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        init_addAssetsByPackBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
-        init_addAssetsByPackBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                init_addAssetsByPackBtnActionPerformed(evt);
             }
         });
 
@@ -219,6 +197,8 @@ public class MainWindow extends javax.swing.JFrame {
         init_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         init_outputFileLbl.setText("<no file specified>");
 
+        jSeparator3.setForeground(new java.awt.Color(102, 102, 102));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -240,11 +220,10 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(init_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(init_addAssetsByFilesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(init_addAssetsByPackBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+                .addComponent(init_addAssetsByFilesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -259,10 +238,10 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(init_setOutputFileBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(init_outputFileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(init_addAssetsByFilesBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(init_addAssetsByPackBtn)
+                .addComponent(init_addAssetsByFilesBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -281,8 +260,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jCheckBox1.setText("Remove unknown \"[?]\" files, if any");
-
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -292,10 +269,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(export_saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,8 +276,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(export_saveBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -505,15 +476,19 @@ public class MainWindow extends javax.swing.JFrame {
 				addAsset(asset);
 	}//GEN-LAST:event_init_addAssetsByFilesBtnActionPerformed
 
-	private void init_addAssetsByPackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByPackBtnActionPerformed
-		// TODO add your handling code here:
-	}//GEN-LAST:event_init_addAssetsByPackBtnActionPerformed
-
 	private void init_setOutputFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setOutputFileBtnActionPerformed
 		File file = promptOutputFile();
 		if (file != null) {
 			AppContext.instance().outputFile = file;
 			init_outputFileLbl.setText(file.getPath());
+			if (file.exists()) {
+				int answer = JOptionPane.showConfirmDialog(this, 
+					"Selected file already exists. Do you want to load its content ?"
+					+ "\nLoaded content will replace the current one.",
+					"", JOptionPane.YES_NO_OPTION);
+				if (answer == JOptionPane.YES_OPTION)
+					loadAssets();
+			}
 		}
 	}//GEN-LAST:event_init_setOutputFileBtnActionPerformed
 
@@ -532,6 +507,10 @@ public class MainWindow extends javax.swing.JFrame {
 			AppContext.instance().exportToFile();
 			updateAssets(rootDir, rootDir);
 			JOptionPane.showMessageDialog(this, "Save successfully done !");
+
+			int idx = assets_assetList.getSelectedIndex();
+			loadAssets();
+			assets_assetList.setSelectedIndex(idx);
 
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Something went wrong while writing the file, sorry :/"
@@ -651,7 +630,6 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private boolean isAssetValid(int idx) {
 		String name = (String) assetsListModel.get(idx);
-		
 		if (name.startsWith(UNKNOWN_PREFIX))
 			return false;
 		
@@ -696,6 +674,25 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 	}
 
+	private void loadAssets() {
+		File outputFile = AppContext.instance().outputFile;
+		if (outputFile == null || !outputFile.exists())
+			return;
+
+		try {
+			AppContext.instance().importFromFile();
+			assetsListModel.clear();
+			for (String name : AppContext.instance().getNames())
+				addAsset(name);
+
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(this,
+				"Something went wrong while reading the output "
+				+ "file, sorry :/"
+				+ "\n(nah, don't expect more details)");
+		}
+	}
+
 	// -------------------------------------------------------------------------
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -705,12 +702,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel eastPanel;
     private javax.swing.JButton export_saveBtn;
     private javax.swing.JButton init_addAssetsByFilesBtn;
-    private javax.swing.JButton init_addAssetsByPackBtn;
     private javax.swing.JTextField init_assetsRootDirLbl;
     private javax.swing.JTextField init_outputFileLbl;
     private javax.swing.JButton init_setAssetsRootBtn;
     private javax.swing.JButton init_setOutputFileBtn;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -724,6 +719,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JButton shape_addbtn;
     private javax.swing.JButton shape_clearBtn;
@@ -807,24 +803,31 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private File promptOutputFile() {
-		JFileChooser chooser = new JFileChooser(".");
-		chooser.setFileFilter(new FileFilter() {
+		File outputFile = AppContext.instance().outputFile;
+		File startupFile = outputFile != null && outputFile.exists()
+			? outputFile
+			: new File(".");
+
+		JFileChooser chooser = new JFileChooser(startupFile);
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setMultiSelectionEnabled(false);
+		/*chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {
 				if (f.isDirectory())
 					return true;
-				return isSameString(getExtension(f), "txt");
+				return isSameString(getExtension(f), "b2d");
 			}
 
 			@Override public String getDescription() {
-				return "Shape file (.txt)";
+				return "Shape file (.b2d)";
 			}
-		});
+		});*/
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
-			int idx = selectedFile.getName().lastIndexOf(".");
-			if (idx < 0 || !selectedFile.getName().substring(idx).equals(".txt"))
-				selectedFile = new File(selectedFile.getPath() + ".txt");
+			/*int idx = selectedFile.getName().lastIndexOf(".");
+			if (idx < 0 || !selectedFile.getName().substring(idx).equals(".b2d"))
+				selectedFile = new File(selectedFile.getPath() + ".b2d");*/
 			return selectedFile;
 		}
 

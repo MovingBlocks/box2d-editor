@@ -1,6 +1,9 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.io.IO;
+import aurelienribon.box2deditor.models.BodyModel;
 import aurelienribon.box2deditor.earclipping.Clipper;
+import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.math.Vector2;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +20,7 @@ public class AppContext {
 	// -------------------------------------------------------------------------
 	// Parameters
 	// -------------------------------------------------------------------------
+
 	public File rootDir;
 	public File outputFile;
 
@@ -31,6 +35,13 @@ public class AppContext {
 
 	public final List<Vector2> mousePath = new ArrayList<Vector2>();
 	public final List<Vector2> selectedPoints = new ArrayList<Vector2>();
+
+	// -------------------------------------------------------------------------
+	// Ball throw objects
+	// -------------------------------------------------------------------------
+
+	public Vector2 ballThrowFirstPoint;
+	public Vector2 ballThrowLastPoint;
 
 	// -------------------------------------------------------------------------
 	// Body models
@@ -85,6 +96,7 @@ public class AppContext {
 	}
 
 	public void importFromFile() throws IOException {
+		modelMap.clear();
 		Map<String, BodyModel> map = IO.importFromFile(outputFile);
 		for (String str : map.keySet())
 			modelMap.put(str, map.get(str));
@@ -107,6 +119,7 @@ public class AppContext {
 		tempCenter = null;
 		tempShape.clear();
 		tempPolygons.clear();
+		App.instance().clearBody();
 	}
 
 	public void loadCurrentModel() {
@@ -130,6 +143,7 @@ public class AppContext {
 		if (polygons != null) {
 			polygons = invNormalize(polygons);
 			tempPolygons.addAll(Arrays.asList(polygons));
+			App.instance().setBody(polygons);
 		}
 	}
 
@@ -234,6 +248,7 @@ public class AppContext {
 
 	public void clearTempPolygons() {
 		tempPolygons.clear();
+		App.instance().clearBody();
 	}
 
 	private void computeTempPolygons() {
@@ -245,7 +260,12 @@ public class AppContext {
 			shape[i] = tempShape.get(tempShape.size()-2 - i);
 
 		tempPolygons.clear();
-		tempPolygons.addAll(Arrays.asList(Clipper.polygonize(shape)));
+		
+		Vector2[][] polygons = Clipper.polygonize(shape);
+		if (polygons != null) {
+			tempPolygons.addAll(Arrays.asList(polygons));
+			App.instance().setBody(polygons);
+		}
 	}
 
 	// -------------------------------------------------------------------------
