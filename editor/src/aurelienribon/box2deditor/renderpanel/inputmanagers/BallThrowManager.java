@@ -28,7 +28,7 @@ public class BallThrowManager {
 			Vector2 delta = new Vector2(AppContext.instance().ballThrowLastPoint)
 				.sub(AppContext.instance().ballThrowFirstPoint)
 				.mul(2);
-			App.instance().fireBall(AppContext.instance().ballThrowLastPoint, delta);
+			App.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
 		}
 		AppContext.instance().ballThrowFirstPoint = null;
 		AppContext.instance().ballThrowLastPoint = null;
