@@ -196,8 +196,13 @@ public class App implements ApplicationListener {
 	public void setBody(Vector2[][] polygons) {
 		ballModels.clear();
 		ballSprites.clear();
-		if (world != null)
+		if (world != null) {
 			world.dispose();
+			world = null;
+		}
+
+		if (polygons == null)
+			return;
 
 		world = new World(new Vector2(0, 0), true);
 		Body b = world.createBody(new BodyDef());

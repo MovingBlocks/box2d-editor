@@ -140,7 +140,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel1" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="assets_assetListScrollPane" pref="267" max="32767" attributes="0"/>
+                      <Component id="assets_assetListScrollPane" pref="324" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="assets_removeAssetBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -209,30 +209,14 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel9" alignment="1" pref="203" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Component id="jSeparator3" alignment="1" pref="203" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_setAssetsRootBtn" pref="183" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_assetsRootDirLbl" pref="183" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_setOutputFileBtn" pref="183" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_outputFileLbl" pref="183" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jSeparator3" alignment="0" pref="203" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_addAssetsByFilesBtn" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="init_addAssetsByFilesBtn" alignment="1" pref="183" max="32767" attributes="0"/>
+                          <Component id="init_setOutputFileBtn" alignment="1" pref="183" max="32767" attributes="0"/>
+                          <Component id="init_outputFileLbl" alignment="1" pref="183" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -242,10 +226,6 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel9" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="init_setAssetsRootBtn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="init_assetsRootDirLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="init_setOutputFileBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="init_outputFileLbl" min="-2" max="-2" attributes="0"/>
@@ -259,21 +239,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="init_setAssetsRootBtn">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_import.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Set assets root dir"/>
-                <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                  <Insets value="[2, 3, 2, 2]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="init_setAssetsRootBtnActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="init_addAssetsByFilesBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -292,9 +257,9 @@
             <Component class="javax.swing.JButton" name="init_setOutputFileBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_import.png"/>
+                  <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_gear.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Set output file"/>
+                <Property name="text" type="java.lang.String" value="Set / load output file"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[2, 3, 2, 2]"/>
@@ -314,13 +279,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="    Configuration"/>
                 <Property name="opaque" type="boolean" value="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="init_assetsRootDirLbl">
-              <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="&lt;no dir specified&gt;"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="init_outputFileLbl">

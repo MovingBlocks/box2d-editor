@@ -21,13 +21,32 @@ public class AppContext {
 	// Parameters
 	// -------------------------------------------------------------------------
 
-	public File rootDir;
 	public File outputFile;
 
 	public boolean isAssetDrawn = true;
 	public boolean isAssetDrawnWithOpacity50 = false;
 	public boolean isShapeDrawn = true;
 	public boolean arePolyDrawn = true;
+
+	public String getPathRelativeToOutputFile(String filepath) {
+		assert outputFile != null;
+		try {
+			String path = ResourceUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
+			return path;
+		} catch (ResourceUtils.NoCommonPathFoundException ex) {
+			return null;
+		}
+	}
+
+	public String getRootDirectory() {
+		assert outputFile != null;
+		return outputFile.getParent();
+	}
+
+	public String getFullPath(String name) {
+		assert outputFile != null;
+		return outputFile.getParent() + File.separator + name;
+	}
 
 	// -------------------------------------------------------------------------
 	// Mouse path + selected points

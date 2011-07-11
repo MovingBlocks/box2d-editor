@@ -1,3 +1,4 @@
 syntax: glob
 editor/prj_netbeans/build/classes/*
 editor/prj_netbeans/libs/*
+editor/prj_netbeans/dist/*

@@ -18,12 +18,11 @@ public class Main {
 
 				MainWindow mw = new MainWindow(glCanvas);
 				mw.setTitle("Box2D Editor");
-				mw.setSize(1000, 700);
 
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
-					Math.min(1000, screenSize.width - 100),
-					Math.min(700, screenSize.height - 100)
+					Math.min(1200, screenSize.width - 100),
+					Math.min(800, screenSize.height - 100)
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
@@ -33,12 +32,8 @@ public class Main {
 
 	private static void parseArgs(String[] args) {
 		for (int i=0; i<args.length; i++) {
-			if (args[i].startsWith("--rootdir=")) {
-				AppContext.instance().rootDir = new File(args[i].substring("--rootdir=".length()));
-
-			} else if (args[i].startsWith("--outputfile=")) {
+			if (args[i].startsWith("--outputfile=")) {
 				AppContext.instance().outputFile = new File(args[i].substring("--outputfile=".length()));
-
 			}
 		}
 	}
