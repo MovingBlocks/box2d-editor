@@ -2,3 +2,8 @@ syntax: glob
 editor/prj_netbeans/build/classes/*
 editor/prj_netbeans/libs/*
 editor/prj_netbeans/dist/*
+fixtureatlas-test/prj_netbeans/data/*
+fixtureatlas-test/prj_netbeans/libs/*
+fixtureatlas-test/prj_netbeans/build/classes/*
+fixtureatlas/prj_netbeans/build/classes/*
+fixtureatlas/prj_netbeans/libs/*

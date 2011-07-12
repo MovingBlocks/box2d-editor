@@ -99,17 +99,17 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         renderPanel.add(jPanel1, java.awt.BorderLayout.SOUTH);
@@ -320,7 +320,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel8.setText("<html>\n1 &bull; Set the asset root directory<br/>\n2 &bull; Add some asset to the list<br/>\n3 &bull; Select an asset and define its Box2D body by right clicking on the asset area:<br/><br/>\n\nFirst clic defines the gravity center, other clics define the body hull.<br/><br/>\n\nYou have to close the shape for the result to be saved.<br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
+        jLabel8.setText("<html>\n1 &bull; Set the output file<br/>\n2 &bull; Add some assets to the list<br/>\n3 &bull; Select an asset and define its collision body by clicking on the asset area.<br/><br/>\n\n<i>Note: You *have* to close the shape by clicking on the first point for the result to be saved.</i><br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
 
         shape_drawShapeChk.setSelected(true);
         shape_drawShapeChk.setText("Draw shape");
@@ -411,7 +411,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -455,8 +455,10 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void init_addAssetsByFilesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByFilesBtnActionPerformed
-		if (AppContext.instance().outputFile == null)
+		if (AppContext.instance().outputFile == null) {
+			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
+		}
 		
 		String[] assets = promptAssetsByFiles();
 		if (assets != null)
@@ -493,6 +495,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void assets_assetListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_assets_assetListValueChanged
 		AppContext.instance().clearTempObjects();
+		AppContext.instance().setCurrentName(null);
 		App.instance().clearAsset();
 
 		if (assets_assetList.isSelectionEmpty())
@@ -553,7 +556,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	// -------------------------------------------------------------------------
 
-	private static final String UNKNOWN_PREFIX = "[?] ";
+	private static final String UNKNOWN_PREFIX = "[NOT FOUND] ";
 
 	private void setOutputFile(File file, boolean force) {
 		File oldFile = AppContext.instance().outputFile;
@@ -772,7 +775,11 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private File promptOutputFile() {
 		File outputFile = AppContext.instance().outputFile;
-		JFileChooser chooser = new JFileChooser(outputFile != null ? outputFile.getParent() : ".");
+		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
+		if (!startupDir.isDirectory())
+			startupDir = new File(".");
+
+		JFileChooser chooser = new JFileChooser(startupDir);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
 

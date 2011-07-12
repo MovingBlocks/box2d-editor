@@ -25,11 +25,16 @@ public class ShapeManager {
 			.mul(app.getCamera().zoom)
 			.add(app.getCamera().position.x, app.getCamera().position.y);
 
-		Vector2 center = AppContext.instance().getTempCenter();
 		Vector2[] shape = AppContext.instance().getTempShape();
 		Vector2 nearestP = AppContext.instance().nearestPoint;
 
-		if (AppContext.instance().isTempShapeClosed()) {
+		if (!AppContext.instance().isTempShapeClosed()) {
+			if (shape.length >= 3 && shape[0] == nearestP) {
+				AppContext.instance().addTempShapePoint(shape[0]);
+			} else {
+				AppContext.instance().addTempShapePoint(p);
+			}
+		} else {
 			draggedPoint = nearestP;
 			List<Vector2> sp = AppContext.instance().selectedPoints;
 			if (draggedPoint == null) {
@@ -38,14 +43,6 @@ public class ShapeManager {
 			} else {
 				if (!sp.contains(draggedPoint))
 					sp.clear();
-			}
-		} else {
-			if (center == null) {
-				AppContext.instance().setTempCenter(p);
-			} else if (shape.length >= 3 && shape[0] == nearestP) {
-				AppContext.instance().addTempShapePoint(shape[0]);
-			} else {
-				AppContext.instance().addTempShapePoint(p);
 			}
 		}
 	}
@@ -109,9 +106,6 @@ public class ShapeManager {
 			for (Vector2 v : shape)
 				if (v.dst(p) < 10 * App.instance().getCamera().zoom)
 					AppContext.instance().nearestPoint = v;
-		Vector2 center = AppContext.instance().getTempCenter();
-		if (center != null && center.dst(p) < 10 * App.instance().getCamera().zoom)
-				AppContext.instance().nearestPoint = center;
 
 		// Next point assignment
 		if (!AppContext.instance().isTempShapeClosed())

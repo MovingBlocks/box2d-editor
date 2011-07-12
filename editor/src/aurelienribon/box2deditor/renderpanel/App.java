@@ -28,6 +28,8 @@ public class App implements ApplicationListener {
 	private static App instance = new App();
 	public static App instance() { if (instance == null) instance = new App(); return instance; }
 
+	private static final float PX_PER_METER = 50;
+
 	private AppDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
@@ -67,6 +69,8 @@ public class App implements ApplicationListener {
 		ballSprites = new ArrayList<Sprite>();
 		
 		drawer = new AppDrawer(camera);
+
+		Gdx.graphics.setVSync(true);
 		Gdx.input.setInputProcessor(new AppInputProcessor(this));
 	}
 
@@ -80,7 +84,7 @@ public class App implements ApplicationListener {
 			assetSprite.setColor(1, 1, 1, AppContext.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
 
 		if (world != null)
-			world.step(1f / Gdx.graphics.getFramesPerSecond(), 10, 10);
+			world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
@@ -96,7 +100,8 @@ public class App implements ApplicationListener {
 		sb.disableBlending();
 		sb.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
 		sb.enableBlending();
-		font.draw(sb, "Zoom: " + zoom + "%", 5, 25);
+		font.draw(sb, "Zoom: " + zoom + "%", 5, 45);
+		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
 		sb.end();
 
 		sb.setProjectionMatrix(camera.combined);
@@ -105,9 +110,9 @@ public class App implements ApplicationListener {
 			assetSprite.draw(sb);
 		for (int i=0; i<ballSprites.size(); i++) {
 			Sprite sp = ballSprites.get(i);
-			Vector2 pos = ballModels.get(i).getWorldCenter();
+			Vector2 pos = ballModels.get(i).getWorldCenter().mul(PX_PER_METER).sub(sp.getWidth()/2, sp.getHeight()/2);
 			float angleDeg = ballModels.get(i).getAngle() * MathUtils.radiansToDegrees;
-			sp.setPosition(pos.x - sp.getWidth()/2, pos.y - sp.getHeight()/2);
+			sp.setPosition(pos.x, pos.y);
 			sp.setRotation(angleDeg);
 			sp.draw(sb);
 		}
@@ -154,10 +159,7 @@ public class App implements ApplicationListener {
 		if (assetSprite != null) {
 			assetSprite = null;
 		}
-		if (world != null) {
-			world.dispose();
-			world = null;
-		}
+		clearBody();
 	}
 
 	public Vector2 setAssetByFile(String fullpath) {
@@ -175,7 +177,10 @@ public class App implements ApplicationListener {
 		assetTexture = new Texture(assetPixmap);
 		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		assetSprite = new Sprite(assetTexture);
-		assetSprite.setPosition(-origW/2, -origH/2);
+		assetSprite.setPosition(0, 0);
+
+		camera.position.set(origW/2, origH/2, 0);
+		camera.update();
 
 		return new Vector2(origW, origH);
 	}
@@ -208,35 +213,40 @@ public class App implements ApplicationListener {
 		Body b = world.createBody(new BodyDef());
 
 		for (Vector2[] polygon : polygons) {
+			Vector2[] resizedPolygon = new Vector2[polygon.length];
+			for (int i=0; i<polygon.length; i++)
+				resizedPolygon[i] = new Vector2(polygon[i]).mul(1f / PX_PER_METER);
+
 			PolygonShape shape = new PolygonShape();
-			shape.set(polygon);
+			shape.set(resizedPolygon);
 
 			FixtureDef fd = new FixtureDef();
-			fd.density = 1;
+			fd.density = 1f;
 			fd.friction = 0.8f;
-			fd.restitution = 0.8f;
+			fd.restitution = 0.2f;
 			fd.shape = shape;
 
 			b.createFixture(fd);
+			shape.dispose();
 		}
 	}
 
 	public void fireBall(Vector2 orig, Vector2 force) {
-		float radius = rand.nextFloat() * 5 + 5;
+		float radius = rand.nextFloat() * 10 + 5;
 
 		BodyDef bd = new BodyDef();
 		bd.angularDamping = 0.5f;
 		bd.linearDamping = 0.5f;
 		bd.type = BodyType.DynamicBody;
-		bd.position.set(orig);
+		bd.position.set(orig).mul(1 / PX_PER_METER);
 		bd.angle = rand.nextFloat() * MathUtils.PI;
 		Body b = world.createBody(bd);
-		b.applyLinearImpulse(force, orig);
+		b.applyLinearImpulse(force.mul(2 / PX_PER_METER), orig);
 		ballModels.add(b);
 
 		CircleShape shape = new CircleShape();
-		shape.setRadius(radius);
-		b.createFixture(shape, 1);
+		shape.setRadius(radius / PX_PER_METER);
+		b.createFixture(shape, 1f);
 
 		Sprite sp = new Sprite(ballTexture);
 		sp.setSize(radius*2, radius*2);

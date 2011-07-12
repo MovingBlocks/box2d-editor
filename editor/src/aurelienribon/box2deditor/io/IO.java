@@ -23,11 +23,10 @@ public class IO {
 
 		for (String name : map.keySet()) {
 			BodyModel bm = map.get(name);
-			if (bm.getCenter() == null)
+			if (bm.getPoints() == null || bm.getPolygons() == null)
 				continue;
 
 			os.writeUTF(name);
-			writeVec(os, bm.getCenter());
 			writeVecs(os, bm.getPoints());
 			writeVecss(os, bm.getPolygons());
 		}
@@ -64,12 +63,11 @@ public class IO {
 
 		while (is.available() > 0) {
 			String name = is.readUTF();
-			Vector2 center = readVec(is);
 			Vector2[] points = readVecs(is);
 			Vector2[][] polygons = readVecss(is);
 
 			BodyModel bm = new BodyModel();
-			bm.set(center, points, polygons);
+			bm.set(points, polygons);
 
 			map.put(name, bm);
 		}

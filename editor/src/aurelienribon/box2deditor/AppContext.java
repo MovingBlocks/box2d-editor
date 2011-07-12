@@ -93,7 +93,7 @@ public class AppContext {
 
 	public void setCurrentName(String name) {
 		this.currentName = name;
-		currentModel = modelMap.get(name);
+		currentModel = name == null ? null : modelMap.get(name);
 	}
 
 	public void setCurrentSize(Vector2 currentSize) {
@@ -125,7 +125,6 @@ public class AppContext {
 	// Temp. objects
 	// -------------------------------------------------------------------------
 
-	private Vector2 tempCenter;
 	private final List<Vector2> tempShape = new ArrayList<Vector2>();
 	private final List<Vector2[]> tempPolygons = new ArrayList<Vector2[]>();
 
@@ -135,23 +134,15 @@ public class AppContext {
 	// -------------------------------------------------------------------------
 
 	public void clearTempObjects() {
-		tempCenter = null;
 		tempShape.clear();
-		tempPolygons.clear();
-		App.instance().clearBody();
+		clearTempPolygons();
 	}
 
 	public void loadCurrentModel() {
 		clearTempObjects();
 
-		Vector2 center = getCurrentModel().getCenter();
 		Vector2[] points = getCurrentModel().getPoints();
 		Vector2[][] polygons = getCurrentModel().getPolygons();
-
-		if (center != null) {
-			center = invNormalize(center);
-			tempCenter = center;
-		}
 
 		if (points != null) {
 			points = invNormalize(points);
@@ -167,14 +158,11 @@ public class AppContext {
 	}
 
 	public void saveCurrentModel() {
-		if (tempCenter == null) {
+		if (!isTempShapeClosed()) {
 			BodyModel bm = getCurrentModel();
-			bm.set(null, null, null);
+			bm.set(null, null);
 		} else {
 			computeTempPolygons();
-
-			Vector2 center = tempCenter;
-			center = normalize(center);
 
 			Vector2[] points = new Vector2[tempShape.size()-1];
 			for (int i=0; i<points.length; i++)
@@ -185,7 +173,7 @@ public class AppContext {
 			polygons = normalize(polygons);
 
 			BodyModel bm = getCurrentModel();
-			bm.set(center, points, polygons);
+			bm.set(points, polygons);
 		}
 	}
 
@@ -225,17 +213,6 @@ public class AppContext {
 		for (int i=0; i<ret.length; i++)
 			ret[i] = invNormalize(vss[i]);
 		return ret;
-	}
-
-	// -------------------------------------------------------------------------
-
-	public Vector2 getTempCenter() {
-		return tempCenter;
-	}
-
-	public void setTempCenter(Vector2 tempCenter) {
-		if (getCurrentModel() != BodyModel.EMPTY)
-			this.tempCenter = tempCenter;
 	}
 
 	// -------------------------------------------------------------------------

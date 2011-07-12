@@ -28,21 +28,16 @@ public class AppDrawer {
 	}
 
 	public void draw() {
-		Vector2 center = AppContext.instance().getTempCenter();
+		Vector2[] shape = AppContext.instance().getTempShape();
+		Vector2[][] polys = AppContext.instance().getTempPolygons();
 
-		if (center != null) {
-			Vector2[] shape = AppContext.instance().getTempShape();
-			Vector2[][] polys = AppContext.instance().getTempPolygons();
+		if (AppContext.instance().arePolyDrawn) {
+			drawPolys(polys);
+		}
 
-			if (AppContext.instance().arePolyDrawn) {
-				drawPolys(polys);
-			}
-
-			if (AppContext.instance().isShapeDrawn) {
-				drawShape(shape);
-				drawPoints(shape);
-				drawCenter(center);
-			}
+		if (AppContext.instance().isShapeDrawn) {
+			drawShape(shape);
+			drawPoints(shape);
 		}
 
 		drawMousePath();
