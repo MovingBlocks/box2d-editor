@@ -101,7 +101,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -120,7 +120,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(102, 102, 102));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("    Assets");
+        jLabel1.setText("    Assets (names for the FixtureAtlas)");
         jLabel1.setOpaque(true);
 
         assets_assetList.setModel(new javax.swing.AbstractListModel() {
