@@ -1,5 +1,5 @@
 syntax: glob
-*/prj-netbeans/build/classes/*
+*/prj-netbeans/build/*
 */prj-netbeans/dist/*
 */prj-netbeans/libs/*
 */prj-netbeans/data/*
