@@ -7,9 +7,17 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Box2D-FixtureAtlasTest" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Box2D-FixtureAtlasTest.</description>
+<project name="box2d-fixtureatlastest" default="default" basedir=".">
+    <description>Builds, tests, and runs the project box2d-fixtureatlastest.</description>
     <import file="nbproject/build-impl.xml"/>
+
+	<target name="-post-jar">
+		<delete file="dist/README.TXT"/>
+		<copydir src="../data" dest="dist/data"/>
+		<copydir src="../src" dest="dist/src"/>
+		<zip destfile="../../${ant.project.name}.zip" basedir="dist"/>
+	</target>
+	
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -59,7 +67,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="Box2D-FixtureAtlasTest-impl.jar">
+        <target name="run" depends="box2d-fixtureatlastest-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

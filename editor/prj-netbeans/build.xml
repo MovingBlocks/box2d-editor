@@ -7,9 +7,15 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Box2D-Editor" default="default" basedir=".">
+<project name="box2d-editor" default="default" basedir=".">
     <description>Builds, tests, and runs the project Box2D-Editor.</description>
     <import file="nbproject/build-impl.xml"/>
+
+	<target name="-post-jar">
+		<delete file="dist/README.TXT"/>
+		<zip destfile="../../${ant.project.name}.zip" basedir="dist"/>
+	</target>
+	
     <!--
 
     There exist several targets which are by default empty and which can be 
