@@ -40,8 +40,6 @@ public class Polygon {
 			float dx1 = x[upper] - x[middle];
 			float dy1 = y[upper] - y[middle];
 			float cross = dx0 * dy1 - dx1 * dy0;
-			//Cross product should have same sign
-			//for each vertex if poly is convex.
 			boolean newIsP = (cross > 0) ? true : false;
 			if (i == 0) {
 				isPositive = newIsP;
@@ -52,13 +50,25 @@ public class Polygon {
 		return true;
 	}
 
-	/*
-	 * Tries to add a triangle to the polygon.
-	 * Returns null if it can't connect properly.
-	 * Assumes bitwise equality of join vertices.
-	 */
+    public float getArea() {
+		return Math.abs(getSignedArea());
+	}
+
+    public float getSignedArea() {
+		if (nVertices < 3)
+			return 0;
+		
+        float sum = 0;
+        for (int i = 0; i < nVertices-1; i++)
+            sum += (x[i] * y[i+1]) - (y[i] * x[i+1]);
+        return 0.5f * sum;
+    }
+
+    public boolean isCCW() {
+        return getSignedArea() > 0;
+    }
+
 	public Polygon add(Triangle t) {
-		//First, find vertices that connect
 		int firstP = -1;
 		int firstT = -1;
 		int secondP = -1;
@@ -90,18 +100,16 @@ public class Polygon {
 				}
 			}
 		}
-		//Fix ordering if first should be last vertex of poly
+
 		if (firstP == 0 && secondP == nVertices - 1) {
 			firstP = nVertices - 1;
 			secondP = 0;
 		}
 
-		//Didn't find it
 		if (secondP == -1) {
 			return null;
 		}
 
-		//Find tip index on triangle
 		int tipT = 0;
 		if (tipT == firstT || tipT == secondT) {
 			tipT = 1;

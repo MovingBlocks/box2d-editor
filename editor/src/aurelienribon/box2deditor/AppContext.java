@@ -21,12 +21,16 @@ public class AppContext {
 	// Parameters
 	// -------------------------------------------------------------------------
 
-	public File outputFile;
-
 	public boolean isAssetDrawn = true;
 	public boolean isAssetDrawnWithOpacity50 = false;
 	public boolean isShapeDrawn = true;
 	public boolean arePolyDrawn = true;
+
+	// -------------------------------------------------------------------------
+	// Output file
+	// -------------------------------------------------------------------------
+
+	public File outputFile;
 
 	public String getPathRelativeToOutputFile(String filepath) {
 		assert outputFile != null;
@@ -251,12 +255,11 @@ public class AppContext {
 		if (tempShape.size() < 3)
 			return;
 
-		Vector2[] shape = new Vector2[tempShape.size()-1];
-		for (int i=0; i<shape.length; i++)
-			shape[i] = tempShape.get(tempShape.size()-2 - i);
+		Vector2[] tshape = tempShape.toArray(new Vector2[tempShape.size()]);
+		Vector2[] shape = new Vector2[tshape.length-1];
+		System.arraycopy(tshape, 0, shape, 0, shape.length);
 
 		tempPolygons.clear();
-		
 		Vector2[][] polygons = Clipper.polygonize(shape);
 		if (polygons != null) {
 			tempPolygons.addAll(Arrays.asList(polygons));

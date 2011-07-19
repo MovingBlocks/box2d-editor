@@ -1,47 +1,73 @@
 package aurelienribon.box2deditor.earclipping;
 
 import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Clipper {
 	public static Vector2[][] polygonize(Vector2[] points) {
-		java.awt.Polygon p = new java.awt.Polygon();
-
-		float[] xv = new float[points.length];
-		float[] yv = new float[points.length];
 		int vNum = points.length;
+		float[] xv = new float[vNum];
+		float[] yv = new float[vNum];
 
 		for (int i=0; i<vNum; i++)
 			xv[i] = points[i].x;
 		for (int i=0; i<vNum; i++)
 			yv[i] = points[i].y;
 
-		Triangle[] triangles = triangulatePolygon(xv, yv, vNum);
-		Polygon[] polygons = polygonizeTriangles(triangles);
-		if (polygons == null)
-			return null;
-
-		List<Vector2[]> ret = new ArrayList<Vector2[]>();
-		for (Polygon poly : polygons) {
-			Vector2[] poly2 = new Vector2[poly.nVertices];
-			for (int i=0; i<poly.nVertices; i++)
-				poly2[i] = new Vector2(poly.x[i], poly.y[i]);
-			ret.add(poly2);
+		if (new Polygon(xv, yv).isCCW()) {
+			float[] nxv = new float[vNum];
+			float[] nyv = new float[vNum];
+			for (int i=0; i<vNum; i++)
+				nxv[i] = xv[vNum-1-i];
+			for (int i=0; i<vNum; i++)
+				nyv[i] = yv[vNum-1-i];
+			xv = nxv;
+			yv = nyv;
 		}
 
-		return ret.toArray(new Vector2[ret.size()][]);
+		Triangle[] tempTriangles = triangulatePolygon(xv, yv, vNum);
+		Polygon[] tempPolygons = polygonizeTriangles(tempTriangles);
+		if (tempPolygons == null)
+			return null;
+
+		Vector2[][] polygons = new Vector2[tempPolygons.length][];
+		for (int i=0; i<tempPolygons.length; i++) {
+			polygons[i] = new Vector2[tempPolygons[i].nVertices];
+			for (int ii=0; ii<tempPolygons[i].nVertices; ii++)
+				polygons[i][ii] = new Vector2(tempPolygons[i].x[ii], tempPolygons[i].y[ii]);
+		}
+
+		polygons = updateForBox2D(polygons);
+		return polygons;
 	}
 
-	/*
-	 * Triangulates a polygon using simple O(N^2) ear-clipping algorithm
-	 * Returns a Triangle array unless the polygon can't be triangulated,
-	 * in which case null is returned.  This should only happen if the
-	 * polygon self-intersects, though it will not _always_ return null
-	 * for a bad polygon - it is the caller's responsibility to check for
-	 * self-intersection, and if it doesn't, it should at least check
-	 * that the return value is non-null before using.  You're warned!
-	 */
+	private static Vector2[][] updateForBox2D(Vector2[][] polygons) {
+		for (int i=0; i<polygons.length; i++) {
+			Vector2[] poly = polygons[i];
+			if (poly.length > 8) {
+				int limit = poly.length < 15 ? poly.length/2+1 : 8;
+				Vector2[] newPoly1 = new Vector2[limit];
+				Vector2[] newPoly2 = new Vector2[poly.length-limit+2];
+				System.arraycopy(poly, 0, newPoly1, 0, limit);
+				System.arraycopy(poly, limit-1, newPoly2, 0, poly.length-limit+1);
+				newPoly2[newPoly2.length-1] = poly[0].cpy();
+
+				Vector2[][] newPolys = new Vector2[polygons.length+1][];
+				if (i > 0)
+					System.arraycopy(polygons, 0, newPolys, 0, i);
+				if (i < polygons.length-1)
+					System.arraycopy(polygons, i+1, newPolys, i+2, polygons.length-i-1);
+				newPolys[i] = newPoly1;
+				newPolys[i+1] = newPoly2;
+				polygons = newPolys;
+
+				i -= 1;
+			}
+		}
+		return polygons;
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static Triangle[] triangulatePolygon(float[] xv, float[] yv, int vNum) {
 		if (vNum < 3) {
 			return null;
@@ -57,7 +83,6 @@ public class Clipper {
 		}
 
 		while (vNum > 3) {
-			//Find an ear
 			int earIndex = -1;
 			for (int i = 0; i < vNum; ++i) {
 				if (isEar(i, xrem, yrem)) {
@@ -66,22 +91,9 @@ public class Clipper {
 				}
 			}
 
-			//If we still haven't found an ear, we're screwed.
-			//The user did Something Bad, so return null.
-			//This will probably crash their program, since
-			//they won't bother to check the return value.
-			//At this we shall laugh, heartily and with great gusto.
-			if (earIndex == -1) {
+			if (earIndex == -1)
 				return null;
-			}
 
-
-			//Clip off the ear:
-			//  - remove the ear tip from the list
-
-			//Opt note: actually creates a new list, maybe
-			//this should be done in-place instead.  A linked
-			//list would be even better to avoid array-fu.
 			--vNum;
 			float[] newx = new float[vNum];
 			float[] newy = new float[vNum];
@@ -95,17 +107,16 @@ public class Clipper {
 				++currDest;
 			}
 
-			//  - add the clipped triangle to the triangle list
 			int under = (earIndex == 0) ? (xrem.length - 1) : (earIndex - 1);
 			int over = (earIndex == xrem.length - 1) ? 0 : (earIndex + 1);
 
 			buffer[bufferSize] = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under], yrem[under]);
 			++bufferSize;
 
-			//  - replace the old list with the new one
 			xrem = newx;
 			yrem = newy;
 		}
+
 		Triangle toAdd = new Triangle(xrem[1], yrem[1], xrem[2], yrem[2], xrem[0], yrem[0]);
 		buffer[bufferSize] = toAdd;
 		++bufferSize;
@@ -167,9 +178,6 @@ public class Clipper {
 		return ret;
 	}
 
-	/**
-	 * Checks if vertex i is the tip of an ear
-	 */
 	private static boolean isEar(int i, float[] xv, float[] yv) {
 		float dx0, dy0, dx1, dy1;
 		dx0 = dy0 = dx1 = dy1 = 0;
