@@ -1,5 +1,6 @@
-package aurelienribon.box2deditor;
+package aurelienribon.box2deditor.ui;
 
+import aurelienribon.box2deditor.AppContext;
 import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.math.Vector2;
@@ -31,6 +32,7 @@ public class MainWindow extends javax.swing.JFrame {
 		assets_assetList.setModel(assetsListModel);
 
 		addComponentListener(componentListener);
+		App.instance().setMode(App.Modes.CREATION);
     }
 
 	// -------------------------------------------------------------------------
@@ -50,6 +52,7 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        shapeModeBtnGrp = new javax.swing.ButtonGroup();
         renderPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -69,26 +72,25 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         export_saveBtn = new javax.swing.JButton();
         eastPanel = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        shape_clearBtn = new javax.swing.JButton();
-        shape_addbtn = new javax.swing.JButton();
-        shape_subBtn = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
-        shape_drawShapeChk = new javax.swing.JCheckBox();
-        shape_drawPolysChk = new javax.swing.JCheckBox();
-        shape_drawAssetChk = new javax.swing.JCheckBox();
-        shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        modes_creationRadioBtn = new javax.swing.JRadioButton();
+        modes_editionRadioBtn = new javax.swing.JRadioButton();
+        modes_testRadioBtn = new javax.swing.JRadioButton();
+        jPanel8 = new javax.swing.JPanel();
+        shape_drawAssetChk = new javax.swing.JCheckBox();
+        shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
+        shape_drawShapeChk = new javax.swing.JCheckBox();
+        shape_drawPolysChk = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         renderPanel.setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
 
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_ball.png"))); // NOI18N
@@ -101,7 +103,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -112,7 +114,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        renderPanel.add(jPanel1, java.awt.BorderLayout.SOUTH);
+        renderPanel.add(jPanel1, java.awt.BorderLayout.NORTH);
 
         getContentPane().add(renderPanel, java.awt.BorderLayout.CENTER);
 
@@ -286,41 +288,101 @@ public class MainWindow extends javax.swing.JFrame {
 
         eastPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(0, 0, 0)));
 
-        jLabel6.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("    Shape creation");
-        jLabel6.setOpaque(true);
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/logo.gif"))); // NOI18N
 
-        shape_clearBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_delete.png"))); // NOI18N
-        shape_clearBtn.setText("Clear points");
-        shape_clearBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        shape_clearBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
-        shape_clearBtn.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addContainerGap(13, Short.MAX_VALUE))
+        );
+
+        jLabel7.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("    Editor modes");
+        jLabel7.setOpaque(true);
+
+        shapeModeBtnGrp.add(modes_creationRadioBtn);
+        modes_creationRadioBtn.setSelected(true);
+        modes_creationRadioBtn.setText("Creation");
+        modes_creationRadioBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_clearBtnActionPerformed(evt);
+                modes_creationRadioBtnActionPerformed(evt);
             }
         });
 
-        shape_addbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
-        shape_addbtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        shape_addbtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
-        shape_addbtn.addActionListener(new java.awt.event.ActionListener() {
+        shapeModeBtnGrp.add(modes_editionRadioBtn);
+        modes_editionRadioBtn.setText("Edition");
+        modes_editionRadioBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_addbtnActionPerformed(evt);
+                modes_editionRadioBtnActionPerformed(evt);
             }
         });
 
-        shape_subBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_remove.png"))); // NOI18N
-        shape_subBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        shape_subBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
-        shape_subBtn.addActionListener(new java.awt.event.ActionListener() {
+        shapeModeBtnGrp.add(modes_testRadioBtn);
+        modes_testRadioBtn.setText("Test");
+        modes_testRadioBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_subBtnActionPerformed(evt);
+                modes_testRadioBtnActionPerformed(evt);
             }
         });
 
-        jLabel8.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel8.setText("<html>\n1 &bull; Set the output file<br/>\n2 &bull; Add some assets to the list<br/>\n3 &bull; Select an asset and define its collision body by clicking on the asset area.<br/><br/>\n\n<i>Note: You *have* to close the shape by clicking on the first point for the result to be saved.</i><br/><br/>\n\nZoom with mouse wheel, pan by holding the left mouse button.");
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(modes_creationRadioBtn)
+                .addContainerGap(99, Short.MAX_VALUE))
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(modes_editionRadioBtn)
+                .addContainerGap(109, Short.MAX_VALUE))
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(modes_testRadioBtn)
+                .addContainerGap(119, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(modes_creationRadioBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(modes_editionRadioBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(modes_testRadioBtn)
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
+
+        shape_drawAssetChk.setSelected(true);
+        shape_drawAssetChk.setText("Draw asset");
+        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
+        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetOpacity50ChkActionPerformed(evt);
+            }
+        });
 
         shape_drawShapeChk.setSelected(true);
         shape_drawShapeChk.setText("Draw shape");
@@ -338,68 +400,32 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_drawAssetChk.setSelected(true);
-        shape_drawAssetChk.setText("Draw asset");
-        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetChkActionPerformed(evt);
-            }
-        });
+        jLabel8.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("    Options");
+        jLabel8.setOpaque(true);
 
-        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
-        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetOpacity50ChkActionPerformed(evt);
-            }
-        });
-
-        jSeparator1.setForeground(new java.awt.Color(102, 102, 102));
-
-        jSeparator2.setForeground(new java.awt.Color(102, 102, 102));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_addbtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_subBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(shape_drawAssetOpacity50Chk))
                     .addComponent(shape_drawAssetChk)
                     .addComponent(shape_drawShapeChk)
                     .addComponent(shape_drawPolysChk))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(shape_clearBtn)
-                        .addComponent(shape_addbtn))
-                    .addComponent(shape_subBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawAssetChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawAssetOpacity50Chk)
@@ -407,31 +433,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(shape_drawShapeChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawPolysChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(163, Short.MAX_VALUE))
-        );
-
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/logo.gif"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout eastPanelLayout = new javax.swing.GroupLayout(eastPanel);
@@ -439,14 +441,18 @@ public class MainWindow extends javax.swing.JFrame {
         eastPanelLayout.setHorizontalGroup(
             eastPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         eastPanelLayout.setVerticalGroup(
             eastPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eastPanelLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(284, Short.MAX_VALUE))
         );
 
         getContentPane().add(eastPanel, java.awt.BorderLayout.EAST);
@@ -522,11 +528,6 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_assets_removeAssetBtnActionPerformed
 
-	private void shape_clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_clearBtnActionPerformed
-		AppContext.instance().clearTempObjects();
-		AppContext.instance().saveCurrentModel();
-	}//GEN-LAST:event_shape_clearBtnActionPerformed
-
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
 		AppContext.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
 	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
@@ -543,16 +544,17 @@ public class MainWindow extends javax.swing.JFrame {
 		AppContext.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
 
-	private void shape_addbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_addbtnActionPerformed
-		AppContext.instance().insertPointBetweenSelected();
-	}//GEN-LAST:event_shape_addbtnActionPerformed
+	private void modes_creationRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_creationRadioBtnActionPerformed
+		App.instance().setMode(App.Modes.CREATION);
+	}//GEN-LAST:event_modes_creationRadioBtnActionPerformed
 
-	private void shape_subBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_subBtnActionPerformed
-		if (!AppContext.instance().removeSelectedPoints())
-			JOptionPane.showMessageDialog(this,
-				"You have to leave at least 3 points in the shape.\n"
-				+ "Use the 'clear points' button instead.");
-	}//GEN-LAST:event_shape_subBtnActionPerformed
+	private void modes_editionRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_editionRadioBtnActionPerformed
+		App.instance().setMode(App.Modes.EDITION);
+	}//GEN-LAST:event_modes_editionRadioBtnActionPerformed
+
+	private void modes_testRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_testRadioBtnActionPerformed
+		App.instance().setMode(App.Modes.TEST);
+	}//GEN-LAST:event_modes_testRadioBtnActionPerformed
 
 	// -------------------------------------------------------------------------
 
@@ -671,7 +673,7 @@ public class MainWindow extends javax.swing.JFrame {
 		try {
 			AppContext.instance().importFromFile();
 			assetsListModel.clear();
-			for (String name : AppContext.instance().getNames())
+			for (String name : AppContext.instance().getModelNames())
 				addAsset(name, false);
 
 		} catch (IOException ex) {
@@ -697,26 +699,26 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JRadioButton modes_creationRadioBtn;
+    private javax.swing.JRadioButton modes_editionRadioBtn;
+    private javax.swing.JRadioButton modes_testRadioBtn;
     private javax.swing.JPanel renderPanel;
-    private javax.swing.JButton shape_addbtn;
-    private javax.swing.JButton shape_clearBtn;
+    private javax.swing.ButtonGroup shapeModeBtnGrp;
     private javax.swing.JCheckBox shape_drawAssetChk;
     private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
     private javax.swing.JCheckBox shape_drawPolysChk;
     private javax.swing.JCheckBox shape_drawShapeChk;
-    private javax.swing.JButton shape_subBtn;
     private javax.swing.JPanel westPanel;
     // End of variables declaration//GEN-END:variables
 

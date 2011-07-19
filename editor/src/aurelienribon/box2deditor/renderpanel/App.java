@@ -1,8 +1,13 @@
 package aurelienribon.box2deditor.renderpanel;
 
 import aurelienribon.box2deditor.AppContext;
+import aurelienribon.box2deditor.renderpanel.inputprocessors.BallThrowInputProcessor;
+import aurelienribon.box2deditor.renderpanel.inputprocessors.PanZoomInputProcessor;
+import aurelienribon.box2deditor.renderpanel.inputprocessors.ShapeCreationInputProcessor;
+import aurelienribon.box2deditor.renderpanel.inputprocessors.ShapeEditionInputProcessor;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -71,7 +76,6 @@ public class App implements ApplicationListener {
 		drawer = new AppDrawer(camera);
 
 		Gdx.graphics.setVSync(true);
-		Gdx.input.setInputProcessor(new AppInputProcessor(this));
 	}
 
 	@Override
@@ -146,6 +150,28 @@ public class App implements ApplicationListener {
 	// -------------------------------------------------------------------------
 	// Public API
 	// -------------------------------------------------------------------------
+	
+	public enum Modes { CREATION, EDITION, TEST }
+
+	public Vector2 screenToWorld(int x, int y) {
+		return new Vector2(x, Gdx.graphics.getHeight() - y)
+			.sub(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2)
+			.mul(camera.zoom)
+			.add(camera.position.x, camera.position.y);
+	}
+
+	public void setMode(Modes mode) {
+		InputMultiplexer im = new InputMultiplexer();
+		im.addProcessor(new PanZoomInputProcessor());
+
+		switch (mode) {
+			case CREATION: im.addProcessor(new ShapeCreationInputProcessor()); break;
+			case EDITION: im.addProcessor(new ShapeEditionInputProcessor()); break;
+			case TEST: im.addProcessor(new BallThrowInputProcessor()); break;
+		}
+
+		Gdx.input.setInputProcessor(im);
+	}
 
 	public void clearAsset() {
 		if (assetPixmap != null) {
@@ -206,7 +232,7 @@ public class App implements ApplicationListener {
 			world = null;
 		}
 
-		if (polygons == null)
+		if (polygons == null || polygons.length == 0)
 			return;
 
 		world = new World(new Vector2(0, 0), true);

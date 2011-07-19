@@ -8,31 +8,32 @@ public class Clipper {
 		float[] xv = new float[vNum];
 		float[] yv = new float[vNum];
 
-		for (int i=0; i<vNum; i++)
+		for (int i = 0; i < vNum; i++) {
 			xv[i] = points[i].x;
-		for (int i=0; i<vNum; i++)
 			yv[i] = points[i].y;
+		}
 
 		if (new Polygon(xv, yv).isCCW()) {
 			float[] nxv = new float[vNum];
 			float[] nyv = new float[vNum];
-			for (int i=0; i<vNum; i++)
-				nxv[i] = xv[vNum-1-i];
-			for (int i=0; i<vNum; i++)
-				nyv[i] = yv[vNum-1-i];
+			for (int i = 0; i < vNum; i++) {
+				nxv[i] = xv[vNum - 1 - i];
+				nyv[i] = yv[vNum - 1 - i];
+			}
 			xv = nxv;
 			yv = nyv;
 		}
 
 		Triangle[] tempTriangles = triangulatePolygon(xv, yv, vNum);
 		Polygon[] tempPolygons = polygonizeTriangles(tempTriangles);
+		
 		if (tempPolygons == null)
 			return null;
 
 		Vector2[][] polygons = new Vector2[tempPolygons.length][];
-		for (int i=0; i<tempPolygons.length; i++) {
+		for (int i = 0; i < tempPolygons.length; i++) {
 			polygons[i] = new Vector2[tempPolygons[i].nVertices];
-			for (int ii=0; ii<tempPolygons[i].nVertices; ii++)
+			for (int ii = 0; ii < tempPolygons[i].nVertices; ii++)
 				polygons[i][ii] = new Vector2(tempPolygons[i].x[ii], tempPolygons[i].y[ii]);
 		}
 
@@ -41,23 +42,25 @@ public class Clipper {
 	}
 
 	private static Vector2[][] updateForBox2D(Vector2[][] polygons) {
-		for (int i=0; i<polygons.length; i++) {
+		for (int i = 0; i < polygons.length; i++) {
 			Vector2[] poly = polygons[i];
 			if (poly.length > 8) {
-				int limit = poly.length < 15 ? poly.length/2+1 : 8;
+				int limit = poly.length < 15 ? poly.length / 2 + 1 : 8;
 				Vector2[] newPoly1 = new Vector2[limit];
-				Vector2[] newPoly2 = new Vector2[poly.length-limit+2];
+				Vector2[] newPoly2 = new Vector2[poly.length - limit + 2];
 				System.arraycopy(poly, 0, newPoly1, 0, limit);
-				System.arraycopy(poly, limit-1, newPoly2, 0, poly.length-limit+1);
-				newPoly2[newPoly2.length-1] = poly[0].cpy();
+				System.arraycopy(poly, limit - 1, newPoly2, 0, poly.length - limit + 1);
+				newPoly2[newPoly2.length - 1] = poly[0].cpy();
 
-				Vector2[][] newPolys = new Vector2[polygons.length+1][];
-				if (i > 0)
+				Vector2[][] newPolys = new Vector2[polygons.length + 1][];
+				if (i > 0) {
 					System.arraycopy(polygons, 0, newPolys, 0, i);
-				if (i < polygons.length-1)
-					System.arraycopy(polygons, i+1, newPolys, i+2, polygons.length-i-1);
+				}
+				if (i < polygons.length - 1) {
+					System.arraycopy(polygons, i + 1, newPolys, i + 2, polygons.length - i - 1);
+				}
 				newPolys[i] = newPoly1;
-				newPolys[i+1] = newPoly2;
+				newPolys[i + 1] = newPoly2;
 				polygons = newPolys;
 
 				i -= 1;
@@ -69,9 +72,8 @@ public class Clipper {
 	// -------------------------------------------------------------------------
 
 	private static Triangle[] triangulatePolygon(float[] xv, float[] yv, int vNum) {
-		if (vNum < 3) {
+		if (vNum < 3)
 			return null;
-		}
 
 		Triangle[] buffer = new Triangle[vNum];
 		int bufferSize = 0;
@@ -110,13 +112,13 @@ public class Clipper {
 			int under = (earIndex == 0) ? (xrem.length - 1) : (earIndex - 1);
 			int over = (earIndex == xrem.length - 1) ? 0 : (earIndex + 1);
 
-			buffer[bufferSize] = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under], yrem[under]);
+			Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under], yrem[under]);
+			buffer[bufferSize] = toAdd;
 			++bufferSize;
 
 			xrem = newx;
 			yrem = newy;
 		}
-
 		Triangle toAdd = new Triangle(xrem[1], yrem[1], xrem[2], yrem[2], xrem[0], yrem[0]);
 		buffer[bufferSize] = toAdd;
 		++bufferSize;
@@ -130,49 +132,48 @@ public class Clipper {
 		Polygon[] polys;
 		int polyIndex = 0;
 
-		if (triangulated == null) {
+		if (triangulated == null)
 			return null;
-		} else {
-			polys = new Polygon[triangulated.length];
-			boolean[] covered = new boolean[triangulated.length];
+
+		polys = new Polygon[triangulated.length];
+		boolean[] covered = new boolean[triangulated.length];
+		for (int i = 0; i < triangulated.length; i++)
+			covered[i] = false;
+
+		boolean notDone = true;
+
+		while (notDone) {
+			int currTri = -1;
 			for (int i = 0; i < triangulated.length; i++) {
-				covered[i] = false;
-			}
-
-			boolean notDone = true;
-
-			while (notDone) {
-				int currTri = -1;
-				for (int i = 0; i < triangulated.length; i++) {
-					if (covered[i]) {
-						continue;
-					}
+				if (!covered[i]) {
 					currTri = i;
 					break;
 				}
-				if (currTri == -1) {
-					notDone = false;
-				} else {
-					Polygon poly = new Polygon(triangulated[currTri]);
-					covered[currTri] = true;
-					for (int i = 0; i < triangulated.length; i++) {
-						if (covered[i]) {
-							continue;
-						}
-						Polygon newP = poly.add(triangulated[i]);
-						if (newP == null) {
-							continue;
-						}
-						if (newP.isConvex()) {
-							poly = newP;
-							covered[i] = true;
-						}
+			}
+
+			if (currTri == -1) {
+				notDone = false;
+			} else {
+				Polygon poly = new Polygon(triangulated[currTri]);
+				covered[currTri] = true;
+				for (int i = 0; i < triangulated.length; i++) {
+					if (covered[i])
+						continue;
+
+					Polygon newP = poly.add(triangulated[i]);
+					if (newP == null)
+						continue;
+
+					if (newP.isConvex()) {
+						poly = newP;
+						covered[i] = true;
 					}
-					polys[polyIndex] = poly;
-					polyIndex++;
 				}
+				polys[polyIndex] = poly;
+				polyIndex++;
 			}
 		}
+
 		Polygon[] ret = new Polygon[polyIndex];
 		System.arraycopy(polys, 0, ret, 0, polyIndex);
 		return ret;
@@ -181,11 +182,13 @@ public class Clipper {
 	private static boolean isEar(int i, float[] xv, float[] yv) {
 		float dx0, dy0, dx1, dy1;
 		dx0 = dy0 = dx1 = dy1 = 0;
-		if (i >= xv.length || i < 0 || xv.length < 3) {
+
+		if (i >= xv.length || i < 0 || xv.length < 3)
 			return false;
-		}
+
 		int upper = i + 1;
 		int lower = i - 1;
+
 		if (i == 0) {
 			dx0 = xv[0] - xv[xv.length - 1];
 			dy0 = yv[0] - yv[yv.length - 1];
@@ -204,19 +207,19 @@ public class Clipper {
 			dx1 = xv[i + 1] - xv[i];
 			dy1 = yv[i + 1] - yv[i];
 		}
+
 		float cross = dx0 * dy1 - dx1 * dy0;
-		if (cross > 0) {
+		if (cross > 0)
 			return false;
-		}
+
 		Triangle myTri = new Triangle(xv[i], yv[i], xv[upper], yv[upper], xv[lower], yv[lower]);
 		for (int j = 0; j < xv.length; ++j) {
-			if (j == i || j == lower || j == upper) {
+			if (j == i || j == lower || j == upper)
 				continue;
-			}
-			if (myTri.isInside(xv[j], yv[j])) {
+			if (myTri.isInside(xv[j], yv[j]))
 				return false;
-			}
 		}
+		
 		return true;
 	}
 }

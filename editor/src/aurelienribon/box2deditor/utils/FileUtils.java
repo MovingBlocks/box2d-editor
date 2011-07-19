@@ -1,10 +1,10 @@
-package aurelienribon.box2deditor;
+package aurelienribon.box2deditor.utils;
 
 import java.io.File;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
 
-public class ResourceUtils {
+public class FileUtils {
 
 	/**
 	 * Get the relative path from one file to another, specifying the directory separator.
@@ -90,7 +90,7 @@ public class ResourceUtils {
 		return relative.toString();
 	}
 
-	static class NoCommonPathFoundException extends RuntimeException {
+	public static class NoCommonPathFoundException extends RuntimeException {
 		public NoCommonPathFoundException(String msg) {
 			super(msg);
 		}

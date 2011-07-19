@@ -1,6 +1,7 @@
 package aurelienribon.box2deditor.renderpanel;
 
 import aurelienribon.box2deditor.AppContext;
+import aurelienribon.box2deditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -13,7 +14,6 @@ public class AppDrawer {
 	private static final Color SHAPE_LINE_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color SHAPE_POLY_COLOR = new Color(0.2f, 0.8f, 0.2f, 1);
-	private static final Color SHAPE_CENTER_COLOR = new Color(0.8f, 0.2f, 0.2f, 1);
 	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 
@@ -27,8 +27,10 @@ public class AppDrawer {
 		this.imr = new ImmediateModeRenderer();
 	}
 
+	// -------------------------------------------------------------------------
+
 	public void draw() {
-		Vector2[] shape = AppContext.instance().getTempShape();
+		ShapeModel[] shapes = AppContext.instance().getTempShapes();
 		Vector2[][] polys = AppContext.instance().getTempPolygons();
 
 		if (AppContext.instance().arePolyDrawn) {
@@ -36,37 +38,45 @@ public class AppDrawer {
 		}
 
 		if (AppContext.instance().isShapeDrawn) {
-			drawShape(shape);
-			drawPoints(shape);
+			drawShapes(shapes);
+			drawPoints(shapes);
 		}
 
 		drawMousePath();
 		drawBallThrowPath();
 	}
 
-	private void drawShape(Vector2[] shape) {
-		if (shape.length > 0) {
-			for (int i=1; i<shape.length; i++)
-				drawLine(shape[i], shape[i-1], SHAPE_LINE_COLOR, 2);
+	// -------------------------------------------------------------------------
 
-			if (AppContext.instance().isTempShapeClosed()) {
-				drawLine(shape[0], shape[shape.length-1], SHAPE_LINE_COLOR, 2);
-			} else {
-				Vector2 p = AppContext.instance().nextPoint;
-				drawLine(shape[shape.length-1], p, SHAPE_LASTLINE_COLOR, 2);
+	private void drawShapes(ShapeModel[] shapes) {
+		for (ShapeModel shape : shapes) {
+			Vector2[] points = shape.getPoints();
+			if (points.length > 0) {
+				for (int i=1; i<points.length; i++)
+					drawLine(points[i], points[i-1], SHAPE_LINE_COLOR, 2);
+
+				if (shape.isClosed()) {
+					drawLine(points[0], points[points.length-1], SHAPE_LINE_COLOR, 2);
+				} else {
+					Vector2 nextPoint = AppContext.instance().nextPoint;
+					if (nextPoint != null)
+						drawLine(points[points.length-1], nextPoint, SHAPE_LASTLINE_COLOR, 2);
+				}
 			}
 		}
 	}
 
-	private void drawPoints(Vector2[] shape) {
+	private void drawPoints(ShapeModel[] shapes) {
 		Vector2 np = AppContext.instance().nearestPoint;
 		List<Vector2> sp = AppContext.instance().selectedPoints;
 		float w = 10 * camera.zoom;
 
-		for (Vector2 p : shape) {
-			if (p == np || sp.contains(p))
-				fillRect(p, w, w, SHAPE_LINE_COLOR);
-			drawRect(p, w, w, SHAPE_LINE_COLOR, 2);
+		for (ShapeModel shape : shapes) {
+			for (Vector2 p : shape.getPoints()) {
+				if (p == np || sp.contains(p))
+					fillRect(p, w, w, SHAPE_LINE_COLOR);
+				drawRect(p, w, w, SHAPE_LINE_COLOR, 2);
+			}
 		}
 	}
 
@@ -77,23 +87,6 @@ public class AppDrawer {
 			if (poly.length > 0)
 				drawLine(poly[0], poly[poly.length-1], SHAPE_POLY_COLOR, 2);
 		}
-	}
-
-	private void drawCenter(Vector2 p) {
-		Vector2 nearestP = AppContext.instance().nearestPoint;
-		float w = 10 * camera.zoom;
-
-		tp1.set(p).sub(w, 0);
-		tp2.set(p).add(w, 0);
-		drawLine(tp1, tp2, SHAPE_CENTER_COLOR, 2);
-
-		tp1.set(p).sub(0, w);
-		tp2.set(p).add(0, w);
-		drawLine(tp1, tp2, SHAPE_CENTER_COLOR, 2);
-
-		if (p == nearestP)
-			fillRect(p, w, w, SHAPE_CENTER_COLOR);
-		drawRect(p, w, w, SHAPE_CENTER_COLOR, 2);
 	}
 
 	private void drawMousePath() {
@@ -114,6 +107,8 @@ public class AppDrawer {
 			drawRect(v2, w, w, BALLTHROWPATH_COLOR, 3);
 		}
 	}
+
+	// -------------------------------------------------------------------------
 
 	public void drawLine(Vector2 p1, Vector2 p2, Color c, float lineWidth) {
 		Gdx.gl10.glLineWidth(lineWidth);

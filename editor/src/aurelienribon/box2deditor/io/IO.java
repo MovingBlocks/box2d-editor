@@ -23,11 +23,11 @@ public class IO {
 
 		for (String name : map.keySet()) {
 			BodyModel bm = map.get(name);
-			if (bm.getPoints() == null || bm.getPolygons() == null)
+			if (bm.getShapes() == null || bm.getPolygons() == null)
 				continue;
 
 			os.writeUTF(name);
-			writeVecs(os, bm.getPoints());
+			writeVecs(os, bm.getShapes());
 			writeVecss(os, bm.getPolygons());
 		}
 

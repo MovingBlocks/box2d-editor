@@ -1,14 +1,19 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.utils.FileUtils;
 import aurelienribon.box2deditor.io.IO;
 import aurelienribon.box2deditor.models.BodyModel;
 import aurelienribon.box2deditor.earclipping.Clipper;
+import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
+import aurelienribon.box2deditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,9 +40,9 @@ public class AppContext {
 	public String getPathRelativeToOutputFile(String filepath) {
 		assert outputFile != null;
 		try {
-			String path = ResourceUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
+			String path = FileUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
 			return path;
-		} catch (ResourceUtils.NoCommonPathFoundException ex) {
+		} catch (NoCommonPathFoundException ex) {
 			return null;
 		}
 	}
@@ -75,6 +80,8 @@ public class AppContext {
 	private BodyModel currentModel;
 	private Vector2 currentSize;
 
+	// -------------------------------------------------------------------------
+
 	public void addModel(String name) {
 		if (!modelMap.containsKey(name))
 			modelMap.put(name, new BodyModel());
@@ -95,6 +102,22 @@ public class AppContext {
 		modelMap.put(newName, bm);
 	}
 
+	public String[] getModelNames() {
+		return modelMap.keySet().toArray(new String[0]);
+	}
+
+	// -------------------------------------------------------------------------
+
+	public BodyModel getCurrentModel() {
+		if (currentModel == null)
+			currentModel = BodyModel.EMPTY;
+		return currentModel;
+	}
+
+	public boolean isCurrentModelValid() {
+		return getCurrentModel() != BodyModel.EMPTY;
+	}
+
 	public void setCurrentName(String name) {
 		this.currentName = name;
 		currentModel = name == null ? null : modelMap.get(name);
@@ -104,15 +127,7 @@ public class AppContext {
 		this.currentSize = currentSize;
 	}
 
-	private BodyModel getCurrentModel() {
-		if (currentModel == null)
-			currentModel = BodyModel.EMPTY;
-		return currentModel;
-	}
-
-	public String[] getNames() {
-		return modelMap.keySet().toArray(new String[0]);
-	}
+	// -------------------------------------------------------------------------
 
 	public void exportToFile() throws IOException {
 		IO.exportToFile(outputFile, modelMap);
@@ -129,7 +144,7 @@ public class AppContext {
 	// Temp. objects
 	// -------------------------------------------------------------------------
 
-	private final List<Vector2> tempShape = new ArrayList<Vector2>();
+	private final List<ShapeModel> tempShapes = new ArrayList<ShapeModel>();
 	private final List<Vector2[]> tempPolygons = new ArrayList<Vector2[]>();
 
 	public Vector2 nextPoint;
@@ -138,106 +153,68 @@ public class AppContext {
 	// -------------------------------------------------------------------------
 
 	public void clearTempObjects() {
-		tempShape.clear();
+		tempShapes.clear();
 		clearTempPolygons();
 	}
+
+	// -------------------------------------------------------------------------
+
+	public void createNewTempShape() {
+		tempShapes.add(new ShapeModel());
+	}
+
+	public ShapeModel[] getTempShapes() {
+		return tempShapes.toArray(new ShapeModel[tempShapes.size()]);
+	}
+
+	public ShapeModel getLastTempShape() {
+		if (tempShapes.isEmpty())
+			return null;
+		return tempShapes.get(tempShapes.size()-1);
+	}
+
+	// -------------------------------------------------------------------------
 
 	public void loadCurrentModel() {
 		clearTempObjects();
 
-		Vector2[] points = getCurrentModel().getPoints();
+		Vector2[][] shapes = getCurrentModel().getShapes();
 		Vector2[][] polygons = getCurrentModel().getPolygons();
 
-		if (points != null) {
-			points = invNormalize(points);
-			tempShape.addAll(Arrays.asList(points));
-			tempShape.add(points[0]);
+		if (shapes != null) {
+			shapes = VectorUtils.mul(shapes, currentSize.x / 1f);
+			for (Vector2[] shape : shapes)
+				tempShapes.add(new ShapeModel(shape));
 		}
 
 		if (polygons != null) {
-			polygons = invNormalize(polygons);
+			polygons = VectorUtils.mul(polygons, currentSize.x / 1f);
 			tempPolygons.addAll(Arrays.asList(polygons));
 			App.instance().setBody(polygons);
 		}
 	}
 
 	public void saveCurrentModel() {
-		if (!isTempShapeClosed()) {
-			BodyModel bm = getCurrentModel();
-			bm.set(null, null);
-		} else {
-			computeTempPolygons();
+		List<ShapeModel> closedShapes = new ArrayList<ShapeModel>();
+		for (ShapeModel shape : tempShapes)
+			if (shape.isClosed())
+				closedShapes.add(shape);
 
-			Vector2[] points = new Vector2[tempShape.size()-1];
-			for (int i=0; i<points.length; i++)
-				points[i] = tempShape.get(i);
-			points = normalize(points);
+		Vector2[][] points = new Vector2[closedShapes.size()][];
+		for (int i=0; i<closedShapes.size(); i++)
+			points[i] = closedShapes.get(i).getPoints();
 
-			Vector2[][] polygons = tempPolygons.toArray(new Vector2[tempPolygons.size()][]);
-			polygons = normalize(polygons);
+		Vector2[][] normalizedPoints = VectorUtils.mul(points, 1f / currentSize.x);
+		Vector2[][] normalizedPolygons = computePolygons(normalizedPoints);
 
-			BodyModel bm = getCurrentModel();
-			bm.set(points, polygons);
-		}
-	}
-
-	// -------------------------------------------------------------------------
-
-	private Vector2 normalize(Vector2 v) {
-		return new Vector2(v).mul(100f / currentSize.x);
-	}
-
-	private Vector2[] normalize(Vector2[] vs) {
-		Vector2[] ret = new Vector2[vs.length];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = normalize(vs[i]);
-		return ret;
-	}
-
-	private Vector2[][] normalize(Vector2[][] vss) {
-		Vector2[][] ret = new Vector2[vss.length][];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = normalize(vss[i]);
-		return ret;
-	}
-
-	private Vector2 invNormalize(Vector2 v) {
-		return new Vector2(v).mul(currentSize.x / 100f);
-	}
-
-	private Vector2[] invNormalize(Vector2[] vs) {
-		Vector2[] ret = new Vector2[vs.length];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = invNormalize(vs[i]);
-		return ret;
-	}
-
-	private Vector2[][] invNormalize(Vector2[][] vss) {
-		Vector2[][] ret = new Vector2[vss.length][];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = invNormalize(vss[i]);
-		return ret;
-	}
-
-	// -------------------------------------------------------------------------
-
-	public Vector2[] getTempShape() {
-		return tempShape.toArray(new Vector2[tempShape.size()]);
-	}
-
-	public boolean isTempShapeClosed() {
-		if (tempShape.isEmpty() || tempShape.size() < 3)
-			return false;
-		return tempShape.get(tempShape.size()-1) == tempShape.get(0);
-	}
-
-	public void addTempShapePoint(Vector2 p) {
 		BodyModel bm = getCurrentModel();
-		if (bm != BodyModel.EMPTY) {
-			tempShape.add(p);
-			if (isTempShapeClosed())
-				saveCurrentModel();
-		}
+		bm.set(normalizedPoints, normalizedPolygons);
+
+		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / 1f);
+		tempPolygons.clear();
+		Collections.addAll(tempPolygons, polygons);
+
+		App.instance().setBody(polygons);
 	}
 
 	// -------------------------------------------------------------------------
@@ -251,36 +228,30 @@ public class AppContext {
 		App.instance().clearBody();
 	}
 
-	private void computeTempPolygons() {
-		if (tempShape.size() < 3)
-			return;
-
-		Vector2[] tshape = tempShape.toArray(new Vector2[tempShape.size()]);
-		Vector2[] shape = new Vector2[tshape.length-1];
-		System.arraycopy(tshape, 0, shape, 0, shape.length);
-
-		tempPolygons.clear();
-		Vector2[][] polygons = Clipper.polygonize(shape);
-		if (polygons != null) {
-			tempPolygons.addAll(Arrays.asList(polygons));
-			App.instance().setBody(polygons);
+	private Vector2[][] computePolygons(Vector2[][] shapes) {
+		List<Vector2[]> ret = new ArrayList<Vector2[]>();
+		for (Vector2[] shape : shapes) {
+			Vector2[][] polygons = Clipper.polygonize(shape);
+			if (polygons != null)
+				ret.addAll(Arrays.asList(polygons));
 		}
+		return ret.toArray(new Vector2[ret.size()][]);
 	}
 
 	// -------------------------------------------------------------------------
 
 	public boolean removeSelectedPoints() {
-		if (tempShape.size() - selectedPoints.size() < 3)
+		/*if (tempShape.size() - selectedPoints.size() < 3)
 			return false;
 		tempShape.remove(tempShape.size()-1);
 		tempShape.removeAll(selectedPoints);
 		tempShape.add(tempShape.get(0));
-		saveCurrentModel();
+		saveCurrentModel();*/
 		return true;
 	}
 
 	public void insertPointBetweenSelected() {
-		if (selectedPoints.size() < 2)
+		/*if (selectedPoints.size() < 2)
 			return;
 
 		List<Vector2> toAdd = new ArrayList<Vector2>();
@@ -298,6 +269,6 @@ public class AppContext {
 		}
 
 		selectedPoints.addAll(toAdd);
-		saveCurrentModel();
+		saveCurrentModel();*/
 	}
 }

@@ -1,0 +1,65 @@
+package aurelienribon.box2deditor.renderpanel.inputprocessors;
+
+import aurelienribon.box2deditor.AppContext;
+import aurelienribon.box2deditor.models.ShapeModel;
+import aurelienribon.box2deditor.renderpanel.App;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector2;
+
+public class ShapeCreationInputProcessor extends InputAdapter {
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		if (button != Buttons.LEFT)
+			return false;
+
+		if (!AppContext.instance().isCurrentModelValid())
+			return true;
+
+		ShapeModel lastShape = AppContext.instance().getLastTempShape();
+
+		if (lastShape == null || lastShape.isClosed()) {
+			AppContext.instance().createNewTempShape();
+			lastShape = AppContext.instance().getLastTempShape();
+		}
+
+		if (lastShape.getPointCount() >= 3 && AppContext.instance().nearestPoint == lastShape.getPoint(0)) {
+			lastShape.close();
+			AppContext.instance().saveCurrentModel();
+		} else {
+			Vector2 p = App.instance().screenToWorld(x, y);
+			lastShape.addPoint(p);
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+		if (!Gdx.input.isButtonPressed(Buttons.LEFT))
+			return false;
+
+		touchMoved(x, y);
+		return true;
+	}
+
+	@Override
+	public boolean touchMoved(int x, int y) {
+		if (!AppContext.instance().isCurrentModelValid())
+			return true;
+
+		Vector2 p = App.instance().screenToWorld(x, y);
+
+		// Nearest point computation
+		AppContext.instance().nearestPoint = null;
+		ShapeModel shape = AppContext.instance().getLastTempShape();
+		if (shape != null && !shape.isClosed() && shape.getPointCount() >= 3)
+			if (shape.getPoint(0).dst(p) < 10 * App.instance().getCamera().zoom)
+				AppContext.instance().nearestPoint = shape.getPoint(0);
+
+		// Next point assignment
+		AppContext.instance().nextPoint = p;
+		return true;
+	}
+}
