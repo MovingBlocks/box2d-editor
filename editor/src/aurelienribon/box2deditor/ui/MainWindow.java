@@ -32,7 +32,6 @@ public class MainWindow extends javax.swing.JFrame {
 		assets_assetList.setModel(assetsListModel);
 
 		addComponentListener(componentListener);
-		App.instance().setMode(App.Modes.CREATION);
     }
 
 	// -------------------------------------------------------------------------
@@ -54,76 +53,58 @@ public class MainWindow extends javax.swing.JFrame {
 
         shapeModeBtnGrp = new javax.swing.ButtonGroup();
         renderPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         westPanel = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         assets_assetListScrollPane = new javax.swing.JScrollPane();
         assets_assetList = new javax.swing.JList();
         assets_removeAssetBtn = new javax.swing.JButton();
+        jPanel11 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        help_assetsLbl = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         init_addAssetsByFilesBtn = new javax.swing.JButton();
         init_setOutputFileBtn = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
         init_outputFileLbl = new javax.swing.JTextField();
         jSeparator3 = new javax.swing.JSeparator();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        help_configurationLbl = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
         export_saveBtn = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        help_exportLbl = new javax.swing.JLabel();
         eastPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        modes_creationRadioBtn = new javax.swing.JRadioButton();
-        modes_editionRadioBtn = new javax.swing.JRadioButton();
-        modes_testRadioBtn = new javax.swing.JRadioButton();
         jPanel8 = new javax.swing.JPanel();
         shape_drawAssetChk = new javax.swing.JCheckBox();
         shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
         shape_drawShapeChk = new javax.swing.JCheckBox();
         shape_drawPolysChk = new javax.swing.JCheckBox();
-        jLabel8 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        help_optionsLbl = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel16 = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        help_toolsLbl = new javax.swing.JLabel();
+        tools_insertPointsBtn = new javax.swing.JButton();
+        tools_removePointsBtn = new javax.swing.JButton();
+        tools_clearPointsBtn = new javax.swing.JButton();
+        jPanel17 = new javax.swing.JPanel();
+        jPanel18 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        help_hintsLbl = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         renderPanel.setLayout(new java.awt.BorderLayout());
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-
-        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_ball.png"))); // NOI18N
-        jLabel2.setText("<html>\nOnce defined, you can directly test your shape in a physics environment.\nFor this purpose, hold \"shift\" + \"left click\" and drag the mouse to throw some dynamic objects to the shape.");
-        jLabel2.setIconTextGap(10);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addContainerGap())
-        );
-
-        renderPanel.add(jPanel1, java.awt.BorderLayout.NORTH);
-
         getContentPane().add(renderPanel, java.awt.BorderLayout.CENTER);
 
         westPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(0, 0, 0)));
-
-        jLabel1.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("    Assets (names for the FixtureAtlas)");
-        jLabel1.setOpaque(true);
 
         assets_assetList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -147,11 +128,38 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jPanel11.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel11.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Assets");
+
+        help_assetsLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_assetsLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_assetsLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                .addComponent(help_assetsLbl))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel9)
+            .addComponent(help_assetsLbl)
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(assets_removeAssetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
@@ -160,13 +168,14 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(assets_removeAssetBtn)
                 .addContainerGap())
@@ -192,22 +201,47 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("    Configuration");
-        jLabel9.setOpaque(true);
-
         init_outputFileLbl.setEditable(false);
         init_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         init_outputFileLbl.setText("<no file specified>");
 
         jSeparator3.setForeground(new java.awt.Color(102, 102, 102));
 
+        jPanel9.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel9.setLayout(new java.awt.BorderLayout());
+
+        jPanel7.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Configuration");
+
+        help_configurationLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_configurationLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_configurationLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addComponent(help_configurationLbl))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel5)
+            .addComponent(help_configurationLbl)
+        );
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
@@ -216,12 +250,15 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(init_setOutputFileBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                     .addComponent(init_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
                 .addContainerGap())
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
                 .addComponent(init_setOutputFileBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(init_outputFileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -230,12 +267,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(init_addAssetsByFilesBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(150, Short.MAX_VALUE)))
         );
-
-        jLabel11.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText("    Export");
-        jLabel11.setOpaque(true);
 
         export_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_export.png"))); // NOI18N
         export_saveBtn.setText("Save");
@@ -247,21 +283,49 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jPanel10.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel10.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Export");
+
+        help_exportLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_exportLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_exportLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                .addComponent(help_exportLbl))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel7)
+            .addComponent(help_exportLbl)
+        );
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(export_saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
                 .addComponent(export_saveBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -297,7 +361,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -306,67 +370,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel10)
                 .addContainerGap(13, Short.MAX_VALUE))
-        );
-
-        jLabel7.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("    Editor modes");
-        jLabel7.setOpaque(true);
-
-        shapeModeBtnGrp.add(modes_creationRadioBtn);
-        modes_creationRadioBtn.setSelected(true);
-        modes_creationRadioBtn.setText("Creation");
-        modes_creationRadioBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modes_creationRadioBtnActionPerformed(evt);
-            }
-        });
-
-        shapeModeBtnGrp.add(modes_editionRadioBtn);
-        modes_editionRadioBtn.setText("Edition");
-        modes_editionRadioBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modes_editionRadioBtnActionPerformed(evt);
-            }
-        });
-
-        shapeModeBtnGrp.add(modes_testRadioBtn);
-        modes_testRadioBtn.setText("Test");
-        modes_testRadioBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modes_testRadioBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(modes_creationRadioBtn)
-                .addContainerGap(99, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(modes_editionRadioBtn)
-                .addContainerGap(109, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(modes_testRadioBtn)
-                .addContainerGap(119, Short.MAX_VALUE))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(modes_creationRadioBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modes_editionRadioBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modes_testRadioBtn)
-                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         shape_drawAssetChk.setSelected(true);
@@ -400,18 +403,41 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("    Options");
-        jLabel8.setOpaque(true);
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Options");
+
+        help_optionsLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_optionsLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_optionsLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
+                .addComponent(help_optionsLbl))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3)
+            .addComponent(help_optionsLbl)
+        );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
@@ -419,12 +445,12 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(shape_drawAssetChk)
                     .addComponent(shape_drawShapeChk)
                     .addComponent(shape_drawPolysChk))
-                .addContainerGap())
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(shape_drawAssetChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -436,23 +462,166 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel16.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel16.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("Edition tools");
+
+        help_toolsLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_toolsLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_toolsLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+        jPanel16.setLayout(jPanel16Layout);
+        jPanel16Layout.setHorizontalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                .addComponent(help_toolsLbl))
+        );
+        jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel20)
+            .addComponent(help_toolsLbl)
+        );
+
+        tools_insertPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
+        tools_insertPointsBtn.setText("Insert point(s)");
+        tools_insertPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tools_insertPointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_insertPointsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tools_insertPointsBtnActionPerformed(evt);
+            }
+        });
+
+        tools_removePointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_remove.png"))); // NOI18N
+        tools_removePointsBtn.setText("Remove point(s)");
+        tools_removePointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tools_removePointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_removePointsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tools_removePointsBtnActionPerformed(evt);
+            }
+        });
+
+        tools_clearPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_delete.png"))); // NOI18N
+        tools_clearPointsBtn.setText("Clear all points");
+        tools_clearPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tools_clearPointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_clearPointsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tools_clearPointsBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tools_insertPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tools_removePointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tools_clearPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tools_insertPointsBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tools_removePointsBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tools_clearPointsBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel18.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel22.setText("Hints");
+
+        help_hintsLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_help.png"))); // NOI18N
+        help_hintsLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                help_hintsLblMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
+        jPanel18.setLayout(jPanel18Layout);
+        jPanel18Layout.setHorizontalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addComponent(help_hintsLbl))
+        );
+        jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel22)
+            .addComponent(help_hintsLbl)
+        );
+
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("<html>\n\n1 &bull; Set the output file,<br/>\n2 &bull; Add some assets,<br/>\n3 &bull; Select an asset and define its collision shapes (you can define multiple shapes).<br/><br/>\n\n&bull; <font color=\"#00AA00\">Create a shape</font> with <font color=\"#0000FF\">ctrl + left clics</font><br/>\n&bull; <font color=\"#00AA00\">Edit a shape</font> by <font color=\"#0000FF\">dragging the left mouse button</font><br/>\n&bull; <font color=\"#00AA00\">Test collisions</font> with <font color=\"#0000FF\">shift + dragging the left mouse button</font><br/><br/>\n\n&bull; <font color=\"#00AA00\">Zoom</font> by<font color=\"#0000FF\"> scrolling</font><br/>\n&bull; <font color=\"#00AA00\">Pan</font> by <font color=\"#0000FF\">dragging the right mouse button</font><br/>\n\n");
+        jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+        jPanel17.setLayout(jPanel17Layout);
+        jPanel17Layout.setHorizontalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addGap(10, 10, 10))
+        );
+        jPanel17Layout.setVerticalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout eastPanelLayout = new javax.swing.GroupLayout(eastPanel);
         eastPanel.setLayout(eastPanelLayout);
         eastPanelLayout.setHorizontalGroup(
             eastPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         eastPanelLayout.setVerticalGroup(
             eastPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eastPanelLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         getContentPane().add(eastPanel, java.awt.BorderLayout.EAST);
@@ -544,17 +713,77 @@ public class MainWindow extends javax.swing.JFrame {
 		AppContext.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
 
-	private void modes_creationRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_creationRadioBtnActionPerformed
-		App.instance().setMode(App.Modes.CREATION);
-	}//GEN-LAST:event_modes_creationRadioBtnActionPerformed
+	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
+		AppContext.instance().insertPointBetweenSelected();
+	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
 
-	private void modes_editionRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_editionRadioBtnActionPerformed
-		App.instance().setMode(App.Modes.EDITION);
-	}//GEN-LAST:event_modes_editionRadioBtnActionPerformed
+	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
+		AppContext.instance().removeSelectedPoints();
+	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
-	private void modes_testRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modes_testRadioBtnActionPerformed
-		App.instance().setMode(App.Modes.TEST);
-	}//GEN-LAST:event_modes_testRadioBtnActionPerformed
+	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
+		AppContext.instance().clearTempObjects();
+	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
+
+	private void help_configurationLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_configurationLblMouseClicked
+		JOptionPane.showMessageDialog(this, 
+			"<html>"
+			+ "First, set the output file to either an existing file or a new file. If you choose an existing file,<br/>"
+			+ "you will be prompted to load its content over the current one (if any).<br/><br/>"
+			+ ""
+			+ "Then, add some image assets (png, jpg...) and start drawing your shapes !<br/><br/>"
+			+ ""
+			+ "<i><u>Note</u>: Your assets will be referenced relatively to the location of the output file. If you move them<br/>"
+			+ "away, the editor won't be able to load them correctly thereafter.</i>"
+		);
+	}//GEN-LAST:event_help_configurationLblMouseClicked
+
+	private void help_exportLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_exportLblMouseClicked
+		JOptionPane.showMessageDialog(this,
+			"<html>"
+			+ "Saving your work to the output file will erase its content and replace it with every shape you drew.<br/>"
+			+ "Note that assets without any shape defined won't be saved.<br/><br/>"
+			+ ""
+			+ "Also, once you saved, the asset list is cleared and the output file is loaded back, to assure you that<br/>"
+			+ "everything went well."
+		);
+	}//GEN-LAST:event_help_exportLblMouseClicked
+
+	private void help_assetsLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_assetsLblMouseClicked
+		JOptionPane.showMessageDialog(this,
+			"<html>"
+			+ "Each asset from the list let you define a collision mask by creating one or more contour shape.<br/><br/>"
+			+ ""
+			+ "<i><u>Note</u>: The names of the asset that appear in the list are the keys you will have to use in the<br/>"
+			+ "FixtureAtlas.</i>"
+		);
+	}//GEN-LAST:event_help_assetsLblMouseClicked
+
+	private void help_optionsLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_optionsLblMouseClicked
+		JOptionPane.showMessageDialog(this,
+			"<html>"
+			+ "Options speak for themselves, don't they ? :)"
+		);
+	}//GEN-LAST:event_help_optionsLblMouseClicked
+
+	private void help_toolsLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_toolsLblMouseClicked
+		JOptionPane.showMessageDialog(this,
+			"<html>"
+			+ "Edition tools can only be used when you defined at least one shape for the current asset.<br/><br/>"
+			+ ""
+			+ "&bull; <u>Insert points</u>: select two or more adjacent points to insert new point(s) between them.<br/>"
+			+ "&bull; <u>Remove points</u>: removes the selected points. Be careful because you can end up with shapes<br/>"
+			+ "with less than 3 vertices.<br/>"
+			+ "&bull; <u>Clear all points</u>: removes every shape from the current asset."
+		);
+	}//GEN-LAST:event_help_toolsLblMouseClicked
+
+	private void help_hintsLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_hintsLblMouseClicked
+		JOptionPane.showMessageDialog(this,
+			"<html>"
+			+ "Main help section that I want everyone to see."
+		);
+	}//GEN-LAST:event_help_hintsLblMouseClicked
 
 	// -------------------------------------------------------------------------
 
@@ -692,33 +921,47 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton assets_removeAssetBtn;
     private javax.swing.JPanel eastPanel;
     private javax.swing.JButton export_saveBtn;
+    private javax.swing.JLabel help_assetsLbl;
+    private javax.swing.JLabel help_configurationLbl;
+    private javax.swing.JLabel help_exportLbl;
+    private javax.swing.JLabel help_hintsLbl;
+    private javax.swing.JLabel help_optionsLbl;
+    private javax.swing.JLabel help_toolsLbl;
     private javax.swing.JButton init_addAssetsByFilesBtn;
     private javax.swing.JTextField init_outputFileLbl;
     private javax.swing.JButton init_setOutputFileBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JRadioButton modes_creationRadioBtn;
-    private javax.swing.JRadioButton modes_editionRadioBtn;
-    private javax.swing.JRadioButton modes_testRadioBtn;
     private javax.swing.JPanel renderPanel;
     private javax.swing.ButtonGroup shapeModeBtnGrp;
     private javax.swing.JCheckBox shape_drawAssetChk;
     private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
     private javax.swing.JCheckBox shape_drawPolysChk;
     private javax.swing.JCheckBox shape_drawShapeChk;
+    private javax.swing.JButton tools_clearPointsBtn;
+    private javax.swing.JButton tools_insertPointsBtn;
+    private javax.swing.JButton tools_removePointsBtn;
     private javax.swing.JPanel westPanel;
     // End of variables declaration//GEN-END:variables
 

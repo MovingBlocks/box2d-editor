@@ -75,6 +75,12 @@ public class App implements ApplicationListener {
 		
 		drawer = new AppDrawer(camera);
 
+		InputMultiplexer im = new InputMultiplexer();
+		im.addProcessor(new PanZoomInputProcessor());
+		im.addProcessor(new ShapeCreationInputProcessor());
+		im.addProcessor(new ShapeEditionInputProcessor());
+		im.addProcessor(new BallThrowInputProcessor());
+		Gdx.input.setInputProcessor(im);
 		Gdx.graphics.setVSync(true);
 	}
 
@@ -150,27 +156,12 @@ public class App implements ApplicationListener {
 	// -------------------------------------------------------------------------
 	// Public API
 	// -------------------------------------------------------------------------
-	
-	public enum Modes { CREATION, EDITION, TEST }
 
 	public Vector2 screenToWorld(int x, int y) {
 		return new Vector2(x, Gdx.graphics.getHeight() - y)
 			.sub(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2)
 			.mul(camera.zoom)
 			.add(camera.position.x, camera.position.y);
-	}
-
-	public void setMode(Modes mode) {
-		InputMultiplexer im = new InputMultiplexer();
-		im.addProcessor(new PanZoomInputProcessor());
-
-		switch (mode) {
-			case CREATION: im.addProcessor(new ShapeCreationInputProcessor()); break;
-			case EDITION: im.addProcessor(new ShapeEditionInputProcessor()); break;
-			case TEST: im.addProcessor(new BallThrowInputProcessor()); break;
-		}
-
-		Gdx.input.setInputProcessor(im);
 	}
 
 	public void clearAsset() {

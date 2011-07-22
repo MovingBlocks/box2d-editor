@@ -27,7 +27,7 @@ public class IO {
 				continue;
 
 			os.writeUTF(name);
-			writeVecs(os, bm.getShapes());
+			writeVecss(os, bm.getShapes());
 			writeVecss(os, bm.getPolygons());
 		}
 
@@ -63,7 +63,7 @@ public class IO {
 
 		while (is.available() > 0) {
 			String name = is.readUTF();
-			Vector2[] points = readVecs(is);
+			Vector2[][] points = readVecss(is);
 			Vector2[][] polygons = readVecss(is);
 
 			BodyModel bm = new BodyModel();

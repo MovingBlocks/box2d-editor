@@ -5,14 +5,24 @@ import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 public class ShapeCreationInputProcessor extends InputAdapter {
+	boolean isActive = false;
+
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (button != Buttons.LEFT)
+		boolean isValid = button == Buttons.LEFT 
+			&& (!Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) &&
+			    !Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+			&& (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) ||
+			    Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT));
+
+		if (!isValid)
 			return false;
+		isActive = true;
 
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
@@ -36,10 +46,17 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 	}
 
 	@Override
-	public boolean touchDragged(int x, int y, int pointer) {
-		if (!Gdx.input.isButtonPressed(Buttons.LEFT))
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		if (!isActive)
 			return false;
+		isActive = false;
+		return true;
+	}
 
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+		if (!isActive)
+			return false;
 		touchMoved(x, y);
 		return true;
 	}
@@ -47,7 +64,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 	@Override
 	public boolean touchMoved(int x, int y) {
 		if (!AppContext.instance().isCurrentModelValid())
-			return true;
+			return false;
 
 		Vector2 p = App.instance().screenToWorld(x, y);
 
@@ -60,6 +77,6 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 		// Next point assignment
 		AppContext.instance().nextPoint = p;
-		return true;
+		return false;
 	}
 }

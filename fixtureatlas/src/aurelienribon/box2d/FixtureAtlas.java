@@ -124,7 +124,7 @@ public class FixtureAtlas {
 			is = new DataInputStream(stream);
 			while (is.available() > 0) {
 				String name = is.readUTF();
-				Vector2[] points = readVecs(is);
+				Vector2[][] points = readVecss(is);
 				Vector2[][] polygons = readVecss(is);
 
 				BodyModel bm = new BodyModel(polygons);
@@ -139,6 +139,7 @@ public class FixtureAtlas {
 				try { is.close(); } catch (IOException ex) {}
 		}
 	}
+	// -------------------------------------------------------------------------
 
 	private Vector2 readVec(DataInputStream is) throws IOException {
 		Vector2 v = new Vector2();

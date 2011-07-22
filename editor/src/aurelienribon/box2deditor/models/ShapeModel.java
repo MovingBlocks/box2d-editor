@@ -1,8 +1,10 @@
 package aurelienribon.box2deditor.models;
 
+import aurelienribon.box2deditor.utils.ShapeUtils;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ShapeModel {
@@ -44,8 +46,14 @@ public class ShapeModel {
 		return points.get(idx);
 	}
 
+	public Vector2 getLastPoint() {
+		return points.get(points.size()-1);
+	}
+
 	public void close() {
 		isClosed = true;
+		if (ShapeUtils.isPolygonCCW(points.toArray(new Vector2[points.size()])))
+			Collections.reverse(points);
 	}
 
 	public boolean isClosed() {

@@ -7,6 +7,7 @@ import aurelienribon.box2deditor.earclipping.Clipper;
 import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.App;
 import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
+import aurelienribon.box2deditor.utils.ShapeUtils;
 import aurelienribon.box2deditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
 import java.io.File;
@@ -182,13 +183,16 @@ public class AppContext {
 		Vector2[][] polygons = getCurrentModel().getPolygons();
 
 		if (shapes != null) {
-			shapes = VectorUtils.mul(shapes, currentSize.x / 1f);
-			for (Vector2[] shape : shapes)
-				tempShapes.add(new ShapeModel(shape));
+			shapes = VectorUtils.mul(shapes, currentSize.x / 100f);
+			for (Vector2[] shape : shapes) {
+				ShapeModel shapeModel = new ShapeModel(shape);
+				shapeModel.close();
+				tempShapes.add(shapeModel);
+			}
 		}
 
 		if (polygons != null) {
-			polygons = VectorUtils.mul(polygons, currentSize.x / 1f);
+			polygons = VectorUtils.mul(polygons, currentSize.x / 100f);
 			tempPolygons.addAll(Arrays.asList(polygons));
 			App.instance().setBody(polygons);
 		}
@@ -196,21 +200,24 @@ public class AppContext {
 
 	public void saveCurrentModel() {
 		List<ShapeModel> closedShapes = new ArrayList<ShapeModel>();
-		for (ShapeModel shape : tempShapes)
-			if (shape.isClosed())
+		for (ShapeModel shape : tempShapes) {
+			if (shape.isClosed()) {
+				shape.close();
 				closedShapes.add(shape);
+			}
+		}
 
 		Vector2[][] points = new Vector2[closedShapes.size()][];
 		for (int i=0; i<closedShapes.size(); i++)
 			points[i] = closedShapes.get(i).getPoints();
 
-		Vector2[][] normalizedPoints = VectorUtils.mul(points, 1f / currentSize.x);
+		Vector2[][] normalizedPoints = VectorUtils.mul(points, 100f / currentSize.x);
 		Vector2[][] normalizedPolygons = computePolygons(normalizedPoints);
 
 		BodyModel bm = getCurrentModel();
 		bm.set(normalizedPoints, normalizedPolygons);
 
-		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / 1f);
+		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / 100f);
 		tempPolygons.clear();
 		Collections.addAll(tempPolygons, polygons);
 
@@ -233,42 +240,41 @@ public class AppContext {
 		for (Vector2[] shape : shapes) {
 			Vector2[][] polygons = Clipper.polygonize(shape);
 			if (polygons != null)
-				ret.addAll(Arrays.asList(polygons));
+				for (Vector2[] polygon : polygons)
+					if (ShapeUtils.getPolygonArea(polygon) > 1)
+						ret.add(polygon);
 		}
 		return ret.toArray(new Vector2[ret.size()][]);
 	}
 
 	// -------------------------------------------------------------------------
 
-	public boolean removeSelectedPoints() {
-		/*if (tempShape.size() - selectedPoints.size() < 3)
-			return false;
-		tempShape.remove(tempShape.size()-1);
-		tempShape.removeAll(selectedPoints);
-		tempShape.add(tempShape.get(0));
-		saveCurrentModel();*/
-		return true;
+	public void removeSelectedPoints() {
+		for (ShapeModel shape : tempShapes)
+			for (Vector2 p : selectedPoints)
+				shape.removePoint(p);
+		saveCurrentModel();
 	}
 
 	public void insertPointBetweenSelected() {
-		/*if (selectedPoints.size() < 2)
-			return;
-
 		List<Vector2> toAdd = new ArrayList<Vector2>();
 
-		for (int i=0; i<tempShape.size(); i++) {
-			Vector2 p1 = i == 0 ? tempShape.get(tempShape.size()-2) : tempShape.get(i-1);
-			Vector2 p2 = tempShape.get(i);
-			Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-			assert p1 != p2;
+		for (ShapeModel shape : tempShapes) {
+			for (int i=0; i<shape.getPointCount(); i++) {
+				Vector2 p1 = shape.getPoint(i);
+				Vector2 p2 = i != shape.getPointCount()-1
+					? shape.getPoint(i+1)
+					: shape.getPoint(0);
 
-			if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
-				tempShape.add(i == 0 ? tempShape.size()-1 : i, p);
-				toAdd.add(p);
+				if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
+					Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+					shape.addPoint(i+1, p);
+					toAdd.add(p);
+				}
 			}
 		}
 
 		selectedPoints.addAll(toAdd);
-		saveCurrentModel();*/
+		saveCurrentModel();
 	}
 }

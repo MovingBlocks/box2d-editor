@@ -4,15 +4,24 @@ import aurelienribon.box2deditor.AppContext;
 import aurelienribon.box2deditor.renderpanel.App;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 public class BallThrowInputProcessor extends InputAdapter {
+	boolean isActive = false;
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (button != Buttons.LEFT)
+		boolean isValid = button == Buttons.LEFT
+			&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ||
+			    Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+			&& (!Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) &&
+			    !Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT));
+
+		if (!isValid)
 			return false;
+		isActive = true;
 
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
@@ -24,8 +33,9 @@ public class BallThrowInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (button != Buttons.LEFT)
+		if (!isActive)
 			return false;
+		isActive = false;
 
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
@@ -45,7 +55,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!Gdx.input.isButtonPressed(Buttons.LEFT))
+		if (!isActive)
 			return false;
 
 		if (!AppContext.instance().isCurrentModelValid())

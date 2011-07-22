@@ -13,20 +13,9 @@ public class Clipper {
 			yv[i] = points[i].y;
 		}
 
-		if (new Polygon(xv, yv).isCCW()) {
-			float[] nxv = new float[vNum];
-			float[] nyv = new float[vNum];
-			for (int i = 0; i < vNum; i++) {
-				nxv[i] = xv[vNum - 1 - i];
-				nyv[i] = yv[vNum - 1 - i];
-			}
-			xv = nxv;
-			yv = nyv;
-		}
-
 		Triangle[] tempTriangles = triangulatePolygon(xv, yv, vNum);
 		Polygon[] tempPolygons = polygonizeTriangles(tempTriangles);
-		
+
 		if (tempPolygons == null)
 			return null;
 
@@ -219,7 +208,7 @@ public class Clipper {
 			if (myTri.isInside(xv[j], yv[j]))
 				return false;
 		}
-		
+
 		return true;
 	}
 }
