@@ -23,10 +23,17 @@ import com.badlogic.gdx.physics.box2d.World;
 import java.util.Random;
 
 public class App implements ApplicationListener {
+
+	// -------------------------------------------------------------------------
+	// Launcher
+	// -------------------------------------------------------------------------
+
 	public static void main(final String[] args) {
 		new LwjglApplication(new App(), "", 500, 750, false);
 	}
 
+	// -------------------------------------------------------------------------
+	// Static fields
 	// -------------------------------------------------------------------------
 	
 	private static final Vector2 WORLD_SIZE = new Vector2(10, 15);
@@ -34,8 +41,10 @@ public class App implements ApplicationListener {
 	private static final Vector2 BALL_SIZE = new Vector2(0.3f, 0.3f);
 	private static final Vector2 VIAL_POS = new Vector2(-4, -7);
 
-	private static final int MAX_BALL_COUNT = 100;
+	private static final int MAX_BALL_COUNT = 150;
 
+	// -------------------------------------------------------------------------
+	// Public API
 	// -------------------------------------------------------------------------
 	
 	private SpriteBatch spriteBatch;
@@ -88,7 +97,7 @@ public class App implements ApplicationListener {
 		// 3. Create its fixtures automatically by using the FixtureAtlas. Note
 		//    that the fixture name must exactly match the one used in the
 		//    editor. It has no real relationship with the asset used itself.
-		atlas.createFixtures(vialModel, "gfx\\test01 - POT.png", VIAL_SIZE.x, VIAL_SIZE.y);
+		atlas.createFixtures(vialModel, "gfx\\test01.png", VIAL_SIZE.x, VIAL_SIZE.y);
 	}
 
 	private void createBallModels() {
@@ -138,7 +147,11 @@ public class App implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-
+		vialTexture.dispose();
+		ballTexture.dispose();
+		spriteBatch.dispose();
+		font.dispose();
+		world.dispose();
 	}
 
 	@Override
@@ -186,20 +199,33 @@ public class App implements ApplicationListener {
 	public void resume() {
 
 	}
+	
+	// -------------------------------------------------------------------------
+	// Internals
+	// -------------------------------------------------------------------------
+
+	private void restart() {
+		Random rand = new Random();
+		for (int i=0; i<MAX_BALL_COUNT; i++) {
+			float tx = rand.nextFloat() * 1.0f - 0.5f;
+			float ty = rand.nextFloat() * WORLD_SIZE.y*4 + WORLD_SIZE.y/2 + BALL_SIZE.y;
+			float angle = rand.nextFloat() * MathUtils.PI * 2;
+
+			ballModels[i].setLinearVelocity(0, 0);
+			ballModels[i].setAngularVelocity(0);
+			ballModels[i].setTransform(tx, ty, angle);
+			ballModels[i].setAwake(true);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Inputs
+	// -------------------------------------------------------------------------
 
 	private final InputProcessor inputProcessor = new InputAdapter() {
 		@Override
 		public boolean touchDown(int x, int y, int pointer, int button) {
-			Random rand = new Random();
-			for (int i=0; i<MAX_BALL_COUNT; i++) {
-				float tx = rand.nextFloat() * 1.0f - 0.5f;
-				float ty = rand.nextFloat() * WORLD_SIZE.y*4 + WORLD_SIZE.y/2 + BALL_SIZE.y;
-				float angle = rand.nextFloat() * MathUtils.PI * 2;
-
-				ballModels[i].setLinearVelocity(0, 0);
-				ballModels[i].setAngularVelocity(0);
-				ballModels[i].setTransform(tx, ty, angle);
-			}
+			restart();
 			return false;
 		}
 	};
