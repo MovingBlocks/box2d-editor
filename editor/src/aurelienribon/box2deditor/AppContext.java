@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class AppContext {
     private static AppContext instance = new AppContext();
 	public static AppContext instance() { return instance; }

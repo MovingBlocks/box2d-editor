@@ -3,6 +3,10 @@ package aurelienribon.box2deditor.models;
 import aurelienribon.box2deditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class BodyModel {
 	public static final BodyModel EMPTY = new BodyModel() {
 		@Override public void set(Vector2[][] shapes, Vector2[][] polygons) {}

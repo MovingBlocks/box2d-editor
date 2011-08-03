@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class ShapeEditionInputProcessor extends InputAdapter {
 	boolean isActive = false;
 	private Vector2 draggedPoint;

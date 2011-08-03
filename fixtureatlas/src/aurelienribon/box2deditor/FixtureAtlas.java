@@ -1,4 +1,4 @@
-package aurelienribon.box2d;
+package aurelienribon.box2deditor;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +15,7 @@ import java.util.Map;
  * Loads shapes (fixture sets) defined with the Box2D Editor and applies them
  * to bodies. Has to be disposed to free some resources.
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
 public class FixtureAtlas {
 	private static final FixtureDef DEFAULT_FIXTURE = new FixtureDef();

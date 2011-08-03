@@ -19,6 +19,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class MainWindow extends javax.swing.JFrame {
 	private final DefaultListModel assetsListModel;
 

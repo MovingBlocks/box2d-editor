@@ -2,6 +2,10 @@ package aurelienribon.box2deditor.earclipping;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Original code from EwJordan (http://www.ewjordan.com/earClip/)
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class Clipper {
 	public static Vector2[][] polygonize(Vector2[] points) {
 		int vNum = points.length;

@@ -1,5 +1,9 @@
 package aurelienribon.box2deditor.earclipping;
 
+/**
+ *
+ * @author EwJordan (http://www.ewjordan.com/earClip/)
+ */
 public class Triangle {
 	public float[] x;
 	public float[] y;

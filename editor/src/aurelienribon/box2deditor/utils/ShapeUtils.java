@@ -2,6 +2,10 @@ package aurelienribon.box2deditor.utils;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class ShapeUtils {
 	public static float getPolygonSignedArea(Vector2[] points) {
 		if (points.length < 3)

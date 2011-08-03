@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class App implements ApplicationListener {
 	private static App instance = new App();
 	public static App instance() { if (instance == null) instance = new App(); return instance; }

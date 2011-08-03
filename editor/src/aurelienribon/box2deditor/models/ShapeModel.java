@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class ShapeModel {
     private final List<Vector2> points = new ArrayList<Vector2>();
 	private boolean isClosed = false;

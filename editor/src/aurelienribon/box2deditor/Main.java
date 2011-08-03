@@ -8,6 +8,10 @@ import java.awt.Toolkit;
 import java.io.File;
 import javax.swing.SwingUtilities;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class Main {
     public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

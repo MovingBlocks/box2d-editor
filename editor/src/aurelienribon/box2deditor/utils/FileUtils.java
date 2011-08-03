@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
 
+/**
+ *
+ * @author Unknown ?
+ */
 public class FileUtils {
 
 	/**

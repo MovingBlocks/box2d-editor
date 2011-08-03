@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class IO {
 	/**
 	 * Exports a list of BodyModels to a file.

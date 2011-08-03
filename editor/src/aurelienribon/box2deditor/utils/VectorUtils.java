@@ -2,6 +2,10 @@ package aurelienribon.box2deditor.utils;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ *
+ * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ */
 public class VectorUtils {
 	public static Vector2 mul(Vector2 v, float coeff) {
 		return new Vector2(v).mul(coeff);

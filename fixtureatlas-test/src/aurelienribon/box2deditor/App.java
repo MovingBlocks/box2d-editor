@@ -1,5 +1,6 @@
-package aurelienribon.box2d;
+package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.FixtureAtlas;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
