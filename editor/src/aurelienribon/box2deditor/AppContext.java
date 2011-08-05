@@ -3,13 +3,14 @@ package aurelienribon.box2deditor;
 import aurelienribon.box2deditor.utils.FileUtils;
 import aurelienribon.box2deditor.io.IO;
 import aurelienribon.box2deditor.models.BodyModel;
-import aurelienribon.box2deditor.earclipping.Clipper;
+import aurelienribon.box2deditor.earclipping.ewjordan.Clipper;
 import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.App;
 import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
 import aurelienribon.box2deditor.utils.ShapeUtils;
 import aurelienribon.box2deditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.TreeMap;
 public class AppContext {
     private static AppContext instance = new AppContext();
 	public static AppContext instance() { return instance; }
+	
+	public static final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 	// -------------------------------------------------------------------------
 	// Parameters
@@ -35,6 +38,9 @@ public class AppContext {
 	public boolean isAssetDrawnWithOpacity50 = false;
 	public boolean isShapeDrawn = true;
 	public boolean arePolyDrawn = true;
+	public boolean isBackgroundLight = false;
+	public boolean isSnapToGridEnabled = false;
+	public boolean isGridShown = true;
 
 	// -------------------------------------------------------------------------
 	// Output file
@@ -59,7 +65,7 @@ public class AppContext {
 
 	public String getFullPath(String name) {
 		assert outputFile != null;
-		return outputFile.getParent() + File.separator + name;
+		return new File(outputFile.getParent(), name).getPath();
 	}
 
 	// -------------------------------------------------------------------------
@@ -164,8 +170,10 @@ public class AppContext {
 
 	// -------------------------------------------------------------------------
 
-	public void createNewTempShape() {
-		tempShapes.add(new ShapeModel());
+	public ShapeModel createNewTempShape() {
+		ShapeModel newShape = new ShapeModel();
+		tempShapes.add(newShape);
+		return newShape;
 	}
 
 	public ShapeModel[] getTempShapes() {

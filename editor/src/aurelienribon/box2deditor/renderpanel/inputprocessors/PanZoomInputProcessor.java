@@ -54,6 +54,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 			}
 		}
 
+		OrthographicCamera camera = app.getCamera();
 		app.getCamera().zoom = 100f / app.getZoom();
 		app.getCamera().update();
 		return false;

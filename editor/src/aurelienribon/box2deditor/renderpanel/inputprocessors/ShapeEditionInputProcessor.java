@@ -83,9 +83,9 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
 
 		if (draggedPoint != null) {
+			Vector2 p = App.instance().alignedScreenToWorld(x, y);
 			AppContext.instance().clearTempPolygons();
 
 			float dx = p.x - draggedPoint.x;
@@ -98,6 +98,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 					sp.add(dx, dy);
 			}
 		} else {
+			Vector2 p = App.instance().screenToWorld(x, y);
 			AppContext.instance().mousePath.add(p);
 		}
 		
@@ -109,9 +110,8 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return false;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
-
 		// Nearest point computation
+		Vector2 p = App.instance().screenToWorld(x, y);
 		AppContext.instance().nearestPoint = null;
 		for (Vector2 v : getAllShapePoints())
 			if (v.dst(p) < 10 * App.instance().getCamera().zoom)

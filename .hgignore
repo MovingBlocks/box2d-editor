@@ -1,7 +1,6 @@
 syntax: glob
-*/prj-netbeans/build/*
-*/prj-netbeans/dist/*
-*/prj-netbeans/libs/*
-*/prj-netbeans/data/*
-fixtureatlas-test-android/prj-eclipse/bin/*
 *.zip
+editor/build.xml
+editor/build/*
+editor/manifest.mf
+editor/nbproject/*

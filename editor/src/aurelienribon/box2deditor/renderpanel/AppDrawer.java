@@ -23,8 +23,6 @@ public class AppDrawer {
 
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
-	private final Vector2 tp1 = new Vector2();
-	private final Vector2 tp2 = new Vector2();
 
 	public AppDrawer(OrthographicCamera camera) {
 		this.camera = camera;

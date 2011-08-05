@@ -1,13 +1,17 @@
-package aurelienribon.box2deditor.ui;
+package aurelienribon.box2deditor;
 
-import aurelienribon.box2deditor.AppContext;
 import aurelienribon.box2deditor.renderpanel.App;
-import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -28,10 +33,33 @@ public class MainWindow extends javax.swing.JFrame {
 
 	// -------------------------------------------------------------------------
 
-    public MainWindow(final LwjglCanvas glCanvas) {
+    public MainWindow(final Component canvas) {
         initComponents();
-		renderPanel.add(glCanvas.getCanvas(), BorderLayout.CENTER);
 
+		// Launch a timer to periodically update the console
+		final Timer consoleTimer = new Timer(100, new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				ByteArrayOutputStream stream = AppContext.outputStream;
+				if (stream.size() > 0) {
+					String txt = stream.toString();
+					consoleTextArea.append(txt);
+					stream.reset();
+				}
+			}
+		});
+		consoleTimer.start();
+
+		// Stop the timer on exit
+		addWindowListener(new WindowAdapter() {
+			@Override public void windowClosing(WindowEvent e) {
+				consoleTimer.stop();
+			}
+		});
+
+		// Set the render panel to an opengl context
+		renderPanel.add(canvas, BorderLayout.CENTER);
+
+		// Init the ui
 		assetsListModel = new DefaultListModel();
 		assets_assetList.setModel(assetsListModel);
 
@@ -56,7 +84,12 @@ public class MainWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         shapeModeBtnGrp = new javax.swing.ButtonGroup();
+        jSplitPane1 = new javax.swing.JSplitPane();
         renderPanel = new javax.swing.JPanel();
+        consolePanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        consoleTextArea = new javax.swing.JTextArea();
         westPanel = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         assets_assetListScrollPane = new javax.swing.JScrollPane();
@@ -69,7 +102,6 @@ public class MainWindow extends javax.swing.JFrame {
         init_addAssetsByFilesBtn = new javax.swing.JButton();
         init_setOutputFileBtn = new javax.swing.JButton();
         init_outputFileLbl = new javax.swing.JTextField();
-        jSeparator3 = new javax.swing.JSeparator();
         jPanel9 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -83,13 +115,16 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        help_optionsLbl = new javax.swing.JLabel();
         shape_drawAssetChk = new javax.swing.JCheckBox();
         shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
         shape_drawShapeChk = new javax.swing.JCheckBox();
         shape_drawPolysChk = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        help_optionsLbl = new javax.swing.JLabel();
+        shape_useLightBackgroundChk = new javax.swing.JCheckBox();
+        shape_enableSnapToGridChk = new javax.swing.JCheckBox();
+        shape_drawGridChk = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
@@ -105,11 +140,60 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        renderPanel.setLayout(new java.awt.BorderLayout());
-        getContentPane().add(renderPanel, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setBorder(null);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setContinuousLayout(true);
 
+        renderPanel.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setLeftComponent(renderPanel);
+
+        consolePanel.setBackground(Theme.MAIN_BACKGROUND);
+        consolePanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, Theme.SEPARATOR));
+
+        jLabel2.setForeground(Theme.MAIN_FOREGROUND);
+        jLabel2.setText("Console (standard output):");
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, Theme.SEPARATOR));
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        consoleTextArea.setBackground(Theme.CONSOLE_BACKGROUND);
+        consoleTextArea.setColumns(20);
+        consoleTextArea.setEditable(false);
+        consoleTextArea.setForeground(Theme.CONSOLE_FOREGROUND);
+        consoleTextArea.setRows(5);
+        jScrollPane1.setViewportView(consoleTextArea);
+
+        javax.swing.GroupLayout consolePanelLayout = new javax.swing.GroupLayout(consolePanel);
+        consolePanel.setLayout(consolePanelLayout);
+        consolePanelLayout.setHorizontalGroup(
+            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(consolePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addContainerGap(61, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+        );
+        consolePanelLayout.setVerticalGroup(
+            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(consolePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
+        );
+
+        jSplitPane1.setRightComponent(consolePanel);
+
+        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+
+        westPanel.setBackground(Theme.MAIN_BACKGROUND);
         westPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(0, 0, 0)));
 
+        jPanel4.setBackground(Theme.MAIN_BACKGROUND);
+
+        assets_assetList.setBackground(Theme.TEXTAREA_BACKGROUND);
+        assets_assetList.setForeground(Theme.TEXTAREA_FOREGROUND);
         assets_assetList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -126,15 +210,18 @@ public class MainWindow extends javax.swing.JFrame {
         assets_removeAssetBtn.setText("Remove selected asset(s)");
         assets_removeAssetBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         assets_removeAssetBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        assets_removeAssetBtn.setOpaque(false);
         assets_removeAssetBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 assets_removeAssetBtnActionPerformed(evt);
             }
         });
 
-        jPanel11.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel11.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel11.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel11.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
 
+        jLabel9.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Assets");
 
@@ -150,14 +237,20 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
-                .addComponent(help_assetsLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addComponent(help_assetsLbl)
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel9)
-            .addComponent(help_assetsLbl)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel9)
+                    .addComponent(help_assetsLbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -166,11 +259,11 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(assets_removeAssetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(assets_removeAssetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -179,16 +272,19 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
-                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+                .addComponent(assets_assetListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(assets_removeAssetBtn)
                 .addContainerGap())
         );
 
+        jPanel5.setBackground(Theme.MAIN_BACKGROUND);
+
         init_addAssetsByFilesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
         init_addAssetsByFilesBtn.setText("Add assets by image files or dirs");
         init_addAssetsByFilesBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         init_addAssetsByFilesBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        init_addAssetsByFilesBtn.setOpaque(false);
         init_addAssetsByFilesBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 init_addAssetsByFilesBtnActionPerformed(evt);
@@ -199,24 +295,27 @@ public class MainWindow extends javax.swing.JFrame {
         init_setOutputFileBtn.setText("Set / load output file");
         init_setOutputFileBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         init_setOutputFileBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        init_setOutputFileBtn.setOpaque(false);
         init_setOutputFileBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 init_setOutputFileBtnActionPerformed(evt);
             }
         });
 
+        init_outputFileLbl.setBackground(Theme.TEXTAREA_BACKGROUND);
         init_outputFileLbl.setEditable(false);
+        init_outputFileLbl.setForeground(Theme.TEXTAREA_FOREGROUND);
         init_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         init_outputFileLbl.setText("<no file specified>");
-
-        jSeparator3.setForeground(new java.awt.Color(102, 102, 102));
 
         jPanel9.setBackground(new java.awt.Color(102, 102, 102));
         jPanel9.setLayout(new java.awt.BorderLayout());
 
-        jPanel7.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel7.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel7.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
 
+        jLabel5.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Configuration");
 
@@ -232,31 +331,36 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                .addComponent(help_configurationLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addComponent(help_configurationLbl)
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5)
-            .addComponent(help_configurationLbl)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel5)
+                    .addComponent(help_configurationLbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(init_addAssetsByFilesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                    .addComponent(init_setOutputFileBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                    .addComponent(init_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+                    .addComponent(init_addAssetsByFilesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(init_setOutputFileBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(init_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,30 +370,33 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(init_setOutputFileBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(init_outputFileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(27, 27, 27)
                 .addComponent(init_addAssetsByFilesBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel5Layout.createSequentialGroup()
                     .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(150, Short.MAX_VALUE)))
+                    .addContainerGap(173, Short.MAX_VALUE)))
         );
+
+        jPanel6.setBackground(Theme.MAIN_BACKGROUND);
 
         export_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_export.png"))); // NOI18N
         export_saveBtn.setText("Save");
         export_saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         export_saveBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        export_saveBtn.setOpaque(false);
         export_saveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 export_saveBtnActionPerformed(evt);
             }
         });
 
-        jPanel10.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel10.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel10.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel10.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
 
+        jLabel7.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Export");
 
@@ -305,14 +412,20 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
-                .addComponent(help_exportLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+                .addComponent(help_exportLbl)
+                .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7)
-            .addComponent(help_exportLbl)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel7)
+                    .addComponent(help_exportLbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -321,7 +434,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(export_saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(export_saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -354,10 +467,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(westPanel, java.awt.BorderLayout.WEST);
 
+        eastPanel.setBackground(Theme.MAIN_BACKGROUND);
         eastPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(0, 0, 0)));
 
+        jPanel3.setBackground(Theme.MAIN_BACKGROUND);
+
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/logo.gif"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/title.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -365,7 +481,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -373,43 +489,16 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel10)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        shape_drawAssetChk.setSelected(true);
-        shape_drawAssetChk.setText("Draw asset");
-        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetChkActionPerformed(evt);
-            }
-        });
+        jPanel8.setBackground(Theme.MAIN_BACKGROUND);
 
-        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
-        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetOpacity50ChkActionPerformed(evt);
-            }
-        });
+        jPanel2.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
 
-        shape_drawShapeChk.setSelected(true);
-        shape_drawShapeChk.setText("Draw shape");
-        shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawShapeChkActionPerformed(evt);
-            }
-        });
-
-        shape_drawPolysChk.setSelected(true);
-        shape_drawPolysChk.setText("Draw convex polygons");
-        shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawPolysChkActionPerformed(evt);
-            }
-        });
-
-        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
+        jLabel3.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Options");
 
@@ -425,15 +514,88 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
-                .addComponent(help_optionsLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+                .addComponent(help_optionsLbl)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3)
-            .addComponent(help_optionsLbl)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel3)
+                    .addComponent(help_optionsLbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        shape_drawAssetChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawAssetChk.setSelected(true);
+        shape_drawAssetChk.setText("Draw asset");
+        shape_drawAssetChk.setOpaque(false);
+        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawAssetOpacity50Chk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
+        shape_drawAssetOpacity50Chk.setOpaque(false);
+        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawAssetOpacity50ChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawShapeChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawShapeChk.setSelected(true);
+        shape_drawShapeChk.setText("Draw shape");
+        shape_drawShapeChk.setOpaque(false);
+        shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawShapeChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawPolysChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawPolysChk.setSelected(true);
+        shape_drawPolysChk.setText("Draw convex polygons");
+        shape_drawPolysChk.setOpaque(false);
+        shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawPolysChkActionPerformed(evt);
+            }
+        });
+
+        shape_useLightBackgroundChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_useLightBackgroundChk.setText("Use lighter background");
+        shape_useLightBackgroundChk.setOpaque(false);
+        shape_useLightBackgroundChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_useLightBackgroundChkActionPerformed(evt);
+            }
+        });
+
+        shape_enableSnapToGridChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_enableSnapToGridChk.setText("Enable snap-to-grid");
+        shape_enableSnapToGridChk.setOpaque(false);
+        shape_enableSnapToGridChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_enableSnapToGridChkActionPerformed(evt);
+            }
+        });
+
+        shape_drawGridChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawGridChk.setSelected(true);
+        shape_drawGridChk.setText("Draw grid");
+        shape_drawGridChk.setOpaque(false);
+        shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shape_drawGridChkActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -443,13 +605,25 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(shape_drawShapeChk)
+                    .addComponent(shape_drawPolysChk)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(shape_drawAssetOpacity50Chk))
-                    .addComponent(shape_drawAssetChk)
-                    .addComponent(shape_drawShapeChk)
-                    .addComponent(shape_drawPolysChk))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addComponent(shape_drawAssetChk))
+                .addContainerGap(79, Short.MAX_VALUE))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(shape_drawGridChk)
+                .addContainerGap(164, Short.MAX_VALUE))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(shape_enableSnapToGridChk)
+                .addContainerGap(116, Short.MAX_VALUE))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(shape_useLightBackgroundChk)
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -463,12 +637,22 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(shape_drawShapeChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_drawPolysChk)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_drawGridChk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_enableSnapToGridChk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(shape_useLightBackgroundChk)
+                .addContainerGap())
         );
 
-        jPanel16.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel16.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel1.setBackground(Theme.MAIN_BACKGROUND);
 
+        jPanel16.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel16.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
+
+        jLabel20.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel20.setForeground(new java.awt.Color(255, 255, 255));
         jLabel20.setText("Edition tools");
 
@@ -484,20 +668,27 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel20)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
-                .addComponent(help_toolsLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addComponent(help_toolsLbl)
+                .addContainerGap())
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel20)
-            .addComponent(help_toolsLbl)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(help_toolsLbl)
+                    .addComponent(jLabel20))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tools_insertPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/box2deditor/gfx/ic_add.png"))); // NOI18N
         tools_insertPointsBtn.setText("Insert point(s)");
         tools_insertPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_insertPointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_insertPointsBtn.setOpaque(false);
         tools_insertPointsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tools_insertPointsBtnActionPerformed(evt);
@@ -508,6 +699,7 @@ public class MainWindow extends javax.swing.JFrame {
         tools_removePointsBtn.setText("Remove point(s)");
         tools_removePointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_removePointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_removePointsBtn.setOpaque(false);
         tools_removePointsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tools_removePointsBtnActionPerformed(evt);
@@ -518,6 +710,7 @@ public class MainWindow extends javax.swing.JFrame {
         tools_clearPointsBtn.setText("Clear all points");
         tools_clearPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_clearPointsBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
+        tools_clearPointsBtn.setOpaque(false);
         tools_clearPointsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tools_clearPointsBtnActionPerformed(evt);
@@ -531,15 +724,15 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tools_insertPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(tools_insertPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tools_removePointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(tools_removePointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tools_clearPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(tools_clearPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -555,9 +748,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel18.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel17.setBackground(Theme.MAIN_BACKGROUND);
 
+        jPanel18.setBackground(Theme.HEADER_BACKGROUND);
+        jPanel18.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, Theme.SEPARATOR));
+
+        jLabel22.setBackground(Theme.HEADER_FOREGROUND);
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel22.setForeground(new java.awt.Color(255, 255, 255));
         jLabel22.setText("Hints");
 
@@ -572,19 +769,25 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel22)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
-                .addComponent(help_hintsLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                .addComponent(help_hintsLbl)
+                .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel22)
-            .addComponent(help_hintsLbl)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel22)
+                    .addComponent(help_hintsLbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setText("<html>\n\n1 &bull; Set the output file,<br/>\n2 &bull; Add some assets,<br/>\n3 &bull; Select an asset and define its collision shapes (you can define multiple shapes).<br/><br/>\n\n&bull; <font color=\"#00AA00\">Create a shape</font> with <font color=\"#0000FF\">ctrl + left clics</font><br/>\n&bull; <font color=\"#00AA00\">Edit a shape</font> by <font color=\"#0000FF\">dragging the left mouse button</font><br/>\n&bull; <font color=\"#00AA00\">Test collisions</font> with <font color=\"#0000FF\">shift + dragging the left mouse button</font><br/><br/>\n\n&bull; <font color=\"#00AA00\">Zoom</font> by<font color=\"#0000FF\"> scrolling</font><br/>\n&bull; <font color=\"#00AA00\">Pan</font> by <font color=\"#0000FF\">dragging the right mouse button</font><br/>\n\n");
+        jLabel1.setForeground(Theme.MAIN_FOREGROUND);
+        jLabel1.setText("<html>\n\n1 &bull; Set the output file,<br/>\n2 &bull; Add some assets,<br/>\n3 &bull; Select an asset and define its collision shapes (you can define multiple shapes).<br/><br/>\n\n&bull; <font color=\"#4CFF00\">Create a shape</font> with <font color=\"5EBCFF\">ctrl + left clics</font><br/>\n&bull; <font color=\"#4CFF00\">Edit a shape</font> by <font color=\"5EBCFF\">dragging the left mouse button</font><br/>\n&bull; <font color=\"#4CFF00\">Test collisions</font> with <font color=\"5EBCFF\">shift + dragging the left mouse button</font><br/><br/>\n\n&bull; <font color=\"#4CFF00\">Zoom</font> by<font color=\"5EBCFF\"> scrolling</font><br/>\n&bull; <font color=\"#4CFF00\">Pan</font> by <font color=\"5EBCFF\">dragging the right mouse button</font><br/>\n\n");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
@@ -594,7 +797,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
         jPanel17Layout.setVerticalGroup(
@@ -625,7 +828,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(eastPanel, java.awt.BorderLayout.EAST);
@@ -789,6 +992,18 @@ public class MainWindow extends javax.swing.JFrame {
 		);
 	}//GEN-LAST:event_help_hintsLblMouseClicked
 
+	private void shape_useLightBackgroundChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_useLightBackgroundChkActionPerformed
+		AppContext.instance().isBackgroundLight = shape_useLightBackgroundChk.isSelected();
+	}//GEN-LAST:event_shape_useLightBackgroundChkActionPerformed
+
+	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
+		AppContext.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
+	}//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
+
+	private void shape_drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawGridChkActionPerformed
+		AppContext.instance().isGridShown = shape_drawGridChk.isSelected();
+	}//GEN-LAST:event_shape_drawGridChkActionPerformed
+
 	// -------------------------------------------------------------------------
 
 	private static final String UNKNOWN_PREFIX = "[NOT FOUND] ";
@@ -923,6 +1138,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JList assets_assetList;
     private javax.swing.JScrollPane assets_assetListScrollPane;
     private javax.swing.JButton assets_removeAssetBtn;
+    private javax.swing.JPanel consolePanel;
+    private javax.swing.JTextArea consoleTextArea;
     private javax.swing.JPanel eastPanel;
     private javax.swing.JButton export_saveBtn;
     private javax.swing.JLabel help_assetsLbl;
@@ -936,6 +1153,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton init_setOutputFileBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
@@ -956,13 +1174,17 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel renderPanel;
     private javax.swing.ButtonGroup shapeModeBtnGrp;
     private javax.swing.JCheckBox shape_drawAssetChk;
     private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
+    private javax.swing.JCheckBox shape_drawGridChk;
     private javax.swing.JCheckBox shape_drawPolysChk;
     private javax.swing.JCheckBox shape_drawShapeChk;
+    private javax.swing.JCheckBox shape_enableSnapToGridChk;
+    private javax.swing.JCheckBox shape_useLightBackgroundChk;
     private javax.swing.JButton tools_clearPointsBtn;
     private javax.swing.JButton tools_insertPointsBtn;
     private javax.swing.JButton tools_removePointsBtn;

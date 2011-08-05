@@ -1,4 +1,4 @@
-package aurelienribon.box2deditor.earclipping;
+package aurelienribon.box2deditor.earclipping.ewjordan;
 
 /**
  *

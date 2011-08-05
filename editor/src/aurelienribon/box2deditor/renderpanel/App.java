@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -35,14 +36,16 @@ import java.util.Random;
  */
 public class App implements ApplicationListener {
 	private static App instance = new App();
-	public static App instance() { if (instance == null) instance = new App(); return instance; }
+	public static App instance() {if (instance == null) instance = new App(); return instance;}
 
 	private static final float PX_PER_METER = 50;
 
 	private AppDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
-	private Texture backgroundTexture;
+	private Texture backgroundLightTexture;
+	private Texture backgroundDarkTexture;
+	private Texture gridTexture;
 
 	private OrthographicCamera camera;
 	private int zoom = 100;
@@ -61,6 +64,7 @@ public class App implements ApplicationListener {
 	
 	@Override
 	public void create() {
+		Texture.setEnforcePotImages(false);
 		sb = new SpriteBatch();
 		
 		font = new BitmapFont();
@@ -69,8 +73,12 @@ public class App implements ApplicationListener {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
 
-		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent.png"));
-		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-light.png"));
+		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-dark.png"));
+		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		gridTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/grid.png"));
+		gridTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 		rand = new Random();
 		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/ball.png"));
@@ -85,7 +93,6 @@ public class App implements ApplicationListener {
 		im.addProcessor(new ShapeEditionInputProcessor());
 		im.addProcessor(new BallThrowInputProcessor());
 		Gdx.input.setInputProcessor(im);
-		Gdx.graphics.setVSync(true);
 	}
 
 	@Override
@@ -106,13 +113,19 @@ public class App implements ApplicationListener {
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		float tw = backgroundTexture.getWidth();
-		float th = backgroundTexture.getHeight();
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
 		sb.disableBlending();
-		sb.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
+		if (AppContext.instance().isBackgroundLight) {
+			float tw = backgroundLightTexture.getWidth();
+			float th = backgroundLightTexture.getHeight();
+			sb.draw(backgroundLightTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
+		} else {
+			float tw = backgroundDarkTexture.getWidth();
+			float th = backgroundDarkTexture.getHeight();
+			sb.draw(backgroundDarkTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
+		}
 		sb.enableBlending();
 		font.draw(sb, "Zoom: " + zoom + "%", 5, 45);
 		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
@@ -131,6 +144,17 @@ public class App implements ApplicationListener {
 			sp.draw(sb);
 		}
 		sb.end();
+
+		if (AppContext.instance().isGridShown) {
+			float tw = gridTexture.getWidth();
+			float th = gridTexture.getHeight();
+			float deltaX = (camera.position.x/camera.zoom) % tw;
+			float deltaY = (camera.position.y/camera.zoom) % th;
+			sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
+			sb.begin();
+			sb.draw(gridTexture, -deltaX-tw, -deltaY-th, w+tw*2, h+th*2, 0f, 0f, (w+tw*2)/tw, (h+th*2)/th);
+			sb.end();
+		}
 
 		camera.apply(gl);
 		drawer.draw();
@@ -152,7 +176,7 @@ public class App implements ApplicationListener {
 	@Override
 	public void dispose() {
 		clearAsset();
-		backgroundTexture.dispose();
+		backgroundDarkTexture.dispose();
 		sb.dispose();
 		font.dispose();
 	}
@@ -161,11 +185,24 @@ public class App implements ApplicationListener {
 	// Public API
 	// -------------------------------------------------------------------------
 
+	private final Vector3 tempVec = new Vector3();
+
 	public Vector2 screenToWorld(int x, int y) {
-		return new Vector2(x, Gdx.graphics.getHeight() - y)
-			.sub(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2)
-			.mul(camera.zoom)
-			.add(camera.position.x, camera.position.y);
+		camera.unproject(tempVec.set(x, y, 0));
+		return new Vector2(tempVec.x, tempVec.y);
+	}
+
+	public Vector2 screenToWorld(float x, float y) {
+		camera.unproject(tempVec.set(x, y, 0));
+		return new Vector2(tempVec.x, tempVec.y);
+	}
+
+	public Vector2 alignedScreenToWorld(int x, int y) {
+		if (AppContext.instance().isSnapToGridEnabled) {
+			// TODO
+			return screenToWorld(x, y);
+		}
+		return screenToWorld(x, y);
 	}
 
 	public void clearAsset() {

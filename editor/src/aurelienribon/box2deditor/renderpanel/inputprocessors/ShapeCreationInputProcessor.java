@@ -33,16 +33,14 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 		ShapeModel lastShape = AppContext.instance().getLastTempShape();
 
-		if (lastShape == null || lastShape.isClosed()) {
-			AppContext.instance().createNewTempShape();
-			lastShape = AppContext.instance().getLastTempShape();
-		}
+		if (lastShape == null || lastShape.isClosed())
+			lastShape = AppContext.instance().createNewTempShape();
 
 		if (lastShape.getPointCount() >= 3 && AppContext.instance().nearestPoint == lastShape.getPoint(0)) {
 			lastShape.close();
 			AppContext.instance().saveCurrentModel();
 		} else {
-			Vector2 p = App.instance().screenToWorld(x, y);
+			Vector2 p = App.instance().alignedScreenToWorld(x, y);
 			lastShape.addPoint(p);
 		}
 
@@ -70,17 +68,17 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return false;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
-
 		// Nearest point computation
+		Vector2 p1 = App.instance().screenToWorld(x, y);
 		AppContext.instance().nearestPoint = null;
 		ShapeModel shape = AppContext.instance().getLastTempShape();
 		if (shape != null && !shape.isClosed() && shape.getPointCount() >= 3)
-			if (shape.getPoint(0).dst(p) < 10 * App.instance().getCamera().zoom)
+			if (shape.getPoint(0).dst(p1) < 10 * App.instance().getCamera().zoom)
 				AppContext.instance().nearestPoint = shape.getPoint(0);
 
 		// Next point assignment
-		AppContext.instance().nextPoint = p;
+		Vector2 p2 = App.instance().alignedScreenToWorld(x, y);
+		AppContext.instance().nextPoint = p2;
 		return false;
 	}
 }
