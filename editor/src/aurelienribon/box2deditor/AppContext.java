@@ -1,9 +1,10 @@
 package aurelienribon.box2deditor;
 
+import aurelienribon.box2deditor.earclipping.Clipper;
+import aurelienribon.box2deditor.earclipping.Clipper.Polygonizers;
 import aurelienribon.box2deditor.utils.FileUtils;
 import aurelienribon.box2deditor.io.IO;
 import aurelienribon.box2deditor.models.BodyModel;
-import aurelienribon.box2deditor.earclipping.ewjordan.Clipper;
 import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.App;
 import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
@@ -41,6 +42,8 @@ public class AppContext {
 	public boolean isBackgroundLight = false;
 	public boolean isSnapToGridEnabled = false;
 	public boolean isGridShown = true;
+	public int gridGap = 20;
+	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
 
 	// -------------------------------------------------------------------------
 	// Output file
@@ -250,7 +253,7 @@ public class AppContext {
 	private Vector2[][] computePolygons(Vector2[][] shapes) {
 		List<Vector2[]> ret = new ArrayList<Vector2[]>();
 		for (Vector2[] shape : shapes) {
-			Vector2[][] polygons = Clipper.polygonize(shape);
+			Vector2[][] polygons = Clipper.polygonize(shape, polygonizer);
 			if (polygons != null)
 				for (Vector2[] polygon : polygons)
 					if (ShapeUtils.getPolygonArea(polygon) > 1)

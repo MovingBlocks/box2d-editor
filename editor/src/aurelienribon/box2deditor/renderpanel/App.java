@@ -45,7 +45,6 @@ public class App implements ApplicationListener {
 	private BitmapFont font;
 	private Texture backgroundLightTexture;
 	private Texture backgroundDarkTexture;
-	private Texture gridTexture;
 
 	private OrthographicCamera camera;
 	private int zoom = 100;
@@ -77,8 +76,6 @@ public class App implements ApplicationListener {
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-dark.png"));
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		gridTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/grid.png"));
-		gridTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 		rand = new Random();
 		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/ball.png"));
@@ -111,8 +108,8 @@ public class App implements ApplicationListener {
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		int w = Gdx.graphics.getWidth();
+		int h = Gdx.graphics.getHeight();
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
@@ -127,8 +124,6 @@ public class App implements ApplicationListener {
 			sb.draw(backgroundDarkTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
 		}
 		sb.enableBlending();
-		font.draw(sb, "Zoom: " + zoom + "%", 5, 45);
-		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
 		sb.end();
 
 		sb.setProjectionMatrix(camera.combined);
@@ -146,18 +141,19 @@ public class App implements ApplicationListener {
 		sb.end();
 
 		if (AppContext.instance().isGridShown) {
-			float tw = gridTexture.getWidth();
-			float th = gridTexture.getHeight();
-			float deltaX = (camera.position.x/camera.zoom) % tw;
-			float deltaY = (camera.position.y/camera.zoom) % th;
-			sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
-			sb.begin();
-			sb.draw(gridTexture, -deltaX-tw, -deltaY-th, w+tw*2, h+th*2, 0f, 0f, (w+tw*2)/tw, (h+th*2)/th);
-			sb.end();
+			OrthographicCamera cam = new OrthographicCamera(w, h);
+			cam.apply(gl);
+			drawer.drawGrid(w, h, AppContext.instance().gridGap);
 		}
 
 		camera.apply(gl);
 		drawer.draw();
+
+		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
+		sb.begin();
+		font.draw(sb, "Zoom: " + zoom + "%", 5, 45);
+		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
+		sb.end();
 	}
 
 	@Override
@@ -192,17 +188,22 @@ public class App implements ApplicationListener {
 		return new Vector2(tempVec.x, tempVec.y);
 	}
 
-	public Vector2 screenToWorld(float x, float y) {
-		camera.unproject(tempVec.set(x, y, 0));
-		return new Vector2(tempVec.x, tempVec.y);
-	}
-
 	public Vector2 alignedScreenToWorld(int x, int y) {
+		Vector2 p = screenToWorld(x, y);
 		if (AppContext.instance().isSnapToGridEnabled) {
-			// TODO
-			return screenToWorld(x, y);
+			float div = 1;
+			if (camera.zoom < 1) {
+				float camZoom = 1/camera.zoom;
+				while (camZoom > 1) {div *= 2; camZoom /= 2;}
+			} else if (camera.zoom > 1) {
+				float camZoom = 1/camera.zoom;
+				while (camZoom < 1) {div /= 2; camZoom *= 2;}
+			}
+			float gap = AppContext.instance().gridGap / div;
+			p.x = Math.round(p.x / gap) * gap;
+			p.y = Math.round(p.y / gap) * gap;
 		}
-		return screenToWorld(x, y);
+		return p;
 	}
 
 	public void clearAsset() {

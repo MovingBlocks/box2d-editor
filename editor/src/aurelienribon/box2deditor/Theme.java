@@ -9,7 +9,7 @@ public class Theme {
     public static final Color HEADER_BACKGROUND = new Color(0x383838);
     public static final Color HEADER_FOREGROUND = new Color(0xFFFFFF);
 
-    public static final Color TEXTAREA_BACKGROUND = new Color(0xA5A5A5);
+    public static final Color TEXTAREA_BACKGROUND = new Color(0xC6C6C6);
     public static final Color TEXTAREA_FOREGROUND = new Color(0x000000);
 
     public static final Color CONSOLE_BACKGROUND = new Color(0xA5A5A5);

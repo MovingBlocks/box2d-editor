@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -29,7 +30,13 @@ public class Main {
 	private static void parseArgs(String[] args) {
 		for (int i=0; i<args.length; i++) {
 			if (args[i].startsWith("--outputfile=")) {
-				AppContext.instance().outputFile = new File(args[i].substring("--outputfile=".length()));
+				try {
+					File file = new File(args[i].substring("--outputfile=".length()));
+					AppContext.instance().outputFile = file.getCanonicalFile();
+				} catch (IOException ex) {
+					System.err.println("Given output file path cannot be retrieved...");
+					AppContext.instance().outputFile = null;
+				}
 			}
 		}
 	}
@@ -47,8 +54,8 @@ public class Main {
 				MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
-					Math.min(1200, screenSize.width - 100),
-					Math.min(800, screenSize.height - 100)
+					Math.min(1250, screenSize.width - 100),
+					Math.min(850, screenSize.height - 100)
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);

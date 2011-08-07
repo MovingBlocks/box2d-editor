@@ -4,10 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Original code from EwJordan (http://www.ewjordan.com/earClip/)
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
-public class Clipper {
-	public static Vector2[][] polygonize(Vector2[] points) {
+public class EwjordanDecomposer {
+	public static Vector2[][] decompose(Vector2[] points) {
 		int vNum = points.length;
 		float[] xv = new float[vNum];
 		float[] yv = new float[vNum];
@@ -29,36 +28,7 @@ public class Clipper {
 			for (int ii = 0; ii < tempPolygons[i].nVertices; ii++)
 				polygons[i][ii] = new Vector2(tempPolygons[i].x[ii], tempPolygons[i].y[ii]);
 		}
-
-		polygons = updateForBox2D(polygons);
-		return polygons;
-	}
-
-	private static Vector2[][] updateForBox2D(Vector2[][] polygons) {
-		for (int i = 0; i < polygons.length; i++) {
-			Vector2[] poly = polygons[i];
-			if (poly.length > 8) {
-				int limit = poly.length < 15 ? poly.length / 2 + 1 : 8;
-				Vector2[] newPoly1 = new Vector2[limit];
-				Vector2[] newPoly2 = new Vector2[poly.length - limit + 2];
-				System.arraycopy(poly, 0, newPoly1, 0, limit);
-				System.arraycopy(poly, limit - 1, newPoly2, 0, poly.length - limit + 1);
-				newPoly2[newPoly2.length - 1] = poly[0].cpy();
-
-				Vector2[][] newPolys = new Vector2[polygons.length + 1][];
-				if (i > 0) {
-					System.arraycopy(polygons, 0, newPolys, 0, i);
-				}
-				if (i < polygons.length - 1) {
-					System.arraycopy(polygons, i + 1, newPolys, i + 2, polygons.length - i - 1);
-				}
-				newPolys[i] = newPoly1;
-				newPolys[i + 1] = newPoly2;
-				polygons = newPolys;
-
-				i -= 1;
-			}
-		}
+		
 		return polygons;
 	}
 

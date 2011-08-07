@@ -21,7 +21,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,57,0,0,2,-58"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,83,0,0,3,53"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -77,9 +77,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="61" max="32767" attributes="0"/>
+                      <EmptySpace pref="170" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" alignment="0" pref="202" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="311" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -88,7 +88,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="77" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="117" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -145,7 +145,9 @@
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-            <MatteColorBorder bottom="0" left="0" right="1" top="0"/>
+            <MatteColorBorder bottom="0" left="0" right="1" top="0">
+              <Connection PropertyName="color" code="Theme.SEPARATOR" type="code"/>
+            </MatteColorBorder>
           </Border>
         </Property>
       </Properties>
@@ -204,7 +206,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPanel11" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                      <Component id="assets_assetListScrollPane" pref="460" max="32767" attributes="0"/>
+                      <Component id="assets_assetListScrollPane" pref="484" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="assets_removeAssetBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -620,7 +622,9 @@
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-            <MatteColorBorder bottom="0" left="1" right="0" top="0"/>
+            <MatteColorBorder bottom="0" left="1" right="0" top="0">
+              <Connection PropertyName="color" code="Theme.SEPARATOR" type="code"/>
+            </MatteColorBorder>
           </Border>
         </Property>
       </Properties>
@@ -649,7 +653,7 @@
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="68" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -709,18 +713,26 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="shape_drawShapeChk" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="shape_drawPolysChk" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="shape_drawAssetChk" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Component id="shape_drawAssetOpacity50Chk" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="shape_drawAssetChk" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="79" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="shape_drawGridChk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="164" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="shape_grigGapSpinner" min="-2" pref="54" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="shape_drawGridChk" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="50" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
@@ -731,6 +743,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="shape_useLightBackgroundChk" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="100" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="shape_polygonizerCbox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="86" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -749,10 +768,20 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="shape_drawGridChk" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="shape_grigGapSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="shape_enableSnapToGridChk" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="shape_useLightBackgroundChk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="shape_polygonizerCbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -912,6 +941,45 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shape_drawGridChkActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="Theme.MAIN_FOREGROUND" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="...with gap (in pixels):"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="shape_grigGapSpinner">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="20" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="shape_grigGapSpinnerStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="shape_polygonizerCbox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="BAYAZIT"/>
+                    <StringItem index="1" value="EWJORDAN"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shape_polygonizerCboxActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel6">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="Theme.MAIN_FOREGROUND" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Polygonizer:"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel1">
@@ -927,18 +995,12 @@
                   <Component id="jPanel16" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tools_insertPointsBtn" pref="221" max="32767" attributes="0"/>
+                      <Component id="tools_insertPointsBtn" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="tools_removePointsBtn" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tools_removePointsBtn" pref="221" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tools_clearPointsBtn" pref="221" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tools_clearPointsBtn" linkSize="1" min="-2" pref="71" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="1"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -947,11 +1009,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPanel16" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="tools_insertPointsBtn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tools_removePointsBtn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tools_clearPointsBtn" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tools_insertPointsBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tools_removePointsBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tools_clearPointsBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -978,7 +1040,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="111" max="32767" attributes="0"/>
+                          <EmptySpace pref="115" max="32767" attributes="0"/>
                           <Component id="help_toolsLbl" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1029,7 +1091,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_add.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Insert point(s)"/>
+                <Property name="text" type="java.lang.String" value="Insert"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[2, 3, 2, 2]"/>
@@ -1045,7 +1107,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_remove.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Remove point(s)"/>
+                <Property name="text" type="java.lang.String" value="Remove"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[2, 3, 2, 2]"/>
@@ -1061,7 +1123,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/aurelienribon/box2deditor/gfx/ic_delete.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Clear all points"/>
+                <Property name="text" type="java.lang.String" value="Clear"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[2, 3, 2, 2]"/>
@@ -1097,8 +1159,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPanel18" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabel1" pref="265" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1175,7 +1237,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Theme.MAIN_FOREGROUND" type="code"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;&#xa;1 &amp;bull; Set the output file,&lt;br/&gt;&#xa;2 &amp;bull; Add some assets,&lt;br/&gt;&#xa;3 &amp;bull; Select an asset and define its collision shapes (you can define multiple shapes).&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Create a shape&lt;/font&gt; with &lt;font color=&quot;5EBCFF&quot;&gt;ctrl + left clics&lt;/font&gt;&lt;br/&gt;&#xa;&amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Edit a shape&lt;/font&gt; by &lt;font color=&quot;5EBCFF&quot;&gt;dragging the left mouse button&lt;/font&gt;&lt;br/&gt;&#xa;&amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Test collisions&lt;/font&gt; with &lt;font color=&quot;5EBCFF&quot;&gt;shift + dragging the left mouse button&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Zoom&lt;/font&gt; by&lt;font color=&quot;5EBCFF&quot;&gt; scrolling&lt;/font&gt;&lt;br/&gt;&#xa;&amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Pan&lt;/font&gt; by &lt;font color=&quot;5EBCFF&quot;&gt;dragging the right mouse button&lt;/font&gt;&lt;br/&gt;&#xa;&#xa;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;  1 &amp;bull; Set the output file,&lt;br/&gt; 2 &amp;bull; Add some assets,&lt;br/&gt; 3 &amp;bull; Select an asset and define its collision shapes (you can define multiple shapes).&lt;br/&gt;&lt;br/&gt;  &amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Create a shape&lt;/font&gt; with &lt;font color=&quot;5EBCFF&quot;&gt;ctrl + left clics&lt;/font&gt;&lt;br/&gt; &amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Edit a shape&lt;/font&gt; by &lt;font color=&quot;5EBCFF&quot;&gt;dragging the left mouse button&lt;/font&gt;&lt;br/&gt; &amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Test collisions&lt;/font&gt; with &lt;font color=&quot;5EBCFF&quot;&gt;shift + dragging the left mouse button&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  &amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Zoom&lt;/font&gt; by&lt;font color=&quot;5EBCFF&quot;&gt; scrolling&lt;/font&gt;&lt;br/&gt; &amp;bull; &lt;font color=&quot;#4CFF00&quot;&gt;Pan&lt;/font&gt; by &lt;font color=&quot;5EBCFF&quot;&gt;dragging the right mouse button&lt;/font&gt;&lt;br/&gt;  "/>
                 <Property name="verticalAlignment" type="int" value="1"/>
               </Properties>
             </Component>

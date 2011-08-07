@@ -15,11 +15,12 @@ import java.util.List;
  * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
 public class AppDrawer {
-	private static final Color SHAPE_LINE_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
+	private static final Color SHAPE_LINE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
-	private static final Color SHAPE_POLY_COLOR = new Color(0.2f, 0.8f, 0.2f, 1);
+	private static final Color SHAPE_POLY_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
 	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
+	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
@@ -46,6 +47,125 @@ public class AppDrawer {
 
 		drawMousePath();
 		drawBallThrowPath();
+	}
+
+	public void drawGrid(int w, int h, int gapPx) {
+		Vector2 p1 = new Vector2();
+		Vector2 p2 = new Vector2();
+
+		if (camera.zoom == 1) {
+			float gap = gapPx / camera.zoom;
+			float deltaX = (camera.position.x / camera.zoom) % gap;
+			float deltaY = (camera.position.y / camera.zoom) % gap;
+
+			for (float x=-deltaX; x<w/2+gap; x+=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float x=-deltaX-gap; x>-w/2-gap; x-=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY; y<h/2+gap; y+=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY-gap; y>-h/2-gap; y-=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			return;
+		}
+
+		if (camera.zoom < 1) {
+			float div = 1; float zoom = 1/camera.zoom;
+			while (zoom > 1) {div *= 2; zoom /= 2;}
+
+			float gap = (gapPx / div) / camera.zoom;
+			float deltaX = (camera.position.x / camera.zoom) % (gap*div);
+			float deltaY = (camera.position.y / camera.zoom) % (gap*div);
+
+			int cnt = 0;
+			for (float x=-deltaX; x<w/2+gap; x+=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				float lineW = cnt % div == 0 ? 2 : 1;
+				drawLine(p1, p2, GRID_COLOR, lineW);
+				cnt += 1;
+			}
+
+			cnt = 1;
+			for (float x=-deltaX-gap; x>-w/2-gap; x-=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				float lineW = cnt % div == 0 ? 2 : 1;
+				drawLine(p1, p2, GRID_COLOR, lineW);
+				cnt += 1;
+			}
+
+			cnt = 0;
+			for (float y=-deltaY; y<h/2+gap; y+=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				float lineW = cnt % div == 0 ? 2 : 1;
+				drawLine(p1, p2, GRID_COLOR, lineW);
+				cnt += 1;
+			}
+
+			cnt = 1;
+			for (float y=-deltaY-gap; y>-h/2-gap; y-=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				float lineW = cnt % div == 0 ? 2 : 1;
+				drawLine(p1, p2, GRID_COLOR, lineW);
+				cnt += 1;
+			}
+
+			return;
+		}
+
+		if (camera.zoom > 1) {
+			float div = 1; float zoom = 1/camera.zoom;
+			while (zoom < 1) {div /= 2; zoom *= 2;}
+
+			float gap = (gapPx / div) / camera.zoom;
+			float deltaX = (camera.position.x / camera.zoom) % (gap);
+			float deltaY = (camera.position.y / camera.zoom) % (gap);
+
+			for (float x=-deltaX; x<w/2+gap; x+=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float x=-deltaX-gap; x>-w/2-gap; x-=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY; y<h/2+gap; y+=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY-gap; y>-h/2-gap; y-=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			return;
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -122,12 +242,11 @@ public class AppDrawer {
 
 	public void drawRect(Vector2 p, float w, float h, Color c, float lineWidth) {
 		Gdx.gl10.glLineWidth(lineWidth);
-		imr.begin(GL10.GL_LINE_STRIP);
+		imr.begin(GL10.GL_LINE_LOOP);
 		imr.color(c.r, c.g, c.b, c.a); imr.vertex(p.x - w/2, p.y - h/2, 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.vertex(p.x - w/2, p.y + h/2, 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.vertex(p.x + w/2, p.y + h/2, 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.vertex(p.x + w/2, p.y - h/2, 0);
-		imr.color(c.r, c.g, c.b, c.a); imr.vertex(p.x - w/2, p.y - h/2, 0);
 		imr.end();
 	}
 
