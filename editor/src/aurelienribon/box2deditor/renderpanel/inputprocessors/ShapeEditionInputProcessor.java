@@ -2,7 +2,7 @@ package aurelienribon.box2deditor.renderpanel.inputprocessors;
 
 import aurelienribon.box2deditor.AppContext;
 import aurelienribon.box2deditor.models.ShapeModel;
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -41,7 +41,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint == null) {
 			selectedPoints.clear();
-			Vector2 p = App.instance().screenToWorld(x, y);
+			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 			AppContext.instance().mousePath.add(p);
 		} else if (!selectedPoints.contains(draggedPoint)) {
 			selectedPoints.clear();
@@ -85,7 +85,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 
 		if (draggedPoint != null) {
-			Vector2 p = App.instance().alignedScreenToWorld(x, y);
+			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
 			AppContext.instance().clearTempPolygons();
 
 			float dx = p.x - draggedPoint.x;
@@ -98,7 +98,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 					sp.add(dx, dy);
 			}
 		} else {
-			Vector2 p = App.instance().screenToWorld(x, y);
+			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 			AppContext.instance().mousePath.add(p);
 		}
 		
@@ -111,10 +111,10 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 
 		// Nearest point computation
-		Vector2 p = App.instance().screenToWorld(x, y);
+		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().nearestPoint = null;
 		for (Vector2 v : getAllShapePoints())
-			if (v.dst(p) < 10 * App.instance().getCamera().zoom)
+			if (v.dst(p) < 10 * RenderPanel.instance().getCamera().zoom)
 				AppContext.instance().nearestPoint = v;
 
 		return false;

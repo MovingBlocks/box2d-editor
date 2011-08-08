@@ -6,7 +6,7 @@ import aurelienribon.box2deditor.utils.FileUtils;
 import aurelienribon.box2deditor.io.IO;
 import aurelienribon.box2deditor.models.BodyModel;
 import aurelienribon.box2deditor.models.ShapeModel;
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
 import aurelienribon.box2deditor.utils.ShapeUtils;
 import aurelienribon.box2deditor.utils.VectorUtils;
@@ -209,7 +209,7 @@ public class AppContext {
 		if (polygons != null) {
 			polygons = VectorUtils.mul(polygons, currentSize.x / 100f);
 			tempPolygons.addAll(Arrays.asList(polygons));
-			App.instance().setBody(polygons);
+			RenderPanel.instance().setBody(polygons);
 		}
 	}
 
@@ -236,7 +236,7 @@ public class AppContext {
 		tempPolygons.clear();
 		Collections.addAll(tempPolygons, polygons);
 
-		App.instance().setBody(polygons);
+		RenderPanel.instance().setBody(polygons);
 	}
 
 	// -------------------------------------------------------------------------
@@ -247,7 +247,7 @@ public class AppContext {
 
 	public void clearTempPolygons() {
 		tempPolygons.clear();
-		App.instance().clearBody();
+		RenderPanel.instance().clearBody();
 	}
 
 	private Vector2[][] computePolygons(Vector2[][] shapes) {

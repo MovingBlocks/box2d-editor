@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
-public class AppDrawer {
+public class RenderPanelDrawer {
 	private static final Color SHAPE_LINE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color SHAPE_POLY_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
@@ -25,7 +25,7 @@ public class AppDrawer {
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
 
-	public AppDrawer(OrthographicCamera camera) {
+	public RenderPanelDrawer(OrthographicCamera camera) {
 		this.camera = camera;
 		this.imr = new ImmediateModeRenderer();
 	}

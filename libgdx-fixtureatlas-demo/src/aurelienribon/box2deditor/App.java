@@ -1,11 +1,9 @@
 package aurelienribon.box2deditor;
 
-import aurelienribon.box2deditor.FixtureAtlas;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,16 +20,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class App implements ApplicationListener {
-
-	// -------------------------------------------------------------------------
-	// Launcher
-	// -------------------------------------------------------------------------
-
-	public static void main(final String[] args) {
-		new LwjglApplication(new App(), "", 500, 750, false);
-	}
 
 	// -------------------------------------------------------------------------
 	// Static fields
@@ -42,7 +34,7 @@ public class App implements ApplicationListener {
 	private static final Vector2 BALL_SIZE = new Vector2(0.3f, 0.3f);
 	private static final Vector2 VIAL_POS = new Vector2(-4, -7);
 
-	private static final int MAX_BALL_COUNT = 150;
+	private static final int MAX_BALL_COUNT = 200;
 
 	// -------------------------------------------------------------------------
 	// Public API
@@ -62,9 +54,14 @@ public class App implements ApplicationListener {
 	private Texture ballTexture;
 	private Sprite[] ballSprites;
 
+	private Timer timer;
+	private int timerBallIndex;
+
+	private final Random rand = new Random();
+	private final Vector2 tmpVec = new Vector2();
+
 	@Override
 	public void create() {
-		Gdx.graphics.setVSync(true);
 		Gdx.input.setInputProcessor(inputProcessor);
 
 		spriteBatch = new SpriteBatch();
@@ -79,6 +76,8 @@ public class App implements ApplicationListener {
 		createVialModel();
 		createBallModels();
 		createSprites();
+
+		restart();
 	}
 
 	private void createVialModel() {
@@ -108,15 +107,8 @@ public class App implements ApplicationListener {
 		CircleShape ballShape = new CircleShape();
 		ballShape.setRadius(BALL_SIZE.x/2);
 
-		Random rand = new Random();
-
 		ballModels = new Body[MAX_BALL_COUNT];
 		for (int i=0; i<MAX_BALL_COUNT; i++) {
-			float tx = rand.nextFloat() * 1.0f - 0.5f;
-			float ty = rand.nextFloat() * WORLD_SIZE.y*4 + WORLD_SIZE.y/2 + BALL_SIZE.y;
-			float angle = rand.nextFloat() * MathUtils.PI * 2;
-			ballBodyDef.position.set(tx, ty);
-			ballBodyDef.angle = angle;
 			ballModels[i] = world.createBody(ballBodyDef);
 			ballModels[i].createFixture(ballShape, 1);
 		}
@@ -148,6 +140,7 @@ public class App implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		timer.cancel();
 		vialTexture.dispose();
 		ballTexture.dispose();
 		spriteBatch.dispose();
@@ -206,17 +199,33 @@ public class App implements ApplicationListener {
 	// -------------------------------------------------------------------------
 
 	private void restart() {
-		Random rand = new Random();
 		for (int i=0; i<MAX_BALL_COUNT; i++) {
 			float tx = rand.nextFloat() * 1.0f - 0.5f;
-			float ty = rand.nextFloat() * WORLD_SIZE.y*4 + WORLD_SIZE.y/2 + BALL_SIZE.y;
+			float ty = WORLD_SIZE.y/2 + BALL_SIZE.y*5;
 			float angle = rand.nextFloat() * MathUtils.PI * 2;
 
-			ballModels[i].setLinearVelocity(0, 0);
+			ballModels[i].setActive(false);
+			ballModels[i].setLinearVelocity(tmpVec.set(0, 0));
 			ballModels[i].setAngularVelocity(0);
-			ballModels[i].setTransform(tx, ty, angle);
-			ballModels[i].setAwake(true);
+			ballModels[i].setTransform(tmpVec.set(tx, ty), angle);
 		}
+
+		if (timer != null)
+			timer.cancel();
+		
+		timerBallIndex = 0;
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override public void run() {
+				if (timerBallIndex < ballModels.length) {
+					ballModels[timerBallIndex].setAwake(true);
+					ballModels[timerBallIndex].setActive(true);
+					timerBallIndex += 1;
+				} else {
+					timer.cancel();
+				}
+			}
+		}, 100, 100);
 	}
 
 	// -------------------------------------------------------------------------

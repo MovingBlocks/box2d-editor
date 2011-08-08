@@ -1,7 +1,7 @@
 package aurelienribon.box2deditor;
 
 import aurelienribon.box2deditor.earclipping.Clipper.Polygonizers;
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -123,7 +123,6 @@ public class MainWindow extends javax.swing.JFrame {
         shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
         shape_drawShapeChk = new javax.swing.JCheckBox();
         shape_drawPolysChk = new javax.swing.JCheckBox();
-        shape_useLightBackgroundChk = new javax.swing.JCheckBox();
         shape_enableSnapToGridChk = new javax.swing.JCheckBox();
         shape_drawGridChk = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
@@ -176,8 +175,8 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(consolePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addContainerGap(170, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                .addContainerGap(166, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
         );
         consolePanelLayout.setVerticalGroup(
             consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,7 +485,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -521,7 +520,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
                 .addComponent(help_optionsLbl)
                 .addContainerGap())
         );
@@ -571,15 +570,6 @@ public class MainWindow extends javax.swing.JFrame {
         shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 shape_drawPolysChkActionPerformed(evt);
-            }
-        });
-
-        shape_useLightBackgroundChk.setForeground(Theme.MAIN_FOREGROUND);
-        shape_useLightBackgroundChk.setText("Use lighter background");
-        shape_useLightBackgroundChk.setOpaque(false);
-        shape_useLightBackgroundChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_useLightBackgroundChkActionPerformed(evt);
             }
         });
 
@@ -636,7 +626,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(shape_drawAssetOpacity50Chk)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -646,21 +636,17 @@ public class MainWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(shape_grigGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(shape_drawGridChk))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(shape_enableSnapToGridChk)
-                .addContainerGap(116, Short.MAX_VALUE))
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_useLightBackgroundChk)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -682,8 +668,6 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(shape_grigGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(shape_enableSnapToGridChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_useLightBackgroundChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -815,7 +799,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel22)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                 .addComponent(help_hintsLbl)
                 .addContainerGap())
         );
@@ -840,7 +824,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
         jPanel17Layout.setVerticalGroup(
@@ -871,7 +855,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
 
         getContentPane().add(eastPanel, java.awt.BorderLayout.EAST);
@@ -921,7 +905,7 @@ public class MainWindow extends javax.swing.JFrame {
 	private void assets_assetListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_assets_assetListValueChanged
 		AppContext.instance().clearTempObjects();
 		AppContext.instance().setCurrentName(null);
-		App.instance().clearAsset();
+		RenderPanel.instance().clearAsset();
 
 		if (assets_assetList.isSelectionEmpty())
 			return;
@@ -931,7 +915,7 @@ public class MainWindow extends javax.swing.JFrame {
 			String name = (String) assetsListModel.get(idx);
 			String path = AppContext.instance().getFullPath(name);
 
-			Vector2 size = App.instance().setAssetByFile(path);
+			Vector2 size = RenderPanel.instance().setAsset(path);
 			AppContext.instance().setCurrentSize(size);
 			AppContext.instance().setCurrentName(name);
 			AppContext.instance().loadCurrentModel();
@@ -1012,7 +996,9 @@ public class MainWindow extends javax.swing.JFrame {
 	private void help_optionsLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_help_optionsLblMouseClicked
 		JOptionPane.showMessageDialog(this,
 			"<html>"
-			+ "Options speak for themselves, don't they ? :)"
+			+ "Options speak for themselves, don't they ? :)<br/><br/>"
+			+ ""
+			+ "The Polygonizer is the algorithm used to compute the convex polygons from your shapes."
 		);
 	}//GEN-LAST:event_help_optionsLblMouseClicked
 
@@ -1034,10 +1020,6 @@ public class MainWindow extends javax.swing.JFrame {
 			+ "Main help section that I want everyone to see."
 		);
 	}//GEN-LAST:event_help_hintsLblMouseClicked
-
-	private void shape_useLightBackgroundChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_useLightBackgroundChkActionPerformed
-		AppContext.instance().isBackgroundLight = shape_useLightBackgroundChk.isSelected();
-	}//GEN-LAST:event_shape_useLightBackgroundChkActionPerformed
 
 	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
 		AppContext.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
@@ -1240,7 +1222,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox shape_enableSnapToGridChk;
     private javax.swing.JSpinner shape_grigGapSpinner;
     private javax.swing.JComboBox shape_polygonizerCbox;
-    private javax.swing.JCheckBox shape_useLightBackgroundChk;
     private javax.swing.JButton tools_clearPointsBtn;
     private javax.swing.JButton tools_insertPointsBtn;
     private javax.swing.JButton tools_removePointsBtn;

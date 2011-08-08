@@ -2,7 +2,7 @@ package aurelienribon.box2deditor.renderpanel.inputprocessors;
 
 import aurelienribon.box2deditor.AppContext;
 import aurelienribon.box2deditor.models.ShapeModel;
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -40,7 +40,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			lastShape.close();
 			AppContext.instance().saveCurrentModel();
 		} else {
-			Vector2 p = App.instance().alignedScreenToWorld(x, y);
+			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
 			lastShape.addPoint(p);
 		}
 
@@ -69,15 +69,15 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			return false;
 
 		// Nearest point computation
-		Vector2 p1 = App.instance().screenToWorld(x, y);
+		Vector2 p1 = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().nearestPoint = null;
 		ShapeModel shape = AppContext.instance().getLastTempShape();
 		if (shape != null && !shape.isClosed() && shape.getPointCount() >= 3)
-			if (shape.getPoint(0).dst(p1) < 10 * App.instance().getCamera().zoom)
+			if (shape.getPoint(0).dst(p1) < 10 * RenderPanel.instance().getCamera().zoom)
 				AppContext.instance().nearestPoint = shape.getPoint(0);
 
 		// Next point assignment
-		Vector2 p2 = App.instance().alignedScreenToWorld(x, y);
+		Vector2 p2 = RenderPanel.instance().alignedScreenToWorld(x, y);
 		AppContext.instance().nextPoint = p2;
 		return false;
 	}

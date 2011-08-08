@@ -1,7 +1,7 @@
 package aurelienribon.box2deditor.renderpanel.inputprocessors;
 
 import aurelienribon.box2deditor.AppContext;
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -30,7 +30,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
+		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().ballThrowFirstPoint = p;
 		return true;
 	}
@@ -44,12 +44,12 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
+		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().ballThrowLastPoint = p;
 		
-		if (App.instance().isWorldReady()) {
+		if (RenderPanel.instance().isWorldReady()) {
 			Vector2 delta = new Vector2(AppContext.instance().ballThrowLastPoint).sub(AppContext.instance().ballThrowFirstPoint);
-			App.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
+			RenderPanel.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
 		}
 		
 		AppContext.instance().ballThrowFirstPoint = null;
@@ -65,7 +65,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!AppContext.instance().isCurrentModelValid())
 			return true;
 
-		Vector2 p = App.instance().screenToWorld(x, y);
+		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().ballThrowLastPoint = p;
 		return true;
 	}

@@ -34,13 +34,13 @@ import java.util.Random;
  *
  * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
-public class App implements ApplicationListener {
-	private static App instance = new App();
-	public static App instance() {if (instance == null) instance = new App(); return instance;}
+public class RenderPanel implements ApplicationListener {
+	private static RenderPanel instance = new RenderPanel();
+	public static RenderPanel instance() {if (instance == null) instance = new RenderPanel(); return instance;}
 
 	private static final float PX_PER_METER = 50;
 
-	private AppDrawer drawer;
+	private RenderPanelDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
 	private Texture backgroundLightTexture;
@@ -82,7 +82,7 @@ public class App implements ApplicationListener {
 		ballModels = new ArrayList<Body>();
 		ballSprites = new ArrayList<Sprite>();
 		
-		drawer = new AppDrawer(camera);
+		drawer = new RenderPanelDrawer(camera);
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor());
@@ -221,7 +221,7 @@ public class App implements ApplicationListener {
 		clearBody();
 	}
 
-	public Vector2 setAssetByFile(String fullpath) {
+	public Vector2 setAsset(String fullpath) {
 		clearAsset();
 
 		Pixmap tempPm = new Pixmap(Gdx.files.absolute(fullpath));

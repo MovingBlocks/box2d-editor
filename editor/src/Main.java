@@ -1,6 +1,6 @@
-package aurelienribon.box2deditor;
-
-import aurelienribon.box2deditor.renderpanel.App;
+import aurelienribon.box2deditor.AppContext;
+import aurelienribon.box2deditor.MainWindow;
+import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -42,14 +42,14 @@ public class Main {
 	}
 
 	private static void makeWindow() {
+		final LwjglCanvas glCanvas = new LwjglCanvas(RenderPanel.instance(), false);
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				} catch (Exception ex) {}
-
-				LwjglCanvas glCanvas = new LwjglCanvas(App.instance(), false);
 
 				MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
