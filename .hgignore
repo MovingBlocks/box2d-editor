@@ -1,11 +1,20 @@
 syntax: glob
 *.zip
+
 editor/manifest.mf
 editor/nbbuild.xml
+editor/build/*
+editor/dist/*
 editor/nbproject/*
-libgdx-fixtureatlas-demo/manifest.mf
-libgdx-fixtureatlas-demo/nbbuild.xml
-libgdx-fixtureatlas-demo/nbproject/*
+
 libgdx-fixtureatlas/manifest.mf
 libgdx-fixtureatlas/nbbuild.xml
+libgdx-fixtureatlas/build/*
+libgdx-fixtureatlas/dist/*
 libgdx-fixtureatlas/nbproject/*
+
+libgdx-fixtureatlas-demo/manifest.mf
+libgdx-fixtureatlas-demo/nbbuild.xml
+libgdx-fixtureatlas-demo/build/*
+libgdx-fixtureatlas-demo/dist/*
+libgdx-fixtureatlas-demo/nbproject/*
