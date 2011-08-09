@@ -16,7 +16,7 @@
 	<property name="prj.libgdx-fixtureatlas-demo.filename" value="libgdx-fixtureatlas-demo" />
 
 	<!-- ****************************************************************** -->
-	<!-- Tasks -->
+	<!-- Build tasks -->
 	<!-- ****************************************************************** -->
 	
 	<!-- clean -->	
@@ -83,7 +83,6 @@
 
 		<!-- libgdx-fixtureatlas-demo -->
 		<copy file="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}.jar" todir="${prj.libgdx-fixtureatlas-demo.dir}/libs" />
-		<copy file="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}-sources.jar" todir="${prj.libgdx-fixtureatlas-demo.dir}/libs" />
 		<pathconvert property="prj.libgdx-fixtureatlas-demo.classpath" pathsep=" ">
 			<path><fileset dir="${prj.libgdx-fixtureatlas-demo.dir}" includes="libs/**/*.jar" /></path>
 			<chainedmapper>
@@ -91,6 +90,7 @@
 				<globmapper from="*" to="libs/*" />
 			</chainedmapper>
 		</pathconvert>
+		<delete file="${prj.libgdx-fixtureatlas-demo.dir}/libs/${prj.libgdx-fixtureatlas.filename}.jar"/>
 		<jar destfile="${prj.libgdx-fixtureatlas-demo.dir}/${prj.libgdx-fixtureatlas-demo.filename}.jar" basedir="${prj.libgdx-fixtureatlas-demo.dir}/bin">
 			<manifest>
 				<attribute name="Main-Class" value="Main"/>
@@ -109,12 +109,23 @@
 		</zip>
 		<zip destfile="${prj.libgdx-fixtureatlas-demo.filename}-${version}.zip">
 			<fileset dir="${prj.libgdx-fixtureatlas-demo.dir}" includes="*.jar, libs/, data/" />
+			<zipfileset file="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}.jar" fullpath="libs/${prj.libgdx-fixtureatlas.filename}.jar"/>
 		</zip>
 	</target>
 	
 	<!-- all -->
 	<target name="all" depends="zip">
 		<antcall target="clean"/>
+	</target>
+
+	<!-- ****************************************************************** -->
+	<!-- Run tasks -->
+	<!-- ****************************************************************** -->
+	
+	<!-- run-list -->
+	<target name="run-list">
+		<echo>run-editor</echo>
+		<echo>run-libgdx-fixtureatlas-demo</echo>
 	</target>
 
 	<!-- run-editor -->
