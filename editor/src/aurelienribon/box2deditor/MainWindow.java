@@ -584,7 +584,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         shape_drawGridChk.setForeground(Theme.MAIN_FOREGROUND);
-        shape_drawGridChk.setSelected(true);
         shape_drawGridChk.setText("Draw grid");
         shape_drawGridChk.setOpaque(false);
         shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {

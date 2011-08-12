@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 /**
+ * 
  * @author Aurelien Ribon (aurelien.ribon@gmail.com)
  */
 public class Clipper {
@@ -19,6 +20,7 @@ public class Clipper {
 			case EWJORDAN:
 				polygons = EwjordanDecomposer.decompose(points);
 				break;
+
 			case BAYAZIT:
 				Array<Vector2> tmpPoints = new Array<Vector2>(points.length);
 				tmpPoints.addAll(points);
@@ -45,11 +47,11 @@ public class Clipper {
 		}
 		
 		if (polygons != null)
-			polygons = updateForBox2D(polygons);
+			polygons = sliceForMax8Vertices(polygons);
 		return polygons;
 	}
 
-	private static Vector2[][] updateForBox2D(Vector2[][] polygons) {
+	private static Vector2[][] sliceForMax8Vertices(Vector2[][] polygons) {
 		for (int i = 0; i < polygons.length; i++) {
 			Vector2[] poly = polygons[i];
 			if (poly.length > 8) {

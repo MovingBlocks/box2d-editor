@@ -5,6 +5,7 @@ import aurelienribon.box2deditor.renderpanel.inputprocessors.BallThrowInputProce
 import aurelienribon.box2deditor.renderpanel.inputprocessors.PanZoomInputProcessor;
 import aurelienribon.box2deditor.renderpanel.inputprocessors.ShapeCreationInputProcessor;
 import aurelienribon.box2deditor.renderpanel.inputprocessors.ShapeEditionInputProcessor;
+import aurelienribon.box2deditor.utils.ShapeUtils;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -63,26 +65,25 @@ public class RenderPanel implements ApplicationListener {
 	
 	@Override
 	public void create() {
-		Texture.setEnforcePotImages(false);
-		sb = new SpriteBatch();
+		this.sb = new SpriteBatch();
 		
-		font = new BitmapFont();
+		this.font = new BitmapFont();
 		font.setColor(Color.BLACK);
 
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
 
-		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-light.png"));
+		this.backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-light.png"));
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-dark.png"));
+		this.backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/transparent-dark.png"));
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-		rand = new Random();
-		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/ball.png"));
-		ballModels = new ArrayList<Body>();
-		ballSprites = new ArrayList<Sprite>();
+		this.rand = new Random();
+		this.ballTexture = new Texture(Gdx.files.classpath("aurelienribon/box2deditor/gfx/ball.png"));
+		this.ballModels = new ArrayList<Body>();
+		this.ballSprites = new ArrayList<Sprite>();
 		
-		drawer = new RenderPanelDrawer(camera);
+		this.drawer = new RenderPanelDrawer(camera);
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor());
@@ -90,6 +91,8 @@ public class RenderPanel implements ApplicationListener {
 		im.addProcessor(new ShapeEditionInputProcessor());
 		im.addProcessor(new BallThrowInputProcessor());
 		Gdx.input.setInputProcessor(im);
+
+		this.world = new World(new Vector2(0, 0), true);
 	}
 
 	@Override
@@ -101,8 +104,7 @@ public class RenderPanel implements ApplicationListener {
 		if (assetSprite != null)
 			assetSprite.setColor(1, 1, 1, AppContext.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
 
-		if (world != null)
-			world.step(Gdx.graphics.getDeltaTime(), 10, 10);
+		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
@@ -247,34 +249,26 @@ public class RenderPanel implements ApplicationListener {
 	public void clearBody() {
 		ballModels.clear();
 		ballSprites.clear();
-		if (world != null) {
-			world.dispose();
-			world = null;
-		}
-	}
-
-	public boolean isWorldReady() {
-		return world != null;
+		Iterator<Body> bodies = world.getBodies();
+		while (bodies.hasNext())
+			world.destroyBody(bodies.next());
 	}
 
 	public void setBody(Vector2[][] polygons) {
-		ballModels.clear();
-		ballSprites.clear();
-		if (world != null) {
-			world.dispose();
-			world = null;
-		}
+		clearBody();
 
 		if (polygons == null || polygons.length == 0)
 			return;
 
-		world = new World(new Vector2(0, 0), true);
 		Body b = world.createBody(new BodyDef());
 
 		for (Vector2[] polygon : polygons) {
 			Vector2[] resizedPolygon = new Vector2[polygon.length];
 			for (int i=0; i<polygon.length; i++)
 				resizedPolygon[i] = new Vector2(polygon[i]).mul(1f / PX_PER_METER);
+
+			if (ShapeUtils.getPolygonArea(resizedPolygon) < 0.01f)
+				continue;
 
 			PolygonShape shape = new PolygonShape();
 			shape.set(resizedPolygon);

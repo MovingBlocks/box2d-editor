@@ -18,7 +18,7 @@ public class RenderPanelDrawer {
 	private static final Color SHAPE_LINE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color SHAPE_POLY_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
-	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
+	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 

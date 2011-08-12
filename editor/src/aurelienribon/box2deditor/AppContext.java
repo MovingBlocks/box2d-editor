@@ -41,7 +41,7 @@ public class AppContext {
 	public boolean arePolyDrawn = true;
 	public boolean isBackgroundLight = false;
 	public boolean isSnapToGridEnabled = false;
-	public boolean isGridShown = true;
+	public boolean isGridShown = false;
 	public int gridGap = 20;
 	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
 
@@ -191,6 +191,8 @@ public class AppContext {
 
 	// -------------------------------------------------------------------------
 
+	private static final float NORMALIZE_RATIO = 100;
+
 	public void loadCurrentModel() {
 		clearTempObjects();
 
@@ -198,7 +200,7 @@ public class AppContext {
 		Vector2[][] polygons = getCurrentModel().getPolygons();
 
 		if (shapes != null) {
-			shapes = VectorUtils.mul(shapes, currentSize.x / 100f);
+			shapes = VectorUtils.mul(shapes, currentSize.x / NORMALIZE_RATIO);
 			for (Vector2[] shape : shapes) {
 				ShapeModel shapeModel = new ShapeModel(shape);
 				shapeModel.close();
@@ -207,7 +209,7 @@ public class AppContext {
 		}
 
 		if (polygons != null) {
-			polygons = VectorUtils.mul(polygons, currentSize.x / 100f);
+			polygons = VectorUtils.mul(polygons, currentSize.x / NORMALIZE_RATIO);
 			tempPolygons.addAll(Arrays.asList(polygons));
 			RenderPanel.instance().setBody(polygons);
 		}
@@ -226,13 +228,13 @@ public class AppContext {
 		for (int i=0; i<closedShapes.size(); i++)
 			points[i] = closedShapes.get(i).getPoints();
 
-		Vector2[][] normalizedPoints = VectorUtils.mul(points, 100f / currentSize.x);
+		Vector2[][] normalizedPoints = VectorUtils.mul(points, NORMALIZE_RATIO / currentSize.x);
 		Vector2[][] normalizedPolygons = computePolygons(normalizedPoints);
 
 		BodyModel bm = getCurrentModel();
 		bm.set(normalizedPoints, normalizedPolygons);
 
-		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / 100f);
+		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / NORMALIZE_RATIO);
 		tempPolygons.clear();
 		Collections.addAll(tempPolygons, polygons);
 
@@ -255,9 +257,7 @@ public class AppContext {
 		for (Vector2[] shape : shapes) {
 			Vector2[][] polygons = Clipper.polygonize(shape, polygonizer);
 			if (polygons != null)
-				for (Vector2[] polygon : polygons)
-					if (ShapeUtils.getPolygonArea(polygon) > 1)
-						ret.add(polygon);
+				ret.addAll(Arrays.asList(polygons));
 		}
 		return ret.toArray(new Vector2[ret.size()][]);
 	}

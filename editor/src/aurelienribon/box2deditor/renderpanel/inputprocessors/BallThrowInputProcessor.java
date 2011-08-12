@@ -47,10 +47,8 @@ public class BallThrowInputProcessor extends InputAdapter {
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppContext.instance().ballThrowLastPoint = p;
 		
-		if (RenderPanel.instance().isWorldReady()) {
-			Vector2 delta = new Vector2(AppContext.instance().ballThrowLastPoint).sub(AppContext.instance().ballThrowFirstPoint);
-			RenderPanel.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
-		}
+		Vector2 delta = new Vector2(AppContext.instance().ballThrowLastPoint).sub(AppContext.instance().ballThrowFirstPoint);
+		RenderPanel.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
 		
 		AppContext.instance().ballThrowFirstPoint = null;
 		AppContext.instance().ballThrowLastPoint = null;
