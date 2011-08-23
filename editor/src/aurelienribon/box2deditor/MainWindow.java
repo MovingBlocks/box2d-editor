@@ -1257,7 +1257,7 @@ public class MainWindow extends javax.swing.JFrame {
 		chooser.setMultiSelectionEnabled(true);
 		chooser.setFileFilter(imageUiFilter);
 
-		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			List<String> assetPaths = new ArrayList<String>();
 			List<File> remainingFiles = new ArrayList<File>();
 
