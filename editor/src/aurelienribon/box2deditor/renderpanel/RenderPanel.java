@@ -235,6 +235,9 @@ public class RenderPanel implements ApplicationListener {
 		assetPixmap.drawPixmap(tempPm, 0, h - origH, 0, 0, origW, origH);
 		tempPm.dispose();
 
+		assetPixmap.setColor(0, 0, 0, 1);
+		assetPixmap.drawRectangle(0, h - origH, origW, origH);
+
 		assetTexture = new Texture(assetPixmap);
 		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		assetSprite = new Sprite(assetTexture);

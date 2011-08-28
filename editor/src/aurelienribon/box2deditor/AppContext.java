@@ -8,7 +8,6 @@ import aurelienribon.box2deditor.models.BodyModel;
 import aurelienribon.box2deditor.models.ShapeModel;
 import aurelienribon.box2deditor.renderpanel.RenderPanel;
 import aurelienribon.box2deditor.utils.FileUtils.NoCommonPathFoundException;
-import aurelienribon.box2deditor.utils.ShapeUtils;
 import aurelienribon.box2deditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
 import java.io.ByteArrayOutputStream;
@@ -200,7 +199,7 @@ public class AppContext {
 		Vector2[][] polygons = getCurrentModel().getPolygons();
 
 		if (shapes != null) {
-			shapes = VectorUtils.mul(shapes, currentSize.x / NORMALIZE_RATIO);
+			shapes = VectorUtils.mul(shapes, currentSize.x/NORMALIZE_RATIO, currentSize.y/NORMALIZE_RATIO);
 			for (Vector2[] shape : shapes) {
 				ShapeModel shapeModel = new ShapeModel(shape);
 				shapeModel.close();
@@ -209,7 +208,7 @@ public class AppContext {
 		}
 
 		if (polygons != null) {
-			polygons = VectorUtils.mul(polygons, currentSize.x / NORMALIZE_RATIO);
+			polygons = VectorUtils.mul(polygons, currentSize.x/NORMALIZE_RATIO, currentSize.y/NORMALIZE_RATIO);
 			tempPolygons.addAll(Arrays.asList(polygons));
 			RenderPanel.instance().setBody(polygons);
 		}
@@ -228,13 +227,13 @@ public class AppContext {
 		for (int i=0; i<closedShapes.size(); i++)
 			points[i] = closedShapes.get(i).getPoints();
 
-		Vector2[][] normalizedPoints = VectorUtils.mul(points, NORMALIZE_RATIO / currentSize.x);
+		Vector2[][] normalizedPoints = VectorUtils.mul(points, NORMALIZE_RATIO/currentSize.x, NORMALIZE_RATIO/currentSize.y);
 		Vector2[][] normalizedPolygons = computePolygons(normalizedPoints);
 
 		BodyModel bm = getCurrentModel();
 		bm.set(normalizedPoints, normalizedPolygons);
 
-		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x / NORMALIZE_RATIO);
+		Vector2[][] polygons = VectorUtils.mul(normalizedPolygons, currentSize.x/NORMALIZE_RATIO , currentSize.y/NORMALIZE_RATIO);
 		tempPolygons.clear();
 		Collections.addAll(tempPolygons, polygons);
 
