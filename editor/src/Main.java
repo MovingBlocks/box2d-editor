@@ -1,6 +1,6 @@
-import aurelienribon.box2deditor.AppContext;
-import aurelienribon.box2deditor.MainWindow;
-import aurelienribon.box2deditor.renderpanel.RenderPanel;
+import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.MainWindow;
+import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -54,8 +54,8 @@ public class Main {
 				MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
-					Math.min(1250, screenSize.width - 100),
-					Math.min(850, screenSize.height - 100)
+					Math.min(1150, screenSize.width - 100),
+					Math.min(800, screenSize.height - 100)
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
