@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor.earclipping;
 
-import aurelienribon.bodyeditor.ErrorReport;
 import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
 import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
 import com.badlogic.gdx.math.Vector2;
@@ -29,9 +28,6 @@ public class Clipper {
 				try {
 					tmpPolygons = BayazitDecomposer.ConvexPartition(tmpPoints);
 				} catch (Exception ex) {
-					ErrorReport.reportOnStdErr("Something went wrong while decomposing the shape\n"
-						+ "into convex polygons. Are you sure it was a simple polygon ?\n"
-						+ "Try another polygonizer algorithm maybe.");
 					tmpPolygons = null;
 				}
 

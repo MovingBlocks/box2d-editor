@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor;
+package aurelienribon.bodyeditor.ui;
 
 import java.awt.Color;
 

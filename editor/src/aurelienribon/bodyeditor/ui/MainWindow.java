@@ -1,5 +1,6 @@
-package aurelienribon.bodyeditor;
+package aurelienribon.bodyeditor.ui;
 
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizers;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import aurelienribon.utils.ui.SwingHelper;
@@ -41,7 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		addComponentListener(new ComponentAdapter() {
 			@Override public void componentShown(ComponentEvent e) {
-				File outputFile = AppContext.instance().outputFile;
+				File outputFile = AppManager.instance().outputFile;
 				if (outputFile != null)
 					setOutputFile(outputFile, true);
 			}
@@ -137,7 +138,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel3.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
-        tools_insertPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_add.png"))); // NOI18N
+        tools_insertPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_add.png"))); // NOI18N
         tools_insertPointsBtn.setText("Insert point(s)");
         tools_insertPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_insertPointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -148,7 +149,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        tools_removePointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_remove.png"))); // NOI18N
+        tools_removePointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_remove.png"))); // NOI18N
         tools_removePointsBtn.setText("Remove point(s)");
         tools_removePointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_removePointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -159,7 +160,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        tools_clearPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_delete.png"))); // NOI18N
+        tools_clearPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"))); // NOI18N
         tools_clearPointsBtn.setText("Clear all points");
         tools_clearPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         tools_clearPointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -228,7 +229,7 @@ public class MainWindow extends javax.swing.JFrame {
         logoPanel.setBackground(Theme.MAIN_BACKGROUND);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/title.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/title.png"))); // NOI18N
 
         logoWebsiteLbl.setForeground(Theme.MAIN_FOREGROUND);
         logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurélien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
@@ -296,7 +297,7 @@ public class MainWindow extends javax.swing.JFrame {
         init_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         init_outputFileLbl.setText("<no file specified>");
 
-        init_setOutputFileBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_gear.png"))); // NOI18N
+        init_setOutputFileBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_gear.png"))); // NOI18N
         init_setOutputFileBtn.setText("Set / load output file");
         init_setOutputFileBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         init_setOutputFileBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -307,7 +308,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        export_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_save.png"))); // NOI18N
+        export_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_save.png"))); // NOI18N
         export_saveBtn.setText("Save");
         export_saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         export_saveBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -569,7 +570,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel6.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
-        assets_removeAssetBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_delete.png"))); // NOI18N
+        assets_removeAssetBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"))); // NOI18N
         assets_removeAssetBtn.setText("Remove selection");
         assets_removeAssetBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         assets_removeAssetBtn.setMargin(new java.awt.Insets(2, 3, 2, 2));
@@ -594,7 +595,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         assets_assetListScrollPane.setViewportView(assets_assetList);
 
-        init_addAssetsByFilesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/gfx/ic_add.png"))); // NOI18N
+        init_addAssetsByFilesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_add.png"))); // NOI18N
         init_addAssetsByFilesBtn.setText("Add images files/dirs");
         init_addAssetsByFilesBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         init_addAssetsByFilesBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -665,7 +666,7 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void init_addAssetsByFilesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByFilesBtnActionPerformed
-		if (AppContext.instance().outputFile == null) {
+		if (AppManager.instance().outputFile == null) {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
 		}
@@ -683,14 +684,14 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_init_setOutputFileBtnActionPerformed
 
 	private void export_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_saveBtnActionPerformed
-		File outputFile = AppContext.instance().outputFile;
+		File outputFile = AppManager.instance().outputFile;
 		if (outputFile == null) {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
 		}
 
 		try {			
-			AppContext.instance().exportToFile();
+			AppManager.instance().exportToFile();
 			JOptionPane.showMessageDialog(this, "Save successfully done !");
 
 			int idx = assets_assetList.getSelectedIndex();
@@ -704,8 +705,8 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_export_saveBtnActionPerformed
 
 	private void assets_assetListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_assets_assetListValueChanged
-		AppContext.instance().clearTempObjects();
-		AppContext.instance().setCurrentName(null);
+		AppManager.instance().clearTempObjects();
+		AppManager.instance().setCurrentName(null);
 		RenderPanel.instance().clearAsset();
 
 		if (assets_assetList.isSelectionEmpty())
@@ -714,12 +715,12 @@ public class MainWindow extends javax.swing.JFrame {
 		int idx = assets_assetList.getSelectedIndex();
 		if (isAssetValid(idx)) {
 			String name = (String) assetsListModel.get(idx);
-			String path = AppContext.instance().getFullPath(name);
+			String path = AppManager.instance().getFullPath(name);
 
 			Vector2 size = RenderPanel.instance().setAsset(path);
-			AppContext.instance().setCurrentSize(size);
-			AppContext.instance().setCurrentName(name);
-			AppContext.instance().loadCurrentModel();
+			AppManager.instance().setCurrentSize(size);
+			AppManager.instance().setCurrentName(name);
+			AppManager.instance().loadCurrentModel();
 		}
 	}//GEN-LAST:event_assets_assetListValueChanged
 
@@ -733,48 +734,48 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_assets_removeAssetBtnActionPerformed
 
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
-		AppContext.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
+		AppManager.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
 	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
 
 	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
-		AppContext.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
+		AppManager.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
 	}//GEN-LAST:event_shape_drawPolysChkActionPerformed
 
 	private void shape_drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetChkActionPerformed
-		AppContext.instance().isAssetDrawn = shape_drawAssetChk.isSelected();
+		AppManager.instance().isAssetDrawn = shape_drawAssetChk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetChkActionPerformed
 
 	private void shape_drawAssetOpacity50ChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetOpacity50ChkActionPerformed
-		AppContext.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
+		AppManager.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
 
 	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
-		AppContext.instance().insertPointBetweenSelected();
+		AppManager.instance().insertPointBetweenSelected();
 	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
 
 	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
-		AppContext.instance().removeSelectedPoints();
+		AppManager.instance().removeSelectedPoints();
 	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
 	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
-		AppContext.instance().clearTempObjects();
+		AppManager.instance().clearTempObjects();
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
 	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
-		AppContext.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
+		AppManager.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
 	}//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
 
 	private void shape_drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawGridChkActionPerformed
-		AppContext.instance().isGridShown = shape_drawGridChk.isSelected();
+		AppManager.instance().isGridShown = shape_drawGridChk.isSelected();
 	}//GEN-LAST:event_shape_drawGridChkActionPerformed
 
 	private void shape_grigGapSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_shape_grigGapSpinnerStateChanged
-		AppContext.instance().gridGap = (Integer)shape_grigGapSpinner.getValue();
+		AppManager.instance().gridGap = (Integer)shape_grigGapSpinner.getValue();
 	}//GEN-LAST:event_shape_grigGapSpinnerStateChanged
 
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
-		AppContext.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
-		AppContext.instance().saveCurrentModel();
+		AppManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
+		AppManager.instance().saveCurrentModel();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 
 	// -------------------------------------------------------------------------
@@ -782,8 +783,8 @@ public class MainWindow extends javax.swing.JFrame {
 	private static final String UNKNOWN_PREFIX = "[NOT FOUND] ";
 
 	private void setOutputFile(File file, boolean force) {
-		File oldFile = AppContext.instance().outputFile;
-		AppContext.instance().outputFile = file;
+		File oldFile = AppManager.instance().outputFile;
+		AppManager.instance().outputFile = file;
 		init_outputFileLbl.setText(file.getPath());
 
 		if (oldFile != null)
@@ -807,7 +808,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void addAsset(String name, boolean absolutePath) {
 		String newName = absolutePath
-			? AppContext.instance().getPathRelativeToOutputFile(name)
+			? AppManager.instance().getPathRelativeToOutputFile(name)
 			: name;
 
 		if (newName == null)
@@ -815,24 +816,24 @@ public class MainWindow extends javax.swing.JFrame {
 
 		String path = absolutePath
 			? name
-			: AppContext.instance().getFullPath(name);
+			: AppManager.instance().getFullPath(name);
 
 		File file = new File(path);
 
 		if (file.exists()) {
 			if (!assetsListModel.contains(newName))
 				assetsListModel.addElement(newName);
-			AppContext.instance().addModel(newName);
+			AppManager.instance().addModel(newName);
 		} else {
 			if (!assetsListModel.contains(UNKNOWN_PREFIX + newName))
 				assetsListModel.addElement(UNKNOWN_PREFIX + newName);
-			AppContext.instance().addModel(newName);
+			AppManager.instance().addModel(newName);
 		}
 	}
 
 	private void removeAsset(int idx) {
 		String oldName = (String) assetsListModel.get(idx);
-		AppContext.instance().removeModel(oldName);
+		AppManager.instance().removeModel(oldName);
 
 		assetsListModel.remove(idx);
 		if (assetsListModel.size() > idx)
@@ -846,7 +847,7 @@ public class MainWindow extends javax.swing.JFrame {
 		if (name.startsWith(UNKNOWN_PREFIX))
 			return false;
 
-		String path = AppContext.instance().getFullPath(name);
+		String path = AppManager.instance().getFullPath(name);
 		File file = new File(path);
 
 		if (!file.exists()) {
@@ -868,11 +869,11 @@ public class MainWindow extends javax.swing.JFrame {
 					assetsListModel.set(i, oldName);
 			} else {
 				String newName = new File(oldRoot, oldName).getPath();
-				newName = AppContext.instance().getPathRelativeToOutputFile(newName);
+				newName = AppManager.instance().getPathRelativeToOutputFile(newName);
 
 				if (newName != null) {
 					assetsListModel.set(i, newName);
-					AppContext.instance().changeModelName(oldName, newName);
+					AppManager.instance().changeModelName(oldName, newName);
 				} else {
 					assetsListModel.set(i, UNKNOWN_PREFIX + oldName);
 				}
@@ -887,14 +888,14 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void loadAssets() {
-		File outputFile = AppContext.instance().outputFile;
+		File outputFile = AppManager.instance().outputFile;
 		if (outputFile == null || !outputFile.exists())
 			return;
 
 		try {
-			AppContext.instance().importFromFile();
+			AppManager.instance().importFromFile();
 			assetsListModel.clear();
-			for (String name : AppContext.instance().getModelNames())
+			for (String name : AppManager.instance().getModelNames())
 				addAsset(name, false);
 
 		} catch (IOException ex) {
@@ -977,7 +978,7 @@ public class MainWindow extends javax.swing.JFrame {
 	};
 	
     private String[] promptAssetsByFiles() {
-		String startupPath = AppContext.instance().getRootDirectory();
+		String startupPath = AppManager.instance().getRootDirectory();
 		JFileChooser chooser = new JFileChooser(startupPath);
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(true);
@@ -1008,7 +1009,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private File promptOutputFile() {
-		File outputFile = AppContext.instance().outputFile;
+		File outputFile = AppManager.instance().outputFile;
 		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
 		if (!startupDir.isDirectory())
 			startupDir = new File(".");

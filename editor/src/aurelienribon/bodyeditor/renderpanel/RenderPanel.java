@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.renderpanel;
 
-import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.BallThrowInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.PanZoomInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeCreationInputProcessor;
@@ -73,13 +73,13 @@ public class RenderPanel implements ApplicationListener {
 		this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
 
-		this.backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/gfx/transparent-light.png"));
+		this.backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		this.backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/gfx/transparent-dark.png"));
+		this.backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 		this.rand = new Random();
-		this.ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/gfx/ball.png"));
+		this.ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
 		this.ballModels = new ArrayList<Body>();
 		this.ballSprites = new ArrayList<Sprite>();
 		
@@ -102,7 +102,7 @@ public class RenderPanel implements ApplicationListener {
 	@Override
 	public void render() {
 		if (assetSprite != null)
-			assetSprite.setColor(1, 1, 1, AppContext.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
+			assetSprite.setColor(1, 1, 1, AppManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
 
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
@@ -116,7 +116,7 @@ public class RenderPanel implements ApplicationListener {
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
 		sb.disableBlending();
-		if (AppContext.instance().isBackgroundLight) {
+		if (AppManager.instance().isBackgroundLight) {
 			float tw = backgroundLightTexture.getWidth();
 			float th = backgroundLightTexture.getHeight();
 			sb.draw(backgroundLightTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
@@ -130,7 +130,7 @@ public class RenderPanel implements ApplicationListener {
 
 		sb.setProjectionMatrix(camera.combined);
 		sb.begin();
-		if (assetSprite != null && AppContext.instance().isAssetDrawn)
+		if (assetSprite != null && AppManager.instance().isAssetDrawn)
 			assetSprite.draw(sb);
 		for (int i=0; i<ballSprites.size(); i++) {
 			Sprite sp = ballSprites.get(i);
@@ -142,10 +142,10 @@ public class RenderPanel implements ApplicationListener {
 		}
 		sb.end();
 
-		if (AppContext.instance().isGridShown) {
+		if (AppManager.instance().isGridShown) {
 			OrthographicCamera cam = new OrthographicCamera(w, h);
 			cam.apply(gl);
-			drawer.drawGrid(w, h, AppContext.instance().gridGap);
+			drawer.drawGrid(w, h, AppManager.instance().gridGap);
 		}
 
 		camera.apply(gl);
@@ -192,8 +192,8 @@ public class RenderPanel implements ApplicationListener {
 
 	public Vector2 alignedScreenToWorld(int x, int y) {
 		Vector2 p = screenToWorld(x, y);
-		if (AppContext.instance().isSnapToGridEnabled) {
-			float gap = AppContext.instance().gridGap;
+		if (AppManager.instance().isSnapToGridEnabled) {
+			float gap = AppManager.instance().gridGap;
 			p.x = Math.round(p.x / gap) * gap;
 			p.y = Math.round(p.y / gap) * gap;
 		}

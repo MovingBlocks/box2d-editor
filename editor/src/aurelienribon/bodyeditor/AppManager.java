@@ -3,14 +3,12 @@ package aurelienribon.bodyeditor;
 import aurelienribon.bodyeditor.earclipping.Clipper;
 import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizers;
 import aurelienribon.bodyeditor.utils.FileUtils;
-import aurelienribon.bodyeditor.io.IO;
 import aurelienribon.bodyeditor.models.BodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import aurelienribon.bodyeditor.utils.FileUtils.NoCommonPathFoundException;
 import aurelienribon.bodyeditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,11 +22,13 @@ import java.util.TreeMap;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class AppContext {
-    private static AppContext instance = new AppContext();
-	public static AppContext instance() { return instance; }
-	
-	public static final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+public class AppManager {
+	// -------------------------------------------------------------------------
+	// Singleton
+	// -------------------------------------------------------------------------
+
+    private static AppManager instance = new AppManager();
+	public static AppManager instance() { return instance; }
 
 	// -------------------------------------------------------------------------
 	// Parameters
@@ -143,12 +143,12 @@ public class AppContext {
 	// -------------------------------------------------------------------------
 
 	public void exportToFile() throws IOException {
-		IO.exportToFile(outputFile, modelMap);
+		IoManager.instance().exportToFile(outputFile, modelMap);
 	}
 
 	public void importFromFile() throws IOException {
 		modelMap.clear();
-		Map<String, BodyModel> map = IO.importFromFile(outputFile);
+		Map<String, BodyModel> map = IoManager.instance().importFromFile(outputFile);
 		for (String str : map.keySet())
 			modelMap.put(str, map.get(str));
 	}

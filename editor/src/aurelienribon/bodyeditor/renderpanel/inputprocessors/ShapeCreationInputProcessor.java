@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
-import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Input.Buttons;
@@ -22,17 +22,17 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
-		ShapeModel lastShape = AppContext.instance().getLastTempShape();
+		ShapeModel lastShape = AppManager.instance().getLastTempShape();
 
 		if (lastShape == null || lastShape.isClosed())
-			lastShape = AppContext.instance().createNewTempShape();
+			lastShape = AppManager.instance().createNewTempShape();
 
-		if (lastShape.getPointCount() >= 3 && AppContext.instance().nearestPoint == lastShape.getPoint(0)) {
+		if (lastShape.getPointCount() >= 3 && AppManager.instance().nearestPoint == lastShape.getPoint(0)) {
 			lastShape.close();
-			AppContext.instance().saveCurrentModel();
+			AppManager.instance().saveCurrentModel();
 		} else {
 			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
 			lastShape.addPoint(p);
@@ -59,20 +59,20 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return false;
 
 		// Nearest point computation
 		Vector2 p1 = RenderPanel.instance().screenToWorld(x, y);
-		AppContext.instance().nearestPoint = null;
-		ShapeModel shape = AppContext.instance().getLastTempShape();
+		AppManager.instance().nearestPoint = null;
+		ShapeModel shape = AppManager.instance().getLastTempShape();
 		if (shape != null && !shape.isClosed() && shape.getPointCount() >= 3)
 			if (shape.getPoint(0).dst(p1) < 10 * RenderPanel.instance().getCamera().zoom)
-				AppContext.instance().nearestPoint = shape.getPoint(0);
+				AppManager.instance().nearestPoint = shape.getPoint(0);
 
 		// Next point assignment
 		Vector2 p2 = RenderPanel.instance().alignedScreenToWorld(x, y);
-		AppContext.instance().nextPoint = p2;
+		AppManager.instance().nextPoint = p2;
 		return false;
 	}
 }
