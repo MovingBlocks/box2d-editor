@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizers;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import aurelienribon.utils.ui.SwingHelper;
@@ -42,7 +43,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		addComponentListener(new ComponentAdapter() {
 			@Override public void componentShown(ComponentEvent e) {
-				File outputFile = AppManager.instance().outputFile;
+				File outputFile = IoManager.instance().getOutputFile();
 				if (outputFile != null)
 					setOutputFile(outputFile, true);
 			}
@@ -666,11 +667,6 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void init_addAssetsByFilesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_addAssetsByFilesBtnActionPerformed
-		if (AppManager.instance().outputFile == null) {
-			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
-			return;
-		}
-		
 		String[] assets = promptAssetsByFiles();
 		if (assets != null)
 			for (String asset : assets)
@@ -684,7 +680,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_init_setOutputFileBtnActionPerformed
 
 	private void export_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_saveBtnActionPerformed
-		File outputFile = AppManager.instance().outputFile;
+		File outputFile = IoManager.instance().getOutputFile();
 		if (outputFile == null) {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
@@ -715,7 +711,7 @@ public class MainWindow extends javax.swing.JFrame {
 		int idx = assets_assetList.getSelectedIndex();
 		if (isAssetValid(idx)) {
 			String name = (String) assetsListModel.get(idx);
-			String path = AppManager.instance().getFullPath(name);
+			String path = IoManager.instance().combine(name);
 
 			Vector2 size = RenderPanel.instance().setAsset(path);
 			AppManager.instance().setCurrentSize(size);
@@ -783,12 +779,11 @@ public class MainWindow extends javax.swing.JFrame {
 	private static final String UNKNOWN_PREFIX = "[NOT FOUND] ";
 
 	private void setOutputFile(File file, boolean force) {
-		File oldFile = AppManager.instance().outputFile;
-		AppManager.instance().outputFile = file;
+		File oldFile = IoManager.instance().getOutputFile();
+		IoManager.instance().setOutputFile(file);
 		init_outputFileLbl.setText(file.getPath());
 
-		if (oldFile != null)
-			updateAssets(oldFile.getParent(), file.getParent());
+		updateAssets(oldFile != null ? oldFile.getParent() : null, file.getParent());
 
 		if (file.exists()) {
 			if (!force) {
@@ -807,17 +802,11 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void addAsset(String name, boolean absolutePath) {
-		String newName = absolutePath
-			? AppManager.instance().getPathRelativeToOutputFile(name)
-			: name;
-
+		String newName = absolutePath ? IoManager.instance().relativize(name) : name;
 		if (newName == null)
 			return;
 
-		String path = absolutePath
-			? name
-			: AppManager.instance().getFullPath(name);
-
+		String path = absolutePath ? name : IoManager.instance().combine(name);
 		File file = new File(path);
 
 		if (file.exists()) {
@@ -847,7 +836,7 @@ public class MainWindow extends javax.swing.JFrame {
 		if (name.startsWith(UNKNOWN_PREFIX))
 			return false;
 
-		String path = AppManager.instance().getFullPath(name);
+		String path = IoManager.instance().combine(name);
 		File file = new File(path);
 
 		if (!file.exists()) {
@@ -868,8 +857,8 @@ public class MainWindow extends javax.swing.JFrame {
 				if (f.exists())
 					assetsListModel.set(i, oldName);
 			} else {
-				String newName = new File(oldRoot, oldName).getPath();
-				newName = AppManager.instance().getPathRelativeToOutputFile(newName);
+				String newName = oldRoot != null ? new File(oldRoot, oldName).getPath() : oldName;
+				newName = IoManager.instance().relativize(newName);
 
 				if (newName != null) {
 					assetsListModel.set(i, newName);
@@ -888,7 +877,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void loadAssets() {
-		File outputFile = AppManager.instance().outputFile;
+		File outputFile = IoManager.instance().getOutputFile();
 		if (outputFile == null || !outputFile.exists())
 			return;
 
@@ -978,7 +967,9 @@ public class MainWindow extends javax.swing.JFrame {
 	};
 	
     private String[] promptAssetsByFiles() {
-		String startupPath = AppManager.instance().getRootDirectory();
+		File outputFile = IoManager.instance().getOutputFile();
+		String startupPath = outputFile != null ? outputFile.getParent() : ".";
+		
 		JFileChooser chooser = new JFileChooser(startupPath);
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(true);
@@ -1009,7 +1000,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private File promptOutputFile() {
-		File outputFile = AppManager.instance().outputFile;
+		File outputFile = IoManager.instance().getOutputFile();
 		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
 		if (!startupDir.isDirectory())
 			startupDir = new File(".");
