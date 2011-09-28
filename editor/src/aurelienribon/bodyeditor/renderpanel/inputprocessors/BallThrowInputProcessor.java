@@ -17,11 +17,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		boolean isValid = button == Buttons.LEFT
-			&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ||
-			    Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
-			&& (!Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) &&
-			    !Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT));
+		boolean isValid = button == Buttons.LEFT && InputHelper.isTestCollisionKeyDown();
 
 		if (!isValid)
 			return false;

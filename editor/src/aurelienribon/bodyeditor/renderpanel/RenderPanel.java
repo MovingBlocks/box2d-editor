@@ -87,9 +87,9 @@ public class RenderPanel implements ApplicationListener {
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor());
+		im.addProcessor(new BallThrowInputProcessor());
 		im.addProcessor(new ShapeCreationInputProcessor());
 		im.addProcessor(new ShapeEditionInputProcessor());
-		im.addProcessor(new BallThrowInputProcessor());
 		Gdx.input.setInputProcessor(im);
 
 		this.world = new World(new Vector2(0, 0), true);

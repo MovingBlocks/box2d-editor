@@ -424,7 +424,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel9.setForeground(Theme.MAIN_FOREGROUND);
         jLabel9.setText("Grid gap (pixels):");
 
-        shape_grigGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(20), Integer.valueOf(1), null, Integer.valueOf(1)));
+        shape_grigGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
         shape_grigGapSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 shape_grigGapSpinnerStateChanged(evt);
