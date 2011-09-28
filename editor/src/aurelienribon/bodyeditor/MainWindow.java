@@ -55,6 +55,14 @@ public class MainWindow extends javax.swing.JFrame {
 				SwingHelper.browse(MainWindow.this, "http://www.aurelienribon.com");
 			}
 		});
+
+		logoHelpLbl.addMouseListener(new MouseAdapter() {
+			@Override public void mouseClicked(MouseEvent e) {
+				HelpDialog dialog = new HelpDialog(MainWindow.this, true);
+				SwingHelper.centerInWindow(MainWindow.this, dialog);
+				dialog.setVisible(true);
+			}
+		});
     }
 
 	private final MouseListener cursorHandler = new MouseAdapter() {
@@ -225,7 +233,7 @@ public class MainWindow extends javax.swing.JFrame {
         logoWebsiteLbl.setForeground(Theme.MAIN_FOREGROUND);
         logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurélien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
 
-        logoHelpLbl.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        logoHelpLbl.setFont(new java.awt.Font("Tahoma", 1, 11));
         logoHelpLbl.setForeground(Theme.MAIN_FOREGROUND);
         logoHelpLbl.setText("<html>\n<p align=\"right\">\n<font color=\"#6eccff\">Open help</font>\n</p>");
 
@@ -234,25 +242,23 @@ public class MainWindow extends javax.swing.JFrame {
         logoPanelLayout.setHorizontalGroup(
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         logoPanelLayout.setVerticalGroup(
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(logoPanelLayout.createSequentialGroup()
                         .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                         .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel10))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         configPanel.setOpaque(false);
@@ -433,6 +439,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         shape_drawGridChk.setForeground(Theme.MAIN_FOREGROUND);
+        shape_drawGridChk.setSelected(true);
         shape_drawGridChk.setText("Draw grid");
         shape_drawGridChk.setOpaque(false);
         shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
