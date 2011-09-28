@@ -3,9 +3,7 @@ package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 import aurelienribon.bodyeditor.AppContext;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,11 +16,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		boolean isValid = button == Buttons.LEFT 
-			&& (!Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) &&
-			    !Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
-			&& (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) ||
-			    Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT));
+		boolean isValid = button == Buttons.LEFT && InputHelper.isShapeCreationKeyDown();
 
 		if (!isValid)
 			return false;

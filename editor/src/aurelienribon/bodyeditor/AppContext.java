@@ -41,7 +41,7 @@ public class AppContext {
 	public boolean isBackgroundLight = false;
 	public boolean isSnapToGridEnabled = false;
 	public boolean isGridShown = true;
-	public int gridGap = 20;
+	public int gridGap = 10;
 	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
 
 	// -------------------------------------------------------------------------

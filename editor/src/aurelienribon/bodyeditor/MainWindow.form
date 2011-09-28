@@ -647,7 +647,7 @@
                     <Component class="javax.swing.JSpinner" name="shape_grigGapSpinner">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                          <SpinnerModel initial="20" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                          <SpinnerModel initial="10" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
                       </Properties>
                       <Events>

@@ -25,7 +25,7 @@ public class HelpDialog extends javax.swing.JDialog {
         jPanel4.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
         jLabel2.setForeground(Theme.MAIN_ALT_FOREGROUND);
-        jLabel2.setText("<html>\n<b>Tutorial</b><br/>\n1. Set the output file,<br/>\n2. Add some images to the list,<br/>\n3. Select an image and define its collision shape(s)<br/><br/>\n\n<font color=\"#FF8888\">Don't forget to save your work before closing the application! ;-)</font><br/><br/>\n\n<b>Controls</b><br/>\nCreate a shape with &lt;ctrl&gt;+&lt;left clics&gt;<br/>\nEdit a shape by dragging its vertices by holding &lt;left mouse button&gt;<br/>\nTest the collisions by holding <shift> and dragging the &lt;left mouse button&gt;<br/>\nZoom with &lt;mouse scroll&gt;<br/>\nPan by dragging the &lt;right mouse button&gt;<br/><br/>\n\n<b>Hints</b><br/>\nIf you need to insert a vertex between two others, select these two vertices, and clic on the \"insert vertices\" button. A new vertex will be inserted between each pair of selected vertices.");
+        jLabel2.setText("<html>\n<b>Tutorial</b><br/>\n1. Set the output file,<br/>\n2. Add some images to the list,<br/>\n3. Select an image and define its collision shape(s)<br/><br/>\n\n<font color=\"#FF8888\">Don't forget to save your work before closing the application! ;-)</font><br/><br/>\n\n<b>Controls</b><br/>\nCreate a shape with &lt;ctrl&gt;+&lt;left clics&gt;<br/>\nEdit a shape by dragging its vertices by holding &lt;left mouse button&gt;<br/>\nTest the collisions by holding &lt;shift&gt; and dragging the &lt;left mouse button&gt;<br/>\nZoom with &lt;mouse scroll&gt;<br/>\nPan by dragging the &lt;right mouse button&gt;<br/><br/>\n\n<font color=\"#FF8888\">Mac OS users: if &lt;ctrl&gt; or &lt;shift&gt; is not recognized, you can also hold &lt;C&gt; or &lt;S&gt; (respectively).</font><br/><br/>\n\n<b>Hints</b><br/>\nIf you need to insert a vertex between two others, select these two vertices, and clic on the \"insert vertices\" button. A new vertex will be inserted between each pair of selected vertices.");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -34,14 +34,14 @@ public class HelpDialog extends javax.swing.JDialog {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
