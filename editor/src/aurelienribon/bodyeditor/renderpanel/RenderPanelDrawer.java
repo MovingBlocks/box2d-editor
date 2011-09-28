@@ -53,21 +53,33 @@ public class RenderPanelDrawer {
 		Vector2 p1 = new Vector2();
 		Vector2 p2 = new Vector2();
 
-		float gap = gapPx / camera.zoom;
-		float deltaX = (camera.position.x / camera.zoom) % gap;
-		float deltaY = (camera.position.y / camera.zoom) % gap;
+			float gap = gapPx / camera.zoom;
+			float deltaX = (camera.position.x / camera.zoom) % gap;
+			float deltaY = (camera.position.y / camera.zoom) % gap;
 
-		for (float x=-deltaX-w/2; x<w/2+gap; x+=gap) {
-			p1.set(x, -h/2);
-			p2.set(x, +h/2);
-			drawLine(p1, p2, GRID_COLOR, 1);
-		}
+			for (float x=-deltaX; x<w/2+gap; x+=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
 
-		for (float y=-deltaY-h/2; y<h/2+gap; y+=gap) {
-			p1.set(-w/2, y);
-			p2.set(+w/2, y);
-			drawLine(p1, p2, GRID_COLOR, 1);
-		}
+			for (float x=-deltaX-gap; x>-w/2-gap; x-=gap) {
+				p1.set(x, -h/2);
+				p2.set(x, +h/2);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY; y<h/2+gap; y+=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
+
+			for (float y=-deltaY-gap; y>-h/2-gap; y-=gap) {
+				p1.set(-w/2, y);
+				p2.set(+w/2, y);
+				drawLine(p1, p2, GRID_COLOR, 1);
+			}
 	}
 
 	// -------------------------------------------------------------------------

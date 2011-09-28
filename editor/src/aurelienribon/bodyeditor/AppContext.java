@@ -40,7 +40,7 @@ public class AppContext {
 	public boolean arePolyDrawn = true;
 	public boolean isBackgroundLight = false;
 	public boolean isSnapToGridEnabled = false;
-	public boolean isGridShown = false;
+	public boolean isGridShown = true;
 	public int gridGap = 20;
 	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
 

@@ -193,15 +193,7 @@ public class RenderPanel implements ApplicationListener {
 	public Vector2 alignedScreenToWorld(int x, int y) {
 		Vector2 p = screenToWorld(x, y);
 		if (AppContext.instance().isSnapToGridEnabled) {
-			float div = 1;
-			if (camera.zoom < 1) {
-				float camZoom = 1/camera.zoom;
-				while (camZoom > 1) {div *= 2; camZoom /= 2;}
-			} else if (camera.zoom > 1) {
-				float camZoom = 1/camera.zoom;
-				while (camZoom < 1) {div /= 2; camZoom *= 2;}
-			}
-			float gap = AppContext.instance().gridGap / div;
+			float gap = AppContext.instance().gridGap;
 			p.x = Math.round(p.x / gap) * gap;
 			p.y = Math.round(p.y / gap) * gap;
 		}
@@ -234,9 +226,6 @@ public class RenderPanel implements ApplicationListener {
 		assetPixmap = new Pixmap(w, h, tempPm.getFormat());
 		assetPixmap.drawPixmap(tempPm, 0, h - origH, 0, 0, origW, origH);
 		tempPm.dispose();
-
-		assetPixmap.setColor(0, 0, 0, 1);
-		assetPixmap.drawRectangle(0, h - origH, origW, origH);
 
 		assetTexture = new Texture(assetPixmap);
 		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
