@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeUtils {
 	public static float getPolygonSignedArea(Vector2[] points) {

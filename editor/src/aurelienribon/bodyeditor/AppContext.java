@@ -22,7 +22,7 @@ import java.util.TreeMap;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class AppContext {
     private static AppContext instance = new AppContext();

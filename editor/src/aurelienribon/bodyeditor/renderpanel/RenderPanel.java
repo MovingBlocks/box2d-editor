@@ -34,7 +34,7 @@ import java.util.Random;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class RenderPanel implements ApplicationListener {
 	private static RenderPanel instance = new RenderPanel();

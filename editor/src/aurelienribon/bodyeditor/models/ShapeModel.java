@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeModel {
     private final List<Vector2> points = new ArrayList<Vector2>();
