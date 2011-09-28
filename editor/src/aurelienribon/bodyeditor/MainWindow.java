@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class MainWindow extends javax.swing.JFrame {
 	private final DefaultListModel assetsListModel;

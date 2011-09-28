@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * 
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Clipper {
 	public enum Polygonizers {EWJORDAN, BAYAZIT}

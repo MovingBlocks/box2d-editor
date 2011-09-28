@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 
 /**
  *
- * @author Aurelien Ribon (aurelien.ribon@gmail.com)
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Main {
     public static void main(final String[] args) {
