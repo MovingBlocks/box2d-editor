@@ -1016,8 +1016,9 @@ public class MainWindow extends javax.swing.JFrame {
 		JFileChooser chooser = new JFileChooser(startupDir);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
+		chooser.setDialogTitle("Choose an existing file or create a new one");
 
-		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
 			return selectedFile;
 		}
