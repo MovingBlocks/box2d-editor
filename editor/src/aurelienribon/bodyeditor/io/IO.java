@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -66,7 +67,7 @@ public class IO {
 		Map<String, BodyModel> map = new TreeMap<String, BodyModel>();
 
 		while (is.available() > 0) {
-			String name = is.readUTF();
+			String name = FilenameUtils.separatorsToSystem(is.readUTF());
 			Vector2[][] points = readVecss(is);
 			Vector2[][] polygons = readVecss(is);
 
