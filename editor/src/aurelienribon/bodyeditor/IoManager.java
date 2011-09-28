@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.io;
+package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.models.BodyModel;
 import com.badlogic.gdx.math.Vector2;
@@ -16,14 +16,25 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class IO {
+public class IoManager {
+	// -------------------------------------------------------------------------
+	// Singleton
+	// -------------------------------------------------------------------------
+
+    private static IoManager instance = new IoManager();
+	public static IoManager instance() { return instance; }
+
+	// -------------------------------------------------------------------------
+	// Content
+	// -------------------------------------------------------------------------
+
 	/**
 	 * Exports a list of BodyModels to a file.
 	 * @param outputFile The file to write. Does not need to exist.
 	 * @param map A map of BodyModels associated to names.
 	 * @throws IOException
 	 */
-    public static void exportToFile(File outputFile, Map<String, BodyModel> map) throws IOException {
+    public void exportToFile(File outputFile, Map<String, BodyModel> map) throws IOException {
 		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
 
 		for (String name : map.keySet()) {
@@ -39,18 +50,18 @@ public class IO {
 		os.close();
 	}
 
-	private static void writeVec(DataOutputStream os, Vector2 v) throws IOException {
+	private void writeVec(DataOutputStream os, Vector2 v) throws IOException {
 		os.writeFloat(v.x);
 		os.writeFloat(v.y);
 	}
 
-	private static void writeVecs(DataOutputStream os, Vector2[] vs) throws IOException {
+	private void writeVecs(DataOutputStream os, Vector2[] vs) throws IOException {
 		os.writeInt(vs.length);
 		for (Vector2 v : vs)
 			writeVec(os, v);
 	}
 
-	private static void writeVecss(DataOutputStream os, Vector2[][] vss) throws IOException {
+	private void writeVecss(DataOutputStream os, Vector2[][] vss) throws IOException {
 		os.writeInt(vss.length);
 		for (Vector2[] vs : vss)
 			writeVecs(os, vs);
@@ -62,7 +73,7 @@ public class IO {
 	 * @return A map of BodyModels associated to names.
 	 * @throws IOException
 	 */
-	public static Map<String, BodyModel> importFromFile(File inputFile) throws IOException {
+	public Map<String, BodyModel> importFromFile(File inputFile) throws IOException {
 		DataInputStream is = new DataInputStream(new FileInputStream(inputFile));
 		Map<String, BodyModel> map = new TreeMap<String, BodyModel>();
 
@@ -80,14 +91,14 @@ public class IO {
 		return map;
 	}
 
-	private static Vector2 readVec(DataInputStream is) throws IOException {
+	private Vector2 readVec(DataInputStream is) throws IOException {
 		Vector2 v = new Vector2();
 		v.x = is.readFloat();
 		v.y = is.readFloat();
 		return v;
 	}
 
-	private static Vector2[] readVecs(DataInputStream is) throws IOException {
+	private Vector2[] readVecs(DataInputStream is) throws IOException {
 		int len = is.readInt();
 		Vector2[] vs = new Vector2[len];
 		for (int i=0; i<len; i++)
@@ -95,7 +106,7 @@ public class IO {
 		return vs;
 	}
 
-	private static Vector2[][] readVecss(DataInputStream is) throws IOException {
+	private Vector2[][] readVecss(DataInputStream is) throws IOException {
 		int len = is.readInt();
 		Vector2[][] vss = new Vector2[len][];
 		for (int i=0; i<len; i++)

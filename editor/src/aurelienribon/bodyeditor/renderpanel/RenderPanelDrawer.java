@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.renderpanel;
 
-import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -33,14 +33,14 @@ public class RenderPanelDrawer {
 	// -------------------------------------------------------------------------
 
 	public void draw() {
-		ShapeModel[] shapes = AppContext.instance().getTempShapes();
-		Vector2[][] polys = AppContext.instance().getTempPolygons();
+		ShapeModel[] shapes = AppManager.instance().getTempShapes();
+		Vector2[][] polys = AppManager.instance().getTempPolygons();
 
-		if (AppContext.instance().arePolyDrawn) {
+		if (AppManager.instance().arePolyDrawn) {
 			drawPolys(polys);
 		}
 
-		if (AppContext.instance().isShapeDrawn) {
+		if (AppManager.instance().isShapeDrawn) {
 			drawShapes(shapes);
 			drawPoints(shapes);
 		}
@@ -94,7 +94,7 @@ public class RenderPanelDrawer {
 				if (shape.isClosed()) {
 					drawLine(points[0], points[points.length-1], SHAPE_LINE_COLOR, 2);
 				} else {
-					Vector2 nextPoint = AppContext.instance().nextPoint;
+					Vector2 nextPoint = AppManager.instance().nextPoint;
 					if (nextPoint != null)
 						drawLine(points[points.length-1], nextPoint, SHAPE_LASTLINE_COLOR, 2);
 				}
@@ -103,8 +103,8 @@ public class RenderPanelDrawer {
 	}
 
 	private void drawPoints(ShapeModel[] shapes) {
-		Vector2 np = AppContext.instance().nearestPoint;
-		List<Vector2> sp = AppContext.instance().selectedPoints;
+		Vector2 np = AppManager.instance().nearestPoint;
+		List<Vector2> sp = AppManager.instance().selectedPoints;
 		float w = 10 * camera.zoom;
 
 		for (ShapeModel shape : shapes) {
@@ -126,7 +126,7 @@ public class RenderPanelDrawer {
 	}
 
 	private void drawMousePath() {
-		List<Vector2> mp = AppContext.instance().mousePath;
+		List<Vector2> mp = AppManager.instance().mousePath;
 		for (int i=1; i<mp.size(); i++)
 			drawLine(mp.get(i), mp.get(i-1), MOUSEPATH_COLOR, 1);
 		if (mp.size() > 1)
@@ -134,8 +134,8 @@ public class RenderPanelDrawer {
 	}
 
 	private void drawBallThrowPath() {
-		Vector2 v1 = AppContext.instance().ballThrowFirstPoint;
-		Vector2 v2 = AppContext.instance().ballThrowLastPoint;
+		Vector2 v1 = AppManager.instance().ballThrowFirstPoint;
+		Vector2 v2 = AppManager.instance().ballThrowLastPoint;
 		float w = 10 * camera.zoom;
 
 		if (v1 != null && v2 != null) {

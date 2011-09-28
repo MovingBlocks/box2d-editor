@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
-import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
@@ -29,16 +29,16 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
-		draggedPoint = AppContext.instance().nearestPoint;
-		List<Vector2> selectedPoints = AppContext.instance().selectedPoints;
+		draggedPoint = AppManager.instance().nearestPoint;
+		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
 
 		if (draggedPoint == null) {
 			selectedPoints.clear();
 			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-			AppContext.instance().mousePath.add(p);
+			AppManager.instance().mousePath.add(p);
 		} else if (!selectedPoints.contains(draggedPoint)) {
 			selectedPoints.clear();
 		}
@@ -52,20 +52,20 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 		isActive = false;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
 		if (draggedPoint != null) {
 			draggedPoint = null;
-			AppContext.instance().saveCurrentModel();
+			AppManager.instance().saveCurrentModel();
 		}
 
-		List<Vector2> mousePath = AppContext.instance().mousePath;
+		List<Vector2> mousePath = AppManager.instance().mousePath;
 		if (mousePath.size() > 2) {
 			Vector2[] polygonPoints = mousePath.toArray(new Vector2[mousePath.size()]);
 			Vector2[] testedPoints = getAllShapePoints();
 			Vector2[] result = getPointsInPolygon(polygonPoints, testedPoints);
-			Collections.addAll(AppContext.instance().selectedPoints, result);
+			Collections.addAll(AppManager.instance().selectedPoints, result);
 		}
 		mousePath.clear();
 		return true;
@@ -76,26 +76,26 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (!isActive)
 			return false;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
 
 		if (draggedPoint != null) {
 			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
-			AppContext.instance().clearTempPolygons();
+			AppManager.instance().clearTempPolygons();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
 			draggedPoint.add(dx, dy);
 
-			for (int i=0; i<AppContext.instance().selectedPoints.size(); i++) {
-				Vector2 sp = AppContext.instance().selectedPoints.get(i);
+			for (int i=0; i<AppManager.instance().selectedPoints.size(); i++) {
+				Vector2 sp = AppManager.instance().selectedPoints.get(i);
 				if (sp != draggedPoint)
 					sp.add(dx, dy);
 			}
 		} else {
 			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-			AppContext.instance().mousePath.add(p);
+			AppManager.instance().mousePath.add(p);
 		}
 		
 		return true;
@@ -103,15 +103,15 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return false;
 
 		// Nearest point computation
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-		AppContext.instance().nearestPoint = null;
+		AppManager.instance().nearestPoint = null;
 		for (Vector2 v : getAllShapePoints())
 			if (v.dst(p) < 10 * RenderPanel.instance().getCamera().zoom)
-				AppContext.instance().nearestPoint = v;
+				AppManager.instance().nearestPoint = v;
 
 		return false;
 	}
@@ -134,7 +134,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private Vector2[] getAllShapePoints() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		for (ShapeModel shape : AppContext.instance().getTempShapes())
+		for (ShapeModel shape : AppManager.instance().getTempShapes())
 			Collections.addAll(points, shape.getPoints());
 		return points.toArray(new Vector2[points.size()]);
 	}

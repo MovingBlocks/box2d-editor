@@ -1,12 +1,11 @@
-import aurelienribon.bodyeditor.AppContext;
-import aurelienribon.bodyeditor.MainWindow;
+import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.ui.MainWindow;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -16,15 +15,8 @@ import javax.swing.UIManager;
  */
 public class Main {
     public static void main(final String[] args) {
-		PrintStream ps = new PrintStream(AppContext.outputStream);
-		System.setOut(ps);
-		System.setErr(ps);
-
 		parseArgs(args);
 		makeWindow();
-
-		System.out.println("box2d-editor | 2011");
-		System.out.println("Welcome!\n");
     }
 
 	private static void parseArgs(String[] args) {
@@ -32,10 +24,10 @@ public class Main {
 			if (args[i].startsWith("--outputfile=")) {
 				try {
 					File file = new File(args[i].substring("--outputfile=".length()));
-					AppContext.instance().outputFile = file.getCanonicalFile();
+					AppManager.instance().outputFile = file.getCanonicalFile();
 				} catch (IOException ex) {
 					System.err.println("Given output file path cannot be retrieved...");
-					AppContext.instance().outputFile = null;
+					AppManager.instance().outputFile = null;
 				}
 			}
 		}

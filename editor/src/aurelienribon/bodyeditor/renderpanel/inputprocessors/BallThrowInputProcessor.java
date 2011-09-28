@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
-import aurelienribon.bodyeditor.AppContext;
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -23,11 +23,11 @@ public class BallThrowInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-		AppContext.instance().ballThrowFirstPoint = p;
+		AppManager.instance().ballThrowFirstPoint = p;
 		return true;
 	}
 
@@ -37,17 +37,17 @@ public class BallThrowInputProcessor extends InputAdapter {
 			return false;
 		isActive = false;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-		AppContext.instance().ballThrowLastPoint = p;
+		AppManager.instance().ballThrowLastPoint = p;
 		
-		Vector2 delta = new Vector2(AppContext.instance().ballThrowLastPoint).sub(AppContext.instance().ballThrowFirstPoint);
-		RenderPanel.instance().fireBall(AppContext.instance().ballThrowFirstPoint, delta);
+		Vector2 delta = new Vector2(AppManager.instance().ballThrowLastPoint).sub(AppManager.instance().ballThrowFirstPoint);
+		RenderPanel.instance().fireBall(AppManager.instance().ballThrowFirstPoint, delta);
 		
-		AppContext.instance().ballThrowFirstPoint = null;
-		AppContext.instance().ballThrowLastPoint = null;
+		AppManager.instance().ballThrowFirstPoint = null;
+		AppManager.instance().ballThrowLastPoint = null;
 		return true;
 	}
 
@@ -56,11 +56,11 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!isActive)
 			return false;
 
-		if (!AppContext.instance().isCurrentModelValid())
+		if (!AppManager.instance().isCurrentModelValid())
 			return true;
 
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
-		AppContext.instance().ballThrowLastPoint = p;
+		AppManager.instance().ballThrowLastPoint = p;
 		return true;
 	}
 }

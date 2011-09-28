@@ -122,7 +122,7 @@
             <Component class="javax.swing.JButton" name="tools_insertPointsBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_add.png"/>
+                  <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_add.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Insert point(s)"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
@@ -138,7 +138,7 @@
             <Component class="javax.swing.JButton" name="tools_removePointsBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_remove.png"/>
+                  <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_remove.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Remove point(s)"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
@@ -154,7 +154,7 @@
             <Component class="javax.swing.JButton" name="tools_clearPointsBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_delete.png"/>
+                  <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Clear all points"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
@@ -267,7 +267,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/title.png"/>
+                  <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/title.png"/>
                 </Property>
               </Properties>
             </Component>
@@ -410,7 +410,7 @@
                 <Component class="javax.swing.JButton" name="init_setOutputFileBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_gear.png"/>
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_gear.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Set / load output file"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
@@ -426,7 +426,7 @@
                 <Component class="javax.swing.JButton" name="export_saveBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_save.png"/>
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_save.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Save"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
@@ -853,7 +853,7 @@
                 <Component class="javax.swing.JButton" name="assets_removeAssetBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_delete.png"/>
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Remove selection"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
@@ -900,7 +900,7 @@
                 <Component class="javax.swing.JButton" name="init_addAssetsByFilesBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/aurelienribon/bodyeditor/gfx/ic_add.png"/>
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_add.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Add images files/dirs"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>

@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor;
+package aurelienribon.bodyeditor.ui;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
