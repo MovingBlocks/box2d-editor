@@ -1,6 +1,8 @@
 package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.models.BodyModel;
+import aurelienribon.bodyeditor.utils.FileUtils;
+import aurelienribon.bodyeditor.utils.FileUtils.NoCommonPathFoundException;
 import com.badlogic.gdx.math.Vector2;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,16 +27,61 @@ public class IoManager {
 	public static IoManager instance() { return instance; }
 
 	// -------------------------------------------------------------------------
-	// Content
+	// Output file
+	// -------------------------------------------------------------------------
+
+	private File outputFile;
+
+	public File getOutputFile() {
+		return outputFile;
+	}
+
+	public void setOutputFile(File outputFile) {
+		this.outputFile = outputFile;
+	}
+
+	/**
+	 * Computes the given path as relative to the current output file. If no
+	 * output file has been set, return the whole given path.
+	 * @param filepath
+	 * @return
+	 */
+	public String relativize(String filepath) {
+		if (outputFile == null)
+			return filepath;
+		try {
+			String path = FileUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
+			return path;
+		} catch (NoCommonPathFoundException ex) {
+			return null;
+		}
+	}
+
+	/**
+	 * Combines the path of the output file to the given path with the system
+	 * separator.
+	 * @param childPath
+	 * @return
+	 */
+	public String combine(String childPath) {
+		if (outputFile == null)
+			return childPath;
+		return new File(outputFile.getParent(), childPath).getPath();
+	}
+
+	// -------------------------------------------------------------------------
+	// Import/Export
 	// -------------------------------------------------------------------------
 
 	/**
 	 * Exports a list of BodyModels to a file.
-	 * @param outputFile The file to write. Does not need to exist.
 	 * @param map A map of BodyModels associated to names.
 	 * @throws IOException
 	 */
-    public void exportToFile(File outputFile, Map<String, BodyModel> map) throws IOException {
+    public void exportToFile(Map<String, BodyModel> map) throws IOException {
+		if (outputFile == null || !outputFile.isFile())
+			throw new IOException("output file was not set");
+		
 		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
 
 		for (String name : map.keySet()) {
@@ -73,8 +120,11 @@ public class IoManager {
 	 * @return A map of BodyModels associated to names.
 	 * @throws IOException
 	 */
-	public Map<String, BodyModel> importFromFile(File inputFile) throws IOException {
-		DataInputStream is = new DataInputStream(new FileInputStream(inputFile));
+	public Map<String, BodyModel> importFromFile() throws IOException {
+		if (outputFile == null || !outputFile.isFile())
+			throw new IOException("output file was not set");
+
+		DataInputStream is = new DataInputStream(new FileInputStream(outputFile));
 		Map<String, BodyModel> map = new TreeMap<String, BodyModel>();
 
 		while (is.available() > 0) {

@@ -1,4 +1,4 @@
-import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.ui.MainWindow;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
@@ -24,10 +24,10 @@ public class Main {
 			if (args[i].startsWith("--outputfile=")) {
 				try {
 					File file = new File(args[i].substring("--outputfile=".length()));
-					AppManager.instance().outputFile = file.getCanonicalFile();
+					IoManager.instance().setOutputFile(file.getCanonicalFile());
 				} catch (IOException ex) {
 					System.err.println("Given output file path cannot be retrieved...");
-					AppManager.instance().outputFile = null;
+					IoManager.instance().setOutputFile(null);
 				}
 			}
 		}

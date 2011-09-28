@@ -2,14 +2,11 @@ package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.earclipping.Clipper;
 import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizers;
-import aurelienribon.bodyeditor.utils.FileUtils;
 import aurelienribon.bodyeditor.models.BodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
-import aurelienribon.bodyeditor.utils.FileUtils.NoCommonPathFoundException;
 import aurelienribon.bodyeditor.utils.VectorUtils;
 import com.badlogic.gdx.math.Vector2;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,32 +40,6 @@ public class AppManager {
 	public boolean isGridShown = true;
 	public int gridGap = 10;
 	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
-
-	// -------------------------------------------------------------------------
-	// Output file
-	// -------------------------------------------------------------------------
-
-	public File outputFile;
-
-	public String getPathRelativeToOutputFile(String filepath) {
-		assert outputFile != null;
-		try {
-			String path = FileUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
-			return path;
-		} catch (NoCommonPathFoundException ex) {
-			return null;
-		}
-	}
-
-	public String getRootDirectory() {
-		assert outputFile != null;
-		return outputFile.getParent();
-	}
-
-	public String getFullPath(String name) {
-		assert outputFile != null;
-		return new File(outputFile.getParent(), name).getPath();
-	}
 
 	// -------------------------------------------------------------------------
 	// Mouse path + selected points
@@ -143,12 +114,12 @@ public class AppManager {
 	// -------------------------------------------------------------------------
 
 	public void exportToFile() throws IOException {
-		IoManager.instance().exportToFile(outputFile, modelMap);
+		IoManager.instance().exportToFile(modelMap);
 	}
 
 	public void importFromFile() throws IOException {
 		modelMap.clear();
-		Map<String, BodyModel> map = IoManager.instance().importFromFile(outputFile);
+		Map<String, BodyModel> map = IoManager.instance().importFromFile();
 		for (String str : map.keySet())
 			modelMap.put(str, map.get(str));
 	}
