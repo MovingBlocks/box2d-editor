@@ -1,8 +1,15 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.models.BodyModel;
+import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.PolygonModel;
+import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.utils.FileUtils;
 import aurelienribon.bodyeditor.utils.FileUtils.NoCommonPathFoundException;
+import aurelienribon.utils.notifications.ChangeableObject;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,15 +17,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class IoManager {
+public class IoManager extends ChangeableObject {
 	// -------------------------------------------------------------------------
 	// Singleton
 	// -------------------------------------------------------------------------
@@ -38,6 +44,7 @@ public class IoManager {
 
 	public void setOutputFile(File outputFile) {
 		this.outputFile = outputFile;
+		firePropertyChanged("outputFile");
 	}
 
 	/**
@@ -74,93 +81,122 @@ public class IoManager {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Exports a list of BodyModels to a file.
-	 * @param map A map of BodyModels associated to names.
+	 * Writes the current content of the AssetsManager to the output file.
+	 * Save is done like this:
+	 * <pre>
+	 * for each asset:
+	 *     UTFString: relative path
+	 *     int: shapes count
+	 *     for each shape:
+	 *         int: vertices count
+	 *         for each vertex:
+	 *             float: vertex X
+	 *             float: vertex Y
+	 *     int: polygons count
+	 *     for each polygon:
+	 *         int: vertices count
+	 *         for each vertex:
+	 *             float: vertex X
+	 *             float: vertex Y
+	 * </pre>
 	 * @throws IOException
 	 */
-    public void exportToFile(Map<String, BodyModel> map) throws IOException {
-		if (outputFile == null || !outputFile.isFile())
+    public void exportToOutputFile() throws IOException {
+		if (outputFile == null)
 			throw new IOException("output file was not set");
 		
 		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
 
-		for (String name : map.keySet()) {
-			BodyModel bm = map.get(name);
-			if (bm.getShapes() == null || bm.getPolygons() == null)
-				continue;
+		for (AssetModel am : AssetsManager.instance().getList()) {
+			Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
 
+			String name = relativize(am.getPath());
 			os.writeUTF(name);
-			writeVecss(os, bm.getShapes());
-			writeVecss(os, bm.getPolygons());
+
+			os.writeInt(am.getShapes().size());
+			for (ShapeModel shape : am.getShapes())
+				writeVecs(os, shape.getVertices().toArray(new Vector2[0]), normalizeCoeff);
+
+			os.writeInt(am.getPolygons().size());
+			for (PolygonModel polygon : am.getPolygons())
+				writeVecs(os, polygon.getVertices().toArray(new Vector2[0]), normalizeCoeff);
 		}
 
 		os.close();
 	}
 
-	private void writeVec(DataOutputStream os, Vector2 v) throws IOException {
-		os.writeFloat(v.x);
-		os.writeFloat(v.y);
-	}
-
-	private void writeVecs(DataOutputStream os, Vector2[] vs) throws IOException {
-		os.writeInt(vs.length);
-		for (Vector2 v : vs)
-			writeVec(os, v);
-	}
-
-	private void writeVecss(DataOutputStream os, Vector2[][] vss) throws IOException {
-		os.writeInt(vss.length);
-		for (Vector2[] vs : vss)
-			writeVecs(os, vs);
-	}
-
 	/**
-	 * Imports a list of BodyModels from a file.
-	 * @param inputFile The file to read.
-	 * @return A map of BodyModels associated to names.
+	 * Reads the output file and update the AssetsManager with its content.
+	 * Loading is done following the specification of exportToOutputFile()
+	 * method.
 	 * @throws IOException
 	 */
-	public Map<String, BodyModel> importFromFile() throws IOException {
+	public void importFromOutputFile() throws IOException {
 		if (outputFile == null || !outputFile.isFile())
 			throw new IOException("output file was not set");
 
+		AssetsManager.instance().getList().clear();
 		DataInputStream is = new DataInputStream(new FileInputStream(outputFile));
-		Map<String, BodyModel> map = new TreeMap<String, BodyModel>();
 
 		while (is.available() > 0) {
 			String name = FilenameUtils.separatorsToSystem(is.readUTF());
-			Vector2[][] points = readVecss(is);
-			Vector2[][] polygons = readVecss(is);
 
-			BodyModel bm = new BodyModel();
-			bm.set(points, polygons);
+			Vector2 normalizeCoeff = getNormalizeCoeff(combine(name));
 
-			map.put(name, bm);
+			ShapeModel[] shapes = new ShapeModel[is.readInt()];
+			for (int i=0; i<shapes.length; i++)
+				shapes[i] = new ShapeModel(readVecs(is, normalizeCoeff));
+
+			PolygonModel[] polygons = new PolygonModel[is.readInt()];
+			for (int i=0; i<polygons.length; i++)
+				polygons[i] = new PolygonModel(readVecs(is, normalizeCoeff));
+
+			String path = IoManager.instance.combine(name);
+			AssetModel am = new AssetModel(path);
+			am.getShapes().addAll(Arrays.asList(shapes));
+			am.getPolygons().addAll(Arrays.asList(polygons));
+			AssetsManager.instance().getList().add(am);
 		}
-		
-		return map;
 	}
 
-	private Vector2 readVec(DataInputStream is) throws IOException {
+	// -------------------------------------------------------------------------
+
+	public Vector2 getNormalizeCoeff(String assetPath) {
+		FileHandle file = Gdx.files.absolute(assetPath);
+		if (!file.exists())
+			return new Vector2(1, 1);
+
+		Pixmap pm = new Pixmap(file);
+		Vector2 coeff = new Vector2(pm.getWidth() / 100f, pm.getHeight() / 100f);
+		pm.dispose();
+		return coeff;
+	}
+	
+	// -------------------------------------------------------------------------
+
+	private void writeVec(DataOutputStream os, Vector2 v, Vector2 normalizeCoeff) throws IOException {
+		os.writeFloat(v.x / normalizeCoeff.x);
+		os.writeFloat(v.y / normalizeCoeff.y);
+	}
+
+	private void writeVecs(DataOutputStream os, Vector2[] vs, Vector2 normalizeCoeff) throws IOException {
+		os.writeInt(vs.length);
+		for (int i=0; i<vs.length; i++)
+			writeVec(os, vs[i], normalizeCoeff);
+	}
+
+	private Vector2 readVec(DataInputStream is, Vector2 normalizeCoeff) throws IOException {
 		Vector2 v = new Vector2();
-		v.x = is.readFloat();
-		v.y = is.readFloat();
+		v.x = is.readFloat() * normalizeCoeff.x;
+		v.y = is.readFloat() * normalizeCoeff.y;
 		return v;
 	}
 
-	private Vector2[] readVecs(DataInputStream is) throws IOException {
+	private Vector2[] readVecs(DataInputStream is, Vector2 normalizeCoeff) throws IOException {
 		int len = is.readInt();
 		Vector2[] vs = new Vector2[len];
 		for (int i=0; i<len; i++)
-			vs[i] = readVec(is);
+			vs[i] = readVec(is, normalizeCoeff);
 		return vs;
-	}
-
-	private Vector2[][] readVecss(DataInputStream is) throws IOException {
-		int len = is.readInt();
-		Vector2[][] vss = new Vector2[len][];
-		for (int i=0; i<len; i++)
-			vss[i] = readVecs(is);
-		return vss;
 	}
 }

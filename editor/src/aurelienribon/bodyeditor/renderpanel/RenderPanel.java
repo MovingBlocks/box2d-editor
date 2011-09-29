@@ -1,18 +1,22 @@
 package aurelienribon.bodyeditor.renderpanel;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.BallThrowInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.PanZoomInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeCreationInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeEditionInputProcessor;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
+import aurelienribon.utils.notifications.ChangeListener;
+import aurelienribon.utils.notifications.ObservableList.ListChangeListener;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -52,8 +56,6 @@ public class RenderPanel implements ApplicationListener {
 	private int zoom = 100;
 	private final int[] zoomLevels = {16, 25, 33, 50, 66, 100, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 4000, 5000};
 
-	private Pixmap assetPixmap;
-	private Texture assetTexture;
 	private Sprite assetSprite;
 	int[] potWidths = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 5096};
 
@@ -93,10 +95,22 @@ public class RenderPanel implements ApplicationListener {
 		Gdx.input.setInputProcessor(im);
 
 		this.world = new World(new Vector2(0, 0), true);
-	}
 
-	@Override
-	public void resume() {
+		AssetsManager.instance().addChangeListener(new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				assetSprite = null;
+				clearWorld();
+
+				AssetModel am = AssetsManager.instance().getSelectedAsset();
+				if (am != AssetModel.EMPTY) {
+					assetSprite = new Sprite(am.getTexture());
+					assetSprite.setPosition(0, 0);
+					camera.position.set(am.getTexture().getRegionWidth()/2, am.getTexture().getRegionHeight()/2, 0);
+					camera.update();
+					createBody();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -167,27 +181,19 @@ public class RenderPanel implements ApplicationListener {
 		camera.update();
 	}
 
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void dispose() {
-		clearAsset();
-		backgroundDarkTexture.dispose();
-		sb.dispose();
-		font.dispose();
-	}
+	@Override public void resume() {}
+	@Override public void pause() {}
+	@Override public void dispose() {}
 
 	// -------------------------------------------------------------------------
 	// Public API
 	// -------------------------------------------------------------------------
 
-	private final Vector3 tempVec = new Vector3();
+	private final Vector3 vec = new Vector3();
 
 	public Vector2 screenToWorld(int x, int y) {
-		camera.unproject(tempVec.set(x, y, 0));
-		return new Vector2(tempVec.x, tempVec.y);
+		camera.unproject(vec.set(x, y, 0));
+		return new Vector2(vec.x, vec.y);
 	}
 
 	public Vector2 alignedScreenToWorld(int x, int y) {
@@ -200,64 +206,19 @@ public class RenderPanel implements ApplicationListener {
 		return p;
 	}
 
-	public void clearAsset() {
-		if (assetPixmap != null) {
-			assetPixmap.dispose();
-			assetPixmap = null;
-		}
-		if (assetTexture != null) {
-			assetTexture.dispose();
-			assetTexture = null;
-		}
-		if (assetSprite != null) {
-			assetSprite = null;
-		}
-		clearBody();
-	}
+	public void createBody() {
+		clearWorld();
 
-	public Vector2 setAsset(String fullpath) {
-		clearAsset();
-
-		Pixmap tempPm = new Pixmap(Gdx.files.absolute(fullpath));
-		int origW = tempPm.getWidth();
-		int origH = tempPm.getHeight();
-		int w = getNearestPOT(origW);
-		int h = getNearestPOT(origH);
-		assetPixmap = new Pixmap(w, h, tempPm.getFormat());
-		assetPixmap.drawPixmap(tempPm, 0, h - origH, 0, 0, origW, origH);
-		tempPm.dispose();
-
-		assetTexture = new Texture(assetPixmap);
-		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		assetSprite = new Sprite(assetTexture);
-		assetSprite.setPosition(0, 0);
-
-		camera.position.set(origW/2, origH/2, 0);
-		camera.update();
-
-		return new Vector2(origW, origH);
-	}
-
-	public void clearBody() {
-		ballModels.clear();
-		ballSprites.clear();
-		Iterator<Body> bodies = world.getBodies();
-		while (bodies.hasNext())
-			world.destroyBody(bodies.next());
-	}
-
-	public void setBody(Vector2[][] polygons) {
-		clearBody();
-
-		if (polygons == null || polygons.length == 0)
+		AssetModel am = AssetsManager.instance().getSelectedAsset();
+		if (am.getPolygons().isEmpty())
 			return;
 
-		Body b = world.createBody(new BodyDef());
-
-		for (Vector2[] polygon : polygons) {
-			Vector2[] resizedPolygon = new Vector2[polygon.length];
-			for (int i=0; i<polygon.length; i++)
-				resizedPolygon[i] = new Vector2(polygon[i]).mul(1f / PX_PER_METER);
+		Body body = world.createBody(new BodyDef());
+		
+		for (PolygonModel polygon : am.getPolygons()) {
+			Vector2[] resizedPolygon = new Vector2[polygon.getVertices().size()];
+			for (int i=0; i<polygon.getVertices().size(); i++)
+				resizedPolygon[i] = new Vector2(polygon.getVertices().get(i)).mul(1f / PX_PER_METER);
 
 			if (ShapeUtils.getPolygonArea(resizedPolygon) < 0.01f)
 				continue;
@@ -271,7 +232,7 @@ public class RenderPanel implements ApplicationListener {
 			fd.restitution = 0.2f;
 			fd.shape = shape;
 
-			b.createFixture(fd);
+			body.createFixture(fd);
 			shape.dispose();
 		}
 	}
@@ -319,10 +280,11 @@ public class RenderPanel implements ApplicationListener {
 	// Internals
 	// -------------------------------------------------------------------------
 
-	private int getNearestPOT(int d) {
-		for (int i=0; i<potWidths.length; i++)
-			if (d <= potWidths[i])
-				return potWidths[i];
-		return -1;
+	private void clearWorld() {
+		ballModels.clear();
+		ballSprites.clear();
+		Iterator<Body> bodies = world.getBodies();
+		while (bodies.hasNext())
+			world.destroyBody(bodies.next());
 	}
 }

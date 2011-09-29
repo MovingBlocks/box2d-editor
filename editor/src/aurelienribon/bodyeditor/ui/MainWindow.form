@@ -672,7 +672,6 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="Theme.MAIN_FOREGROUND" type="code"/>
                         </Property>
-                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Draw grid"/>
                         <Property name="opaque" type="boolean" value="false"/>
                       </Properties>

@@ -1,6 +1,9 @@
 package aurelienribon.bodyeditor.renderpanel;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -33,8 +36,9 @@ public class RenderPanelDrawer {
 	// -------------------------------------------------------------------------
 
 	public void draw() {
-		ShapeModel[] shapes = AppManager.instance().getTempShapes();
-		Vector2[][] polys = AppManager.instance().getTempPolygons();
+		AssetModel am = AssetsManager.instance().getSelectedAsset();
+		List<ShapeModel> shapes = am.getShapes();
+		List<PolygonModel> polys = am.getPolygons();
 
 		if (AppManager.instance().arePolyDrawn) {
 			drawPolys(polys);
@@ -84,31 +88,31 @@ public class RenderPanelDrawer {
 
 	// -------------------------------------------------------------------------
 
-	private void drawShapes(ShapeModel[] shapes) {
+	private void drawShapes(List<ShapeModel> shapes) {
 		for (ShapeModel shape : shapes) {
-			Vector2[] points = shape.getPoints();
-			if (points.length > 0) {
-				for (int i=1; i<points.length; i++)
-					drawLine(points[i], points[i-1], SHAPE_LINE_COLOR, 2);
+			List<Vector2> vs = shape.getVertices();
+			if (vs.size() > 0) {
+				for (int i=1, n=vs.size(); i<n; i++)
+					drawLine(vs.get(i), vs.get(i-1), SHAPE_LINE_COLOR, 2);
 
 				if (shape.isClosed()) {
-					drawLine(points[0], points[points.length-1], SHAPE_LINE_COLOR, 2);
+					drawLine(vs.get(0), vs.get(vs.size()-1), SHAPE_LINE_COLOR, 2);
 				} else {
 					Vector2 nextPoint = AppManager.instance().nextPoint;
 					if (nextPoint != null)
-						drawLine(points[points.length-1], nextPoint, SHAPE_LASTLINE_COLOR, 2);
+						drawLine(vs.get(vs.size()-1), nextPoint, SHAPE_LASTLINE_COLOR, 2);
 				}
 			}
 		}
 	}
 
-	private void drawPoints(ShapeModel[] shapes) {
+	private void drawPoints(List<ShapeModel> shapes) {
 		Vector2 np = AppManager.instance().nearestPoint;
 		List<Vector2> sp = AppManager.instance().selectedPoints;
 		float w = 10 * camera.zoom;
 
 		for (ShapeModel shape : shapes) {
-			for (Vector2 p : shape.getPoints()) {
+			for (Vector2 p : shape.getVertices()) {
 				if (p == np || sp.contains(p))
 					fillRect(p, w, w, SHAPE_LINE_COLOR);
 				drawRect(p, w, w, SHAPE_LINE_COLOR, 2);
@@ -116,12 +120,13 @@ public class RenderPanelDrawer {
 		}
 	}
 
-	private void drawPolys(Vector2[][] polys) {
-		for (Vector2[] poly : polys) {
-			for (int i=1; i<poly.length; i++)
-				drawLine(poly[i], poly[i-1], SHAPE_POLY_COLOR, 2);
-			if (poly.length > 0)
-				drawLine(poly[0], poly[poly.length-1], SHAPE_POLY_COLOR, 2);
+	private void drawPolys(List<PolygonModel> polys) {
+		for (PolygonModel poly : polys) {
+			List<Vector2> vs = poly.getVertices();
+			for (int i=1, n=vs.size(); i<n; i++)
+				drawLine(vs.get(i), vs.get(i-1), SHAPE_POLY_COLOR, 2);
+			if (vs.size() > 1)
+				drawLine(vs.get(0),vs.get(vs.size()-1), SHAPE_POLY_COLOR, 2);
 		}
 	}
 

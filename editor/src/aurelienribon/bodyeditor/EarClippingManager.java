@@ -1,21 +1,42 @@
-package aurelienribon.bodyeditor.earclipping;
+package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
 import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
+import aurelienribon.bodyeditor.utils.ShapeUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class Clipper {
+public class EarClippingManager {
+	// -------------------------------------------------------------------------
+	// Singleton
+	// -------------------------------------------------------------------------
+
+    private static EarClippingManager instance = new EarClippingManager();
+	public static EarClippingManager instance() { return instance; }
+
+	// -------------------------------------------------------------------------
+	// Content
+	// -------------------------------------------------------------------------
+
 	public enum Polygonizers {EWJORDAN, BAYAZIT}
 
-	public static Vector2[][] polygonize(Vector2[] points, Polygonizers polygonizer) {
+	public Vector2[][] polygonize(Vector2[] points) {
 		Vector2[][] polygons = null;
 
-		switch (polygonizer) {
+		if (ShapeUtils.isPolygonCCW(points)) {
+			List<Vector2> vertices = Arrays.asList(points);
+			Collections.reverse(vertices);
+			points = vertices.toArray(new Vector2[0]);
+		}
+
+		switch (AppManager.instance().polygonizer) {
 			case EWJORDAN:
 				polygons = EwjordanDecomposer.decompose(points);
 				break;
@@ -47,7 +68,7 @@ public class Clipper {
 		return polygons;
 	}
 
-	private static Vector2[][] sliceForMax8Vertices(Vector2[][] polygons) {
+	private Vector2[][] sliceForMax8Vertices(Vector2[][] polygons) {
 		for (int i = 0; i < polygons.length; i++) {
 			Vector2[] poly = polygons[i];
 			if (poly.length > 8) {

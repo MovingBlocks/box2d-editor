@@ -34,11 +34,11 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="assets_assetListScrollPane" alignment="0" pref="252" max="32767" attributes="0"/>
+                      <Component id="assetsListScrollPane" alignment="0" pref="252" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="init_addAssetsByFilesBtn" max="32767" attributes="0"/>
+                          <Component id="addAssetsBtn" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="assets_removeAssetBtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="removeAssetBtn" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -50,18 +50,18 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="init_addAssetsByFilesBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="assets_removeAssetBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addAssetsBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="removeAssetBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="assets_assetListScrollPane" pref="181" max="32767" attributes="0"/>
+                  <Component id="assetsListScrollPane" pref="181" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="assets_removeAssetBtn">
+        <Component class="javax.swing.JButton" name="removeAssetBtn">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"/>
@@ -74,17 +74,17 @@
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="assets_removeAssetBtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAssetBtnActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="assets_assetListScrollPane">
+        <Container class="javax.swing.JScrollPane" name="assetsListScrollPane">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JList" name="assets_assetList">
+            <Component class="javax.swing.JList" name="assetsList">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Theme.TEXTAREA_BACKGROUND" type="code"/>
@@ -102,13 +102,10 @@
                   </StringArray>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="assets_assetListValueChanged"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="init_addAssetsByFilesBtn">
+        <Component class="javax.swing.JButton" name="addAssetsBtn">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_add.png"/>
@@ -121,7 +118,7 @@
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="init_addAssetsByFilesBtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addAssetsBtnActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
