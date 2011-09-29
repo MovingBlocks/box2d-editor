@@ -2,6 +2,7 @@ package aurelienribon.bodyeditor.renderpanel;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.OptionsManager;
 import aurelienribon.bodyeditor.models.AssetModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -40,11 +41,11 @@ public class RenderPanelDrawer {
 		List<ShapeModel> shapes = am.getShapes();
 		List<PolygonModel> polys = am.getPolygons();
 
-		if (AppManager.instance().arePolyDrawn) {
+		if (OptionsManager.instance().arePolyDrawn) {
 			drawPolys(polys);
 		}
 
-		if (AppManager.instance().isShapeDrawn) {
+		if (OptionsManager.instance().isShapeDrawn) {
 			drawShapes(shapes);
 			drawPoints(shapes);
 		}

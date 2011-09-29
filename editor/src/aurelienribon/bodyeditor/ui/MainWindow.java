@@ -2,9 +2,9 @@ package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.AssetsManager;
-import aurelienribon.bodyeditor.EarClippingManager;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
+import aurelienribon.bodyeditor.OptionsManager;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
@@ -17,8 +17,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -609,19 +607,19 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_export_saveBtnActionPerformed
 
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
-		AppManager.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
+		OptionsManager.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
 	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
 
 	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
-		AppManager.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
+		OptionsManager.instance().arePolyDrawn = shape_drawPolysChk.isSelected();
 	}//GEN-LAST:event_shape_drawPolysChkActionPerformed
 
 	private void shape_drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetChkActionPerformed
-		AppManager.instance().isAssetDrawn = shape_drawAssetChk.isSelected();
+		OptionsManager.instance().isAssetDrawn = shape_drawAssetChk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetChkActionPerformed
 
 	private void shape_drawAssetOpacity50ChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetOpacity50ChkActionPerformed
-		AppManager.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
+		OptionsManager.instance().isAssetDrawnWithOpacity50 = shape_drawAssetOpacity50Chk.isSelected();
 	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
 
 	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
@@ -637,19 +635,19 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
 	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
-		AppManager.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
+		OptionsManager.instance().isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
 	}//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
 
 	private void shape_drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawGridChkActionPerformed
-		AppManager.instance().isGridShown = shape_drawGridChk.isSelected();
+		OptionsManager.instance().isGridShown = shape_drawGridChk.isSelected();
 	}//GEN-LAST:event_shape_drawGridChkActionPerformed
 
 	private void shape_grigGapSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_shape_grigGapSpinnerStateChanged
-		AppManager.instance().gridGap = (Integer)shape_grigGapSpinner.getValue();
+		OptionsManager.instance().gridGap = (Integer)shape_grigGapSpinner.getValue();
 	}//GEN-LAST:event_shape_grigGapSpinnerStateChanged
 
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
-		AppManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
+		OptionsManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
 		AssetsManager.instance().getSelectedAsset().computePolygons();
 		RenderPanel.instance().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
