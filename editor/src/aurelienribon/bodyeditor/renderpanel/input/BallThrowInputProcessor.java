@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel.inputprocessors;
+package aurelienribon.bodyeditor.renderpanel.input;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
@@ -21,7 +21,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().ballThrowFirstPoint = p;
 		return true;
 	}
@@ -32,11 +32,11 @@ public class BallThrowInputProcessor extends InputAdapter {
 			return false;
 		isActive = false;
 
-		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().ballThrowLastPoint = p;
 		
 		Vector2 delta = new Vector2(AppManager.instance().ballThrowLastPoint).sub(AppManager.instance().ballThrowFirstPoint);
-		RenderPanel.instance().fireBall(AppManager.instance().ballThrowFirstPoint, delta);
+		AppManager.instance().getRenderPanel().fireBall(AppManager.instance().ballThrowFirstPoint, delta);
 		
 		AppManager.instance().ballThrowFirstPoint = null;
 		AppManager.instance().ballThrowLastPoint = null;
@@ -48,7 +48,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!isActive)
 			return false;
 
-		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().ballThrowLastPoint = p;
 		return true;
 	}

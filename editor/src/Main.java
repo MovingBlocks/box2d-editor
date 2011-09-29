@@ -1,3 +1,4 @@
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.ui.MainWindow;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
@@ -34,7 +35,7 @@ public class Main {
 	}
 
 	private static void makeWindow() {
-		final LwjglCanvas glCanvas = new LwjglCanvas(RenderPanel.instance(), false);
+		final LwjglCanvas glCanvas = new LwjglCanvas(AppManager.instance().getRenderPanel(), false);
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -51,6 +52,8 @@ public class Main {
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
+				
+				AppManager.instance().setRenderCanvas(glCanvas.getCanvas());
 			}
 		});
 	}
