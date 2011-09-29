@@ -1,7 +1,9 @@
 package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.models.ShapeModel;
+import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.math.Vector2;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,26 @@ public class AppManager {
 	public static AppManager instance() { return instance; }
 
 	// -------------------------------------------------------------------------
-	// Content
+	// Components
+	// -------------------------------------------------------------------------
+
+	private final RenderPanel renderPanel = new RenderPanel();
+	private Component renderCanvas;
+
+	public RenderPanel getRenderPanel() {
+		return renderPanel;
+	}
+
+	public Component getRenderCanvas() {
+		return renderCanvas;
+	}
+
+	public void setRenderCanvas(Component renderCanvas) {
+		this.renderCanvas = renderCanvas;
+	}
+
+	// -------------------------------------------------------------------------
+	// Misc
 	// -------------------------------------------------------------------------
 
 	public final List<Vector2> mousePath = new ArrayList<Vector2>();

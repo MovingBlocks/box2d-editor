@@ -1,5 +1,6 @@
-package aurelienribon.bodyeditor.renderpanel.inputprocessors;
+package aurelienribon.bodyeditor.renderpanel.input;
 
+import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -28,7 +29,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 		if (!Gdx.input.isButtonPressed(Buttons.RIGHT))
 			return false;
 
-		OrthographicCamera camera = RenderPanel.instance().getCamera();
+		OrthographicCamera camera = AppManager.instance().getRenderPanel().getCamera();
 		Vector2 delta = new Vector2(x, y).sub(lastTouch).mul(camera.zoom);
 		camera.translate(-delta.x, delta.y, 0);
 		camera.update();
@@ -38,7 +39,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean scrolled(int amount) {
-		RenderPanel app = RenderPanel.instance();
+		RenderPanel app = AppManager.instance().getRenderPanel();
 		int[] zl = app.getZoomLevels();
 
 		if (app.getZoom() == zl[0] && amount < 0) {

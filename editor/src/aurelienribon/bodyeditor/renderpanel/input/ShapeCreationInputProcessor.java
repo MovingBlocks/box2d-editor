@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel.inputprocessors;
+package aurelienribon.bodyeditor.renderpanel.input;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.AssetsManager;
@@ -35,9 +35,9 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		if (lastShape.getVertices().size() >= 3 && AppManager.instance().nearestPoint == lastShape.getVertices().get(0)) {
 			lastShape.close();
 			AssetsManager.instance().getSelectedAsset().computePolygons();
-			RenderPanel.instance().createBody();
+			AppManager.instance().getRenderPanel().createBody();
 		} else {
-			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
+			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
 			lastShape.getVertices().add(p);
 		}
 
@@ -63,18 +63,18 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 	@Override
 	public boolean touchMoved(int x, int y) {
 		// Nearest point computation
-		Vector2 p1 = RenderPanel.instance().screenToWorld(x, y);
+		Vector2 p1 = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
 
 		List<ShapeModel> selectionShapes = AssetsManager.instance().getSelectedAsset().getShapes();
 		ShapeModel shape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
 
 		if (shape != null && !shape.isClosed() && shape.getVertices().size() >= 3)
-			if (shape.getVertices().get(0).dst(p1) < 10 * RenderPanel.instance().getCamera().zoom)
+			if (shape.getVertices().get(0).dst(p1) < 10 * AppManager.instance().getRenderPanel().getCamera().zoom)
 				AppManager.instance().nearestPoint = shape.getVertices().get(0);
 
 		// Next point assignment
-		Vector2 p2 = RenderPanel.instance().alignedScreenToWorld(x, y);
+		Vector2 p2 = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
 		AppManager.instance().nextPoint = p2;
 		return false;
 	}

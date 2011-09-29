@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel.inputprocessors;
+package aurelienribon.bodyeditor.renderpanel.input;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.AssetsManager;
@@ -33,7 +33,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint == null) {
 			selectedPoints.clear();
-			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+			Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 			AppManager.instance().mousePath.add(p);
 		} else if (!selectedPoints.contains(draggedPoint)) {
 			selectedPoints.clear();
@@ -51,7 +51,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (draggedPoint != null) {
 			draggedPoint = null;
 			AssetsManager.instance().getSelectedAsset().computePolygons();
-			RenderPanel.instance().createBody();
+			AppManager.instance().getRenderPanel().createBody();
 		}
 
 		List<Vector2> mousePath = AppManager.instance().mousePath;
@@ -71,9 +71,9 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 
 		if (draggedPoint != null) {
-			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
+			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
 			AssetsManager.instance().getSelectedAsset().getPolygons().clear();
-			RenderPanel.instance().createBody();
+			AppManager.instance().getRenderPanel().createBody();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
@@ -85,7 +85,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 					sp.add(dx, dy);
 			}
 		} else {
-			Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+			Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 			AppManager.instance().mousePath.add(p);
 		}
 		
@@ -95,10 +95,10 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 	@Override
 	public boolean touchMoved(int x, int y) {
 		// Nearest point computation
-		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
+		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
 		for (Vector2 v : getAllShapePoints())
-			if (v.dst(p) < 10 * RenderPanel.instance().getCamera().zoom)
+			if (v.dst(p) < 10 * AppManager.instance().getRenderPanel().getCamera().zoom)
 				AppManager.instance().nearestPoint = v;
 
 		return false;

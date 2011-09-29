@@ -29,6 +29,8 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
 
 		renderPanel.add(canvas, BorderLayout.CENTER);
+		AppManager.instance().setRenderCanvas(canvas);
+		canvas.requestFocusInWindow();
 
 		addComponentListener(new ComponentAdapter() {
 			@Override public void componentShown(ComponentEvent e) {
@@ -649,7 +651,7 @@ public class MainWindow extends javax.swing.JFrame {
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
 		OptionsManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
 		AssetsManager.instance().getSelectedAsset().computePolygons();
-		RenderPanel.instance().createBody();
+		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 
 	private void setOutputFile(File file, boolean forceImport) {

@@ -4,10 +4,10 @@ import aurelienribon.bodyeditor.AssetsManager;
 import aurelienribon.bodyeditor.OptionsManager;
 import aurelienribon.bodyeditor.models.AssetModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
-import aurelienribon.bodyeditor.renderpanel.inputprocessors.BallThrowInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.inputprocessors.PanZoomInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeCreationInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeEditionInputProcessor;
+import aurelienribon.bodyeditor.renderpanel.input.BallThrowInputProcessor;
+import aurelienribon.bodyeditor.renderpanel.input.PanZoomInputProcessor;
+import aurelienribon.bodyeditor.renderpanel.input.ShapeCreationInputProcessor;
+import aurelienribon.bodyeditor.renderpanel.input.ShapeEditionInputProcessor;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import com.badlogic.gdx.ApplicationListener;
@@ -40,9 +40,6 @@ import java.util.Random;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class RenderPanel implements ApplicationListener {
-	private static RenderPanel instance = new RenderPanel();
-	public static RenderPanel instance() {if (instance == null) instance = new RenderPanel(); return instance;}
-
 	private static final float PX_PER_METER = 50;
 
 	private RenderPanelDrawer drawer;
