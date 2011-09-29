@@ -41,6 +41,12 @@ public class AutoListModel implements ListModel {
 		listeners.remove(ListDataListener.class, l);
 	}
 
+	public void forceRefresh() {
+		ListDataEvent evt = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, model.size()-1);
+		for (ListDataListener listener : listeners.getListeners(ListDataListener.class))
+			listener.contentsChanged(evt);
+	}
+
 	// -------------------------------------------------------------------------
 	// Helpers
 	// -------------------------------------------------------------------------

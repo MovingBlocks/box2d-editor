@@ -1,11 +1,13 @@
 package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
+import java.util.List;
 
 /**
  *
@@ -22,20 +24,21 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
+		List<ShapeModel> selectionShapes = AssetsManager.instance().getSelectedAsset().getShapes();
+		ShapeModel lastShape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
 
-		ShapeModel lastShape = AppManager.instance().getLastTempShape();
+		if (lastShape == null || lastShape.isClosed()) {
+			lastShape = new ShapeModel();
+			selectionShapes.add(lastShape);
+		}
 
-		if (lastShape == null || lastShape.isClosed())
-			lastShape = AppManager.instance().createNewTempShape();
-
-		if (lastShape.getPointCount() >= 3 && AppManager.instance().nearestPoint == lastShape.getPoint(0)) {
+		if (lastShape.getVertices().size() >= 3 && AppManager.instance().nearestPoint == lastShape.getVertices().get(0)) {
 			lastShape.close();
-			AppManager.instance().saveCurrentModel();
+			AssetsManager.instance().getSelectedAsset().computePolygons();
+			RenderPanel.instance().createBody();
 		} else {
 			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
-			lastShape.addPoint(p);
+			lastShape.getVertices().add(p);
 		}
 
 		return true;
@@ -59,16 +62,16 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!AppManager.instance().isCurrentModelValid())
-			return false;
-
 		// Nearest point computation
 		Vector2 p1 = RenderPanel.instance().screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
-		ShapeModel shape = AppManager.instance().getLastTempShape();
-		if (shape != null && !shape.isClosed() && shape.getPointCount() >= 3)
-			if (shape.getPoint(0).dst(p1) < 10 * RenderPanel.instance().getCamera().zoom)
-				AppManager.instance().nearestPoint = shape.getPoint(0);
+
+		List<ShapeModel> selectionShapes = AssetsManager.instance().getSelectedAsset().getShapes();
+		ShapeModel shape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
+
+		if (shape != null && !shape.isClosed() && shape.getVertices().size() >= 3)
+			if (shape.getVertices().get(0).dst(p1) < 10 * RenderPanel.instance().getCamera().zoom)
+				AppManager.instance().nearestPoint = shape.getVertices().get(0);
 
 		// Next point assignment
 		Vector2 p2 = RenderPanel.instance().alignedScreenToWorld(x, y);

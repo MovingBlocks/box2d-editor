@@ -1,11 +1,10 @@
 package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.Polygon;
@@ -29,9 +28,6 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
-
 		draggedPoint = AppManager.instance().nearestPoint;
 		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
 
@@ -52,12 +48,10 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			return false;
 		isActive = false;
 
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
-
 		if (draggedPoint != null) {
 			draggedPoint = null;
-			AppManager.instance().saveCurrentModel();
+			AssetsManager.instance().getSelectedAsset().computePolygons();
+			RenderPanel.instance().createBody();
 		}
 
 		List<Vector2> mousePath = AppManager.instance().mousePath;
@@ -76,13 +70,10 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (!isActive)
 			return false;
 
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
-
-
 		if (draggedPoint != null) {
 			Vector2 p = RenderPanel.instance().alignedScreenToWorld(x, y);
-			AppManager.instance().clearTempPolygons();
+			AssetsManager.instance().getSelectedAsset().getPolygons().clear();
+			RenderPanel.instance().createBody();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
@@ -103,9 +94,6 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!AppManager.instance().isCurrentModelValid())
-			return false;
-
 		// Nearest point computation
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
@@ -134,8 +122,8 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private Vector2[] getAllShapePoints() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		for (ShapeModel shape : AppManager.instance().getTempShapes())
-			Collections.addAll(points, shape.getPoints());
+		for (ShapeModel shape : AssetsManager.instance().getSelectedAsset().getShapes())
+			points.addAll(shape.getVertices());
 		return points.toArray(new Vector2[points.size()]);
 	}
 }

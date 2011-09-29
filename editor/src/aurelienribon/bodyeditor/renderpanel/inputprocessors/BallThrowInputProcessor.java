@@ -2,9 +2,7 @@ package aurelienribon.bodyeditor.renderpanel.inputprocessors;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
@@ -23,9 +21,6 @@ public class BallThrowInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
-
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppManager.instance().ballThrowFirstPoint = p;
 		return true;
@@ -36,9 +31,6 @@ public class BallThrowInputProcessor extends InputAdapter {
 		if (!isActive)
 			return false;
 		isActive = false;
-
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
 
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppManager.instance().ballThrowLastPoint = p;
@@ -55,9 +47,6 @@ public class BallThrowInputProcessor extends InputAdapter {
 	public boolean touchDragged(int x, int y, int pointer) {
 		if (!isActive)
 			return false;
-
-		if (!AppManager.instance().isCurrentModelValid())
-			return true;
 
 		Vector2 p = RenderPanel.instance().screenToWorld(x, y);
 		AppManager.instance().ballThrowLastPoint = p;

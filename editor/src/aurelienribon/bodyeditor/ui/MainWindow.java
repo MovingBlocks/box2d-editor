@@ -1,8 +1,11 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.EarClippingManager;
 import aurelienribon.bodyeditor.IoManager;
-import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizers;
+import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
+import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -14,6 +17,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -423,7 +428,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         shape_drawGridChk.setForeground(Theme.MAIN_FOREGROUND);
-        shape_drawGridChk.setSelected(true);
         shape_drawGridChk.setText("Draw grid");
         shape_drawGridChk.setOpaque(false);
         shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
@@ -595,15 +599,12 @@ public class MainWindow extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;
 		}
-
-		try {			
-			AppManager.instance().exportToFile();
-			JOptionPane.showMessageDialog(this, "Save successfully done !");
-			manageAssetsPanel.loadAssets();
-
+		try {
+			IoManager.instance().exportToOutputFile();
+			JOptionPane.showMessageDialog(this, "Saving successfully done.");
 		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Something went wrong while writing the file, sorry :/"
-				+ "\n(nah, don't expect more details)");
+			JOptionPane.showMessageDialog(this, "Something went wrong while saving.\n\n"
+				+ ex.getMessage());
 		}
 	}//GEN-LAST:event_export_saveBtnActionPerformed
 
@@ -632,7 +633,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
 	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
-		AppManager.instance().clearTempObjects();
+		AssetsManager.instance().getSelectedAsset().clear();
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
 	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
@@ -649,28 +650,36 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
 		AppManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
-		AppManager.instance().saveCurrentModel();
+		AssetsManager.instance().getSelectedAsset().computePolygons();
+		RenderPanel.instance().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 
-	private void setOutputFile(File file, boolean force) {
-		File oldFile = IoManager.instance().getOutputFile();
+	private void setOutputFile(File file, boolean forceImport) {
 		IoManager.instance().setOutputFile(file);
 		init_outputFileLbl.setText(file.getPath());
 
-		manageAssetsPanel.updateAssets(oldFile != null ? oldFile.getParent() : null, file.getParent());
-
 		if (file.exists()) {
-			if (!force) {
-				int answer = JOptionPane.showConfirmDialog(this,
-				"Selected file already exists. Do you want to load its content ?"
-				+ "\nLoaded content will replace the current one.",
-				"", JOptionPane.YES_NO_OPTION);
-
-				if (answer == JOptionPane.YES_OPTION)
-					manageAssetsPanel.loadAssets();
+			if (forceImport) {
+				try {
+					IoManager.instance().importFromOutputFile();
+				} catch (IOException ex) {
+				}
 
 			} else {
-				manageAssetsPanel.loadAssets();
+				int answer = JOptionPane.showConfirmDialog(this,
+					"Selected file already exists. Do you want to load its content ?"
+					+ "\nLoaded content will replace the current one.",
+					"", JOptionPane.YES_NO_OPTION);
+
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						IoManager.instance().importFromOutputFile();
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(this, "Something wrong happened. "
+							+ "Are you sure you selected a valid file?");
+					}
+				}
+
 			}
 		}
 	}
