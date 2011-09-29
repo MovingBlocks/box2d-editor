@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
@@ -19,21 +18,7 @@ public class AppManager {
 	public static AppManager instance() { return instance; }
 
 	// -------------------------------------------------------------------------
-	// Options
-	// -------------------------------------------------------------------------
-
-	public boolean isAssetDrawn = true;
-	public boolean isAssetDrawnWithOpacity50 = false;
-	public boolean isShapeDrawn = true;
-	public boolean arePolyDrawn = true;
-	public boolean isBackgroundLight = false;
-	public boolean isSnapToGridEnabled = false;
-	public boolean isGridShown = false;
-	public int gridGap = 10;
-	public Polygonizers polygonizer = Polygonizers.BAYAZIT;
-
-	// -------------------------------------------------------------------------
-	// Objects
+	// Content
 	// -------------------------------------------------------------------------
 
 	public final List<Vector2> mousePath = new ArrayList<Vector2>();

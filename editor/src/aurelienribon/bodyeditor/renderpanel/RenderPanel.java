@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.renderpanel;
 
-import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.OptionsManager;
 import aurelienribon.bodyeditor.models.AssetModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.BallThrowInputProcessor;
@@ -10,7 +10,6 @@ import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeCreationInputPr
 import aurelienribon.bodyeditor.renderpanel.inputprocessors.ShapeEditionInputProcessor;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
 import aurelienribon.utils.notifications.ChangeListener;
-import aurelienribon.utils.notifications.ObservableList.ListChangeListener;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -116,7 +115,7 @@ public class RenderPanel implements ApplicationListener {
 	@Override
 	public void render() {
 		if (assetSprite != null)
-			assetSprite.setColor(1, 1, 1, AppManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
+			assetSprite.setColor(1, 1, 1, OptionsManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
 
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
@@ -130,7 +129,7 @@ public class RenderPanel implements ApplicationListener {
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
 		sb.disableBlending();
-		if (AppManager.instance().isBackgroundLight) {
+		if (OptionsManager.instance().isBackgroundLight) {
 			float tw = backgroundLightTexture.getWidth();
 			float th = backgroundLightTexture.getHeight();
 			sb.draw(backgroundLightTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
@@ -144,7 +143,7 @@ public class RenderPanel implements ApplicationListener {
 
 		sb.setProjectionMatrix(camera.combined);
 		sb.begin();
-		if (assetSprite != null && AppManager.instance().isAssetDrawn)
+		if (assetSprite != null && OptionsManager.instance().isAssetDrawn)
 			assetSprite.draw(sb);
 		for (int i=0; i<ballSprites.size(); i++) {
 			Sprite sp = ballSprites.get(i);
@@ -156,10 +155,10 @@ public class RenderPanel implements ApplicationListener {
 		}
 		sb.end();
 
-		if (AppManager.instance().isGridShown) {
+		if (OptionsManager.instance().isGridShown) {
 			OrthographicCamera cam = new OrthographicCamera(w, h);
 			cam.apply(gl);
-			drawer.drawGrid(w, h, AppManager.instance().gridGap);
+			drawer.drawGrid(w, h, OptionsManager.instance().gridGap);
 		}
 
 		camera.apply(gl);
@@ -198,8 +197,8 @@ public class RenderPanel implements ApplicationListener {
 
 	public Vector2 alignedScreenToWorld(int x, int y) {
 		Vector2 p = screenToWorld(x, y);
-		if (AppManager.instance().isSnapToGridEnabled) {
-			float gap = AppManager.instance().gridGap;
+		if (OptionsManager.instance().isSnapToGridEnabled) {
+			float gap = OptionsManager.instance().gridGap;
 			p.x = Math.round(p.x / gap) * gap;
 			p.y = Math.round(p.y / gap) * gap;
 		}
