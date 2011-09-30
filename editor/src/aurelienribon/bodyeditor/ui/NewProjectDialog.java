@@ -13,6 +13,11 @@ public class NewProjectDialog extends javax.swing.JDialog {
     public NewProjectDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
+		if (IoManager.instance().getOutputFile() != null) {
+			prjFileField.setText(IoManager.instance().getOutputFile().getPath());
+			updateRadios(IoManager.instance().getOutputFile().getPath());
+		}
     }
 
     @SuppressWarnings("unchecked")
@@ -30,6 +35,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         binaryFormatRadio = new javax.swing.JRadioButton();
         xmlFormatRadio = new javax.swing.JRadioButton();
+        jsonFormatRadio = new javax.swing.JRadioButton();
         prjFileField = new javax.swing.JTextField();
         browseBtn = new javax.swing.JButton();
         clearAssetsChk = new javax.swing.JCheckBox();
@@ -45,7 +51,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 
         titlePanel1.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12));
         jLabel1.setForeground(Theme.MAIN_ALT_FOREGROUND);
         jLabel1.setText("New project");
         jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 0, 0));
@@ -69,7 +75,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
         jPanel3.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
         jLabel3.setForeground(Theme.MAIN_ALT_FOREGROUND);
-        jLabel3.setText("<html>\nPlease select a project file.<br/>\nIf the file does not exist, it will be created, else, if will be overwritten.<br/><br/>\n\n<b>About formats</b><br/>\n- Binary format is the fastest to be loaded in your games (especially on embedded devices such as Android targets). However, it can't be edited easily by hand.<br/>\n- XML format is quite slow to be loaded, but being a text file, it can be easily manipulated in any text editor.<br/><br/>\n\n<b>About options</b><br/>\nIf you have already loaded some assets, they will be kept int he list by default. If you want to restart everything, check the \"clear assets\" box.");
+        jLabel3.setText("<html>\nPlease select a project file.<br/>\nIf the file does not exist, it will be created, else, if will be overwritten.<br/><br/>\n\n<b>About formats</b><br/>\n- Binary format is the fastest to be loaded in your games (especially on embedded devices such as Android targets). However, it can't be edited easily by hand.<br/>\n- XML format is quite slow to be loaded, but being a text file, it can be easily manipulated in any text editor.<br/>\n- JSON format is much faster than XML to be loaded since it is more compact. And being text-based, it can still be edited in a text editor.<br/><br/>\n\n<b>About options</b><br/>\nIf you have already loaded some assets, they will be kept int he list by default. If you want to restart everything, check the \"clear assets\" box.");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jPanel4.setOpaque(false);
@@ -95,6 +101,16 @@ public class NewProjectDialog extends javax.swing.JDialog {
         xmlFormatRadio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xmlFormatRadioActionPerformed(evt);
+            }
+        });
+
+        formatButtonGroup.add(jsonFormatRadio);
+        jsonFormatRadio.setForeground(Theme.MAIN_ALT_FOREGROUND);
+        jsonFormatRadio.setText("JSON format");
+        jsonFormatRadio.setOpaque(false);
+        jsonFormatRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jsonFormatRadioActionPerformed(evt);
             }
         });
 
@@ -139,7 +155,9 @@ public class NewProjectDialog extends javax.swing.JDialog {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(binaryFormatRadio)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(xmlFormatRadio))
+                                .addComponent(xmlFormatRadio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jsonFormatRadio))
                             .addComponent(prjFileField, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseBtn))))
@@ -157,7 +175,8 @@ public class NewProjectDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(binaryFormatRadio)
-                    .addComponent(xmlFormatRadio))
+                    .addComponent(xmlFormatRadio)
+                    .addComponent(jsonFormatRadio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearAssetsChk)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -181,7 +200,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -200,7 +219,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -223,13 +242,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
 			prjFileField.setText(selectedFile.getPath());
-
-			String ext = FilenameUtils.getExtension(selectedFile.getPath());
-			if (ext.equalsIgnoreCase("xml")) {
-				xmlFormatRadio.setSelected(true);
-			} else {
-				binaryFormatRadio.setSelected(true);
-			}
+			updateRadios(selectedFile.getPath());
 		}
 	}//GEN-LAST:event_browseBtnActionPerformed
 
@@ -248,7 +261,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 			return;
 		
 		String ext = FilenameUtils.getExtension(path);
-		if (ext.equalsIgnoreCase("xml")) {
+		if (ext.equalsIgnoreCase("xml") || ext.equalsIgnoreCase("json")) {
 			path = FilenameUtils.getFullPath(path) + FilenameUtils.getBaseName(path) + ".bin";
 			prjFileField.setText(path);
 		}
@@ -266,6 +279,18 @@ public class NewProjectDialog extends javax.swing.JDialog {
 		}
 	}//GEN-LAST:event_xmlFormatRadioActionPerformed
 
+	private void jsonFormatRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jsonFormatRadioActionPerformed
+		String path = prjFileField.getText();
+		if (path.equals(""))
+			return;
+
+		String ext = FilenameUtils.getExtension(path);
+		if (!ext.equalsIgnoreCase("json")) {
+			path = FilenameUtils.getFullPath(path) + FilenameUtils.getBaseName(path) + ".json";
+			prjFileField.setText(path);
+		}
+	}//GEN-LAST:event_jsonFormatRadioActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton binaryFormatRadio;
     private javax.swing.JButton browseBtn;
@@ -278,9 +303,21 @@ public class NewProjectDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JRadioButton jsonFormatRadio;
     private javax.swing.JButton okBtn;
     private javax.swing.JTextField prjFileField;
     private aurelienribon.utils.ui.TitlePanel titlePanel1;
     private javax.swing.JRadioButton xmlFormatRadio;
     // End of variables declaration//GEN-END:variables
+
+	private void updateRadios(String path) {
+		String ext = FilenameUtils.getExtension(path);
+		if (ext.equalsIgnoreCase("xml")) {
+			xmlFormatRadio.setSelected(true);
+		} else if (ext.equalsIgnoreCase("json")) {
+			jsonFormatRadio.setSelected(true);
+		} else {
+			binaryFormatRadio.setSelected(true);
+		}
+	}
 }

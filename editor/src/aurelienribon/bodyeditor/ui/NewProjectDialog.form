@@ -22,7 +22,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,88,0,0,2,2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-99,0,0,2,2"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -53,7 +53,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanel2" pref="322" max="32767" attributes="0"/>
+                  <Component id="jPanel2" pref="391" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -145,7 +145,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jLabel3" max="32767" attributes="0"/>
+                          <Component id="jLabel3" pref="237" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -157,7 +157,7 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="Theme.MAIN_ALT_FOREGROUND" type="code"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;Please select a project file.&lt;br/&gt;&#xa;If the file does not exist, it will be created, else, if will be overwritten.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&lt;b&gt;About formats&lt;/b&gt;&lt;br/&gt;&#xa;- Binary format is the fastest to be loaded in your games (especially on embedded devices such as Android targets). However, it can&apos;t be edited easily by hand.&lt;br/&gt;&#xa;- XML format is quite slow to be loaded, but being a text file, it can be easily manipulated in any text editor.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&lt;b&gt;About options&lt;/b&gt;&lt;br/&gt;&#xa;If you have already loaded some assets, they will be kept int he list by default. If you want to restart everything, check the &quot;clear assets&quot; box."/>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;Please select a project file.&lt;br/&gt;&#xa;If the file does not exist, it will be created, else, if will be overwritten.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&lt;b&gt;About formats&lt;/b&gt;&lt;br/&gt;&#xa;- Binary format is the fastest to be loaded in your games (especially on embedded devices such as Android targets). However, it can&apos;t be edited easily by hand.&lt;br/&gt;&#xa;- XML format is quite slow to be loaded, but being a text file, it can be easily manipulated in any text editor.&lt;br/&gt;&#xa;- JSON format is much faster than XML to be loaded since it is more compact. And being text-based, it can still be edited in a text editor.&lt;br/&gt;&lt;br/&gt;&#xa;&#xa;&lt;b&gt;About options&lt;/b&gt;&lt;br/&gt;&#xa;If you have already loaded some assets, they will be kept int he list by default. If you want to restart everything, check the &quot;clear assets&quot; box."/>
                     <Property name="verticalAlignment" type="int" value="1"/>
                   </Properties>
                 </Component>
@@ -183,6 +183,8 @@
                                               <Component id="binaryFormatRadio" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="xmlFormatRadio" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jsonFormatRadio" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Component id="prjFileField" alignment="0" pref="382" max="32767" attributes="0"/>
                                       </Group>
@@ -209,6 +211,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="binaryFormatRadio" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="xmlFormatRadio" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jsonFormatRadio" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="clearAssetsChk" min="-2" max="-2" attributes="0"/>
@@ -256,6 +259,21 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="xmlFormatRadioActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="jsonFormatRadio">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="formatButtonGroup"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="Theme.MAIN_ALT_FOREGROUND" type="code"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="JSON format"/>
+                        <Property name="opaque" type="boolean" value="false"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jsonFormatRadioActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="prjFileField">
