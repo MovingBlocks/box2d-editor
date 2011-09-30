@@ -233,7 +233,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/title.png"))); // NOI18N
 
         logoWebsiteLbl.setForeground(Theme.MAIN_FOREGROUND);
-        logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurélien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
+        logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurelien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
 
         logoHelpLbl.setFont(new java.awt.Font("Tahoma", 1, 11));
         logoHelpLbl.setForeground(Theme.MAIN_FOREGROUND);
@@ -269,7 +269,7 @@ public class MainWindow extends javax.swing.JFrame {
         titlePanel1.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
         jLabel5.setBackground(Theme.HEADER_FOREGROUND);
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12));
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Configuration");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 0, 0));
