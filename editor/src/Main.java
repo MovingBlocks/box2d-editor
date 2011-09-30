@@ -1,10 +1,13 @@
 import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AssetsManager;
 import aurelienribon.bodyeditor.IoManager;
+import aurelienribon.bodyeditor.models.AssetModel;
 import aurelienribon.bodyeditor.ui.MainWindow;
-import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
@@ -16,27 +19,6 @@ import javax.swing.UIManager;
  */
 public class Main {
     public static void main(final String[] args) {
-		parseArgs(args);
-		makeWindow();
-    }
-
-	private static void parseArgs(String[] args) {
-		for (int i=0; i<args.length; i++) {
-			if (args[i].startsWith("--outputfile=")) {
-				try {
-					File file = new File(args[i].substring("--outputfile=".length()));
-					IoManager.instance().setOutputFile(file.getCanonicalFile());
-				} catch (IOException ex) {
-					System.err.println("Given output file path cannot be retrieved...");
-					IoManager.instance().setOutputFile(null);
-				}
-			}
-		}
-	}
-
-	private static void makeWindow() {
-		final LwjglCanvas glCanvas = new LwjglCanvas(AppManager.instance().getRenderPanel(), false);
-
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -44,6 +26,9 @@ public class Main {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				} catch (Exception ex) {}
 
+				LwjglCanvas glCanvas = new LwjglCanvas(AppManager.instance().getRenderPanel(), false);
+				AppManager.instance().setRenderCanvas(glCanvas.getCanvas());
+				
 				MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
@@ -52,9 +37,53 @@ public class Main {
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
-				
-				AppManager.instance().setRenderCanvas(glCanvas.getCanvas());
+
+				mw.addWindowListener(new WindowAdapter() {
+					@Override public void windowOpened(WindowEvent e) {
+						parseArgs(args);
+					}
+				});
 			}
 		});
+    }
+
+	private static void parseArgs(String[] args) {
+		final String ARG_PRJ_FILE = "prjfile";
+		final String ARG_ASSETS_FILES = "assets";
+
+		String prjFilePath = getArg(args, ARG_PRJ_FILE);
+		if (!prjFilePath.equals("")) {
+			File file = new File(prjFilePath);
+			if (!file.isFile()) {
+				try {
+					file.createNewFile();
+					file = file.getCanonicalFile();
+					IoManager.instance().setOutputFile(file);
+				} catch (IOException ex) {
+					System.err.println("Cannot use file: " + prjFilePath);
+				}
+			}
+		}
+
+		String assetsList = getArg(args, ARG_ASSETS_FILES);
+		String[] assetsPaths = assetsList.split(";");
+		for (String path : assetsPaths) {
+			File file = new File(path);
+			if (file.exists()) {
+				try {
+					String fullpath = file.getCanonicalPath();
+					AssetsManager.instance().getList().add(new AssetModel(fullpath));
+				} catch (IOException ex) {
+					System.err.println("Cannot use file: " + path);
+				}
+			}
+		}
+	}
+
+	private static String getArg(String[] args, String arg) {
+		for (int i=0; i<args.length; i++)
+			if (args[i].startsWith("--" + arg + "="))
+				return args[i].substring(("--" + arg + "=").length());
+		return "";
 	}
 }

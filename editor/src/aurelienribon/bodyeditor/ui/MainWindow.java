@@ -29,7 +29,6 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
 
 		renderPanel.add(canvas, BorderLayout.CENTER);
-		AppManager.instance().setRenderCanvas(canvas);
 		canvas.requestFocusInWindow();
 
 		addComponentListener(new ComponentAdapter() {
