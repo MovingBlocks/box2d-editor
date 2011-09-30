@@ -45,7 +45,7 @@ public class RenderPanelDrawer {
 			drawPolys(polys);
 		}
 
-		if (OptionsManager.instance().isShapeDrawn) {
+		if (OptionsManager.instance().areShapesDrawn) {
 			drawShapes(shapes);
 			drawPoints(shapes);
 		}

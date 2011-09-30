@@ -19,7 +19,7 @@ public class OptionsManager {
 
 	public boolean isAssetDrawn = true;
 	public boolean isAssetDrawnWithOpacity50 = false;
-	public boolean isShapeDrawn = true;
+	public boolean areShapesDrawn = true;
 	public boolean arePolyDrawn = true;
 	public boolean isBackgroundLight = false;
 	public boolean isSnapToGridEnabled = false;
