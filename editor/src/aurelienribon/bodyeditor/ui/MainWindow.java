@@ -5,7 +5,7 @@ import aurelienribon.bodyeditor.AssetsManager;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
 import aurelienribon.bodyeditor.OptionsManager;
-import aurelienribon.bodyeditor.renderpanel.RenderPanel;
+import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -35,8 +35,22 @@ public class MainWindow extends javax.swing.JFrame {
 		addComponentListener(new ComponentAdapter() {
 			@Override public void componentShown(ComponentEvent e) {
 				File outputFile = IoManager.instance().getOutputFile();
-				if (outputFile != null)
-					setOutputFile(outputFile, true);
+				if (outputFile != null) {
+					try {
+						IoManager.instance().importFromOutputFile();
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(MainWindow.this,
+							"Something went wrong while loading the selected file.");
+					}
+				}
+			}
+		});
+
+		IoManager.instance().addChangeListener(new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				cfg_outputFileLbl.setText("");
+				if (IoManager.instance().getOutputFile() != null)
+					cfg_outputFileLbl.setText(IoManager.instance().getOutputFile().getPath());
 			}
 		});
 
@@ -74,7 +88,6 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        shapeModeBtnGrp = new javax.swing.ButtonGroup();
         renderPanelWrapper = new javax.swing.JPanel();
         renderPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -91,9 +104,10 @@ public class MainWindow extends javax.swing.JFrame {
         titlePanel1 = new aurelienribon.utils.ui.TitlePanel();
         jLabel5 = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
-        init_outputFileLbl = new javax.swing.JTextField();
-        init_setOutputFileBtn = new javax.swing.JButton();
-        export_saveBtn = new javax.swing.JButton();
+        cfg_outputFileLbl = new javax.swing.JTextField();
+        cfg_newProjectBtn = new javax.swing.JButton();
+        cfg_loadProjectBtn = new javax.swing.JButton();
+        cfg_saveBtn = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -256,7 +270,7 @@ public class MainWindow extends javax.swing.JFrame {
         titlePanel1.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
         jLabel5.setBackground(Theme.HEADER_FOREGROUND);
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Configuration");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 0, 0));
@@ -279,31 +293,42 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel12.setBackground(Theme.MAIN_ALT_BACKGROUND);
 
-        init_outputFileLbl.setBackground(Theme.TEXTAREA_BACKGROUND);
-        init_outputFileLbl.setEditable(false);
-        init_outputFileLbl.setForeground(Theme.TEXTAREA_FOREGROUND);
-        init_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        init_outputFileLbl.setText("<no file specified>");
+        cfg_outputFileLbl.setBackground(Theme.TEXTAREA_BACKGROUND);
+        cfg_outputFileLbl.setEditable(false);
+        cfg_outputFileLbl.setForeground(Theme.TEXTAREA_FOREGROUND);
+        cfg_outputFileLbl.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        cfg_outputFileLbl.setText("<no file specified>");
 
-        init_setOutputFileBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_gear.png"))); // NOI18N
-        init_setOutputFileBtn.setText("Set / load output file");
-        init_setOutputFileBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        init_setOutputFileBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
-        init_setOutputFileBtn.setOpaque(false);
-        init_setOutputFileBtn.addActionListener(new java.awt.event.ActionListener() {
+        cfg_newProjectBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_new.png"))); // NOI18N
+        cfg_newProjectBtn.setText("New project");
+        cfg_newProjectBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cfg_newProjectBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        cfg_newProjectBtn.setOpaque(false);
+        cfg_newProjectBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                init_setOutputFileBtnActionPerformed(evt);
+                cfg_newProjectBtnActionPerformed(evt);
             }
         });
 
-        export_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_save.png"))); // NOI18N
-        export_saveBtn.setText("Save");
-        export_saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        export_saveBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
-        export_saveBtn.setOpaque(false);
-        export_saveBtn.addActionListener(new java.awt.event.ActionListener() {
+        cfg_loadProjectBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_open.png"))); // NOI18N
+        cfg_loadProjectBtn.setText("Load project");
+        cfg_loadProjectBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cfg_loadProjectBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        cfg_loadProjectBtn.setOpaque(false);
+        cfg_loadProjectBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                export_saveBtnActionPerformed(evt);
+                cfg_loadProjectBtnActionPerformed(evt);
+            }
+        });
+
+        cfg_saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_save.png"))); // NOI18N
+        cfg_saveBtn.setText("Save");
+        cfg_saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cfg_saveBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        cfg_saveBtn.setOpaque(false);
+        cfg_saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cfg_saveBtnActionPerformed(evt);
             }
         });
 
@@ -314,11 +339,13 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(init_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                    .addComponent(cfg_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(init_setOutputFileBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                        .addComponent(cfg_newProjectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(export_saveBtn)))
+                        .addComponent(cfg_loadProjectBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cfg_saveBtn)))
                 .addContainerGap())
         );
         jPanel12Layout.setVerticalGroup(
@@ -326,10 +353,11 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(init_setOutputFileBtn)
-                    .addComponent(export_saveBtn))
+                    .addComponent(cfg_saveBtn)
+                    .addComponent(cfg_newProjectBtn)
+                    .addComponent(cfg_loadProjectBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(init_outputFileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cfg_outputFileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -344,7 +372,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         shape_drawShapeChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawShapeChk.setSelected(true);
-        shape_drawShapeChk.setText("Draw shape");
+        shape_drawShapeChk.setText("Draw shapes");
         shape_drawShapeChk.setOpaque(false);
         shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -587,13 +615,34 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private void init_setOutputFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_init_setOutputFileBtnActionPerformed
-		File file = promptOutputFile();
-		if (file != null)
-			setOutputFile(file, false);
-	}//GEN-LAST:event_init_setOutputFileBtnActionPerformed
+	private void cfg_newProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cfg_newProjectBtnActionPerformed
+		NewProjectDialog dialog = new NewProjectDialog(this, true);
+		SwingHelper.centerInWindow(this, dialog);
+		dialog.setVisible(true);
+	}//GEN-LAST:event_cfg_newProjectBtnActionPerformed
 
-	private void export_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_saveBtnActionPerformed
+	private void cfg_loadProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cfg_loadProjectBtnActionPerformed
+		File outputFile = IoManager.instance().getOutputFile();
+		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
+		if (!startupDir.isDirectory())
+			startupDir = new File(".");
+
+		JFileChooser chooser = new JFileChooser(startupDir);
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setMultiSelectionEnabled(false);
+
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+			IoManager.instance().setOutputFile(selectedFile);
+			try {
+				IoManager.instance().importFromOutputFile();
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(this, "Something went wrong while loading the selected file.");
+			}
+		}
+	}//GEN-LAST:event_cfg_loadProjectBtnActionPerformed
+
+	private void cfg_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cfg_saveBtnActionPerformed
 		File outputFile = IoManager.instance().getOutputFile();
 		if (outputFile == null) {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
@@ -606,10 +655,10 @@ public class MainWindow extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Something went wrong while saving.\n\n"
 				+ ex.getMessage());
 		}
-	}//GEN-LAST:event_export_saveBtnActionPerformed
+	}//GEN-LAST:event_cfg_saveBtnActionPerformed
 
 	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
-		OptionsManager.instance().isShapeDrawn = shape_drawShapeChk.isSelected();
+		OptionsManager.instance().areShapesDrawn = shape_drawShapeChk.isSelected();
 	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
 
 	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
@@ -654,42 +703,13 @@ public class MainWindow extends javax.swing.JFrame {
 		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 
-	private void setOutputFile(File file, boolean forceImport) {
-		IoManager.instance().setOutputFile(file);
-		init_outputFileLbl.setText(file.getPath());
-
-		if (file.exists()) {
-			if (forceImport) {
-				try {
-					IoManager.instance().importFromOutputFile();
-				} catch (IOException ex) {
-				}
-
-			} else {
-				int answer = JOptionPane.showConfirmDialog(this,
-					"Selected file already exists. Do you want to load its content ?"
-					+ "\nLoaded content will replace the current one.",
-					"", JOptionPane.YES_NO_OPTION);
-
-				if (answer == JOptionPane.YES_OPTION) {
-					try {
-						IoManager.instance().importFromOutputFile();
-					} catch (IOException ex) {
-						JOptionPane.showMessageDialog(this, "Something wrong happened. "
-							+ "Are you sure you selected a valid file?");
-					}
-				}
-
-			}
-		}
-	}
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cfg_loadProjectBtn;
+    private javax.swing.JButton cfg_newProjectBtn;
+    private javax.swing.JTextField cfg_outputFileLbl;
+    private javax.swing.JButton cfg_saveBtn;
     private javax.swing.JPanel configPanel;
-    private javax.swing.JButton export_saveBtn;
     private javax.swing.JPanel imgsPanel;
-    private javax.swing.JTextField init_outputFileLbl;
-    private javax.swing.JButton init_setOutputFileBtn;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
@@ -709,7 +729,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JPanel renderPanelWrapper;
-    private javax.swing.ButtonGroup shapeModeBtnGrp;
     private javax.swing.JCheckBox shape_drawAssetChk;
     private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
     private javax.swing.JCheckBox shape_drawGridChk;
@@ -726,23 +745,4 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton tools_insertPointsBtn;
     private javax.swing.JButton tools_removePointsBtn;
     // End of variables declaration//GEN-END:variables
-
-	private File promptOutputFile() {
-		File outputFile = IoManager.instance().getOutputFile();
-		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
-		if (!startupDir.isDirectory())
-			startupDir = new File(".");
-
-		JFileChooser chooser = new JFileChooser(startupDir);
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setMultiSelectionEnabled(false);
-		chooser.setDialogTitle("Choose an existing file or create a new one");
-
-		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = chooser.getSelectedFile();
-			return selectedFile;
-		}
-
-		return null;
-	}
 }

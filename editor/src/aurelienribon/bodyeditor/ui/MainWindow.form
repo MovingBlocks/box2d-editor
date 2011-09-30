@@ -1,10 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="shapeModeBtnGrp">
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Physics Body Editor"/>
@@ -367,11 +363,13 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="init_outputFileLbl" alignment="1" pref="319" max="32767" attributes="0"/>
+                              <Component id="cfg_outputFileLbl" alignment="1" pref="319" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="init_setOutputFileBtn" pref="254" max="32767" attributes="0"/>
+                                  <Component id="cfg_newProjectBtn" pref="153" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="export_saveBtn" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cfg_loadProjectBtn" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cfg_saveBtn" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -383,18 +381,19 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="init_setOutputFileBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="export_saveBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cfg_saveBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cfg_newProjectBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cfg_loadProjectBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="init_outputFileLbl" min="-2" max="-2" attributes="0"/>
+                          <Component id="cfg_outputFileLbl" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="init_outputFileLbl">
+                <Component class="javax.swing.JTextField" name="cfg_outputFileLbl">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="Theme.TEXTAREA_BACKGROUND" type="code"/>
@@ -407,12 +406,12 @@
                     <Property name="text" type="java.lang.String" value="&lt;no file specified&gt;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="init_setOutputFileBtn">
+                <Component class="javax.swing.JButton" name="cfg_newProjectBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_gear.png"/>
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_new.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Set / load output file"/>
+                    <Property name="text" type="java.lang.String" value="New project"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                       <Insets value="[2, 5, 2, 5]"/>
@@ -420,10 +419,26 @@
                     <Property name="opaque" type="boolean" value="false"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="init_setOutputFileBtnActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cfg_newProjectBtnActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="export_saveBtn">
+                <Component class="javax.swing.JButton" name="cfg_loadProjectBtn">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_open.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Load project"/>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
+                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+                      <Insets value="[2, 5, 2, 5]"/>
+                    </Property>
+                    <Property name="opaque" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cfg_loadProjectBtnActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="cfg_saveBtn">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/aurelienribon/bodyeditor/ui/gfx/ic_save.png"/>
@@ -436,7 +451,7 @@
                     <Property name="opaque" type="boolean" value="false"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="export_saveBtnActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cfg_saveBtnActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -526,7 +541,7 @@
                           <Connection code="Theme.MAIN_FOREGROUND" type="code"/>
                         </Property>
                         <Property name="selected" type="boolean" value="true"/>
-                        <Property name="text" type="java.lang.String" value="Draw shape"/>
+                        <Property name="text" type="java.lang.String" value="Draw shapes"/>
                         <Property name="opaque" type="boolean" value="false"/>
                       </Properties>
                       <Events>
