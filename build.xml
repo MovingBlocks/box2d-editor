@@ -5,11 +5,11 @@
 	<!-- ****************************************************************** -->
 	
 	<!-- version -->
-	<property name="version" value="1.1" />
+	<property name="version" value="2.0" />
 
 	<!-- projects properties -->
 	<property name="prj.editor.dir" value="editor" />
-	<property name="prj.editor.filename" value="box2d-editor" />
+	<property name="prj.editor.filename" value="physics-body-editor" />
 	<property name="prj.libgdx-fixtureatlas.dir" value="libgdx-fixtureatlas" />
 	<property name="prj.libgdx-fixtureatlas.filename" value="libgdx-fixtureatlas" />
 	<property name="prj.libgdx-fixtureatlas-demo.dir" value="libgdx-fixtureatlas-demo" />
@@ -55,8 +55,8 @@
 
 	<!-- pre-package -->
 	<target name="pre-package" depends="compile">
-		<copy todir="${prj.editor.dir}/bin/aurelienribon/box2deditor/gfx">
-			<fileset dir="${prj.editor.dir}/src/aurelienribon/box2deditor/gfx"/>
+		<copy todir="${prj.editor.dir}/bin/aurelienribon/bodyeditor/ui/gfx">
+			<fileset dir="${prj.editor.dir}/src/aurelienribon/bodyeditor/ui/gfx"/>
 		</copy>
 	</target>
 	
@@ -116,37 +116,5 @@
 	<!-- all -->
 	<target name="all" depends="zip">
 		<antcall target="clean"/>
-	</target>
-
-	<!-- ****************************************************************** -->
-	<!-- Run tasks -->
-	<!-- ****************************************************************** -->
-	
-	<!-- run-list -->
-	<target name="run-list">
-		<echo>run-editor</echo>
-		<echo>run-libgdx-fixtureatlas-demo</echo>
-	</target>
-
-	<!-- run-editor -->
-	<target name="run-editor">
-		<delete dir="temp"/>
-		<unzip src="${prj.editor.filename}-${version}.zip" dest="temp"/>
-		<exec executable="java" dir="temp">
-			<arg value="-jar"/>
-			<arg value="${prj.editor.filename}.jar"/>
-		</exec>
-		<delete dir="temp"/>
-	</target>
-
-	<!-- run-libgdx-fixtureatlas-demo -->
-	<target name="run-libgdx-fixtureatlas-demo">
-		<delete dir="temp"/>
-		<unzip src="${prj.libgdx-fixtureatlas-demo.filename}-${version}.zip" dest="temp"/>
-		<exec executable="java" dir="temp">
-			<arg value="-jar"/>
-			<arg value="${prj.libgdx-fixtureatlas-demo.filename}.jar"/>
-		</exec>
-		<delete dir="temp"/>
 	</target>
 </project>
