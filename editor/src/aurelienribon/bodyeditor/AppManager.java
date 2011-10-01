@@ -57,7 +57,6 @@ public class AppManager {
 		for (ShapeModel shape : AssetsManager.instance().getSelectedAsset().getShapes())
 			for (Vector2 p : selectedPoints)
 				shape.getVertices().remove(p);
-		AssetsManager.instance().getSelectedAsset().computePolygons();
 	}
 
 	public void insertPointBetweenSelected() {
@@ -78,6 +77,5 @@ public class AppManager {
 		}
 
 		selectedPoints.addAll(toAdd);
-		AssetsManager.instance().getSelectedAsset().computePolygons();
 	}
 }
