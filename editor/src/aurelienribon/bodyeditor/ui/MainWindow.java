@@ -674,14 +674,17 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
 		AppManager.instance().insertPointBetweenSelected();
+		AssetsManager.instance().getSelectedAsset().computePolygons();
 	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
 
 	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
 		AppManager.instance().removeSelectedPoints();
+		AssetsManager.instance().getSelectedAsset().computePolygons();
 	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
 	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
 		AssetsManager.instance().getSelectedAsset().clear();
+		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
 	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
