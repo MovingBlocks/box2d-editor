@@ -13,6 +13,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
     public NewProjectDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+		Theme.apply(getContentPane());
 
 		if (IoManager.instance().getOutputFile() != null) {
 			prjFileField.setText(IoManager.instance().getOutputFile().getPath());
@@ -26,9 +27,6 @@ public class NewProjectDialog extends javax.swing.JDialog {
 
         formatButtonGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        titlePanel1 = new aurelienribon.utils.ui.TitlePanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -46,33 +44,9 @@ public class NewProjectDialog extends javax.swing.JDialog {
 
         jPanel1.setBackground(Theme.MAIN_BACKGROUND);
 
-        jPanel2.setOpaque(false);
-        jPanel2.setLayout(new java.awt.BorderLayout());
-
-        titlePanel1.setBackground(Theme.MAIN_ALT_BACKGROUND);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jLabel1.setForeground(Theme.MAIN_ALT_FOREGROUND);
-        jLabel1.setText("New project");
-        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 0, 0));
-
-        javax.swing.GroupLayout titlePanel1Layout = new javax.swing.GroupLayout(titlePanel1);
-        titlePanel1.setLayout(titlePanel1Layout);
-        titlePanel1Layout.setHorizontalGroup(
-            titlePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titlePanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(410, Short.MAX_VALUE))
-        );
-        titlePanel1Layout.setVerticalGroup(
-            titlePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1)
-        );
-
-        jPanel2.add(titlePanel1, java.awt.BorderLayout.NORTH);
-
-        jPanel3.setBackground(Theme.MAIN_ALT_BACKGROUND);
+        aurelienribon.utils.ui.GroupBorder groupBorder1 = new aurelienribon.utils.ui.GroupBorder();
+        groupBorder1.setTitle("New Project");
+        jPanel3.setBorder(groupBorder1);
 
         jLabel3.setForeground(Theme.MAIN_ALT_FOREGROUND);
         jLabel3.setText("<html>\nPlease select a project file.<br/>\nIf the file does not exist, it will be created, else, if will be overwritten.<br/><br/>\n\n<b>About formats</b><br/>\n- Binary format is the fastest to be loaded in your games (especially on embedded devices such as Android targets). However, it can't be edited easily by hand.<br/>\n- XML format is quite slow to be loaded, but being a text file, it can be easily manipulated in any text editor.<br/>\n- JSON format is much faster than XML to be loaded since it is more compact. And being text-based, it can still be edited in a text editor.<br/><br/>\n\n<b>About options</b><br/>\nIf you have already loaded some assets, they will be kept int he list by default. If you want to restart everything, check the \"clear assets\" box.");
@@ -113,9 +87,6 @@ public class NewProjectDialog extends javax.swing.JDialog {
                 jsonFormatRadioActionPerformed(evt);
             }
         });
-
-        prjFileField.setBackground(Theme.TEXTAREA_BACKGROUND);
-        prjFileField.setForeground(Theme.TEXTAREA_FOREGROUND);
 
         browseBtn.setText("...");
         browseBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -200,27 +171,25 @@ public class NewProjectDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        jPanel2.add(jPanel3, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 11, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -296,17 +265,14 @@ public class NewProjectDialog extends javax.swing.JDialog {
     private javax.swing.JButton browseBtn;
     private javax.swing.JCheckBox clearAssetsChk;
     private javax.swing.ButtonGroup formatButtonGroup;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JRadioButton jsonFormatRadio;
     private javax.swing.JButton okBtn;
     private javax.swing.JTextField prjFileField;
-    private aurelienribon.utils.ui.TitlePanel titlePanel1;
     private javax.swing.JRadioButton xmlFormatRadio;
     // End of variables declaration//GEN-END:variables
 
