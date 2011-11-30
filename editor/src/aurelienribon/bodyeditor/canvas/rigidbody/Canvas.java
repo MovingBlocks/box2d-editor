@@ -37,6 +37,9 @@ import java.util.Random;
  */
 public class Canvas implements ApplicationListener {
 	private static final float PX_PER_METER = 50;
+	private final Random rand = new Random();
+	private final List<Body> ballsBodies = new ArrayList<Body>();
+	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 
 	private CanvasDrawer drawer;
 	private SpriteBatch sb;
@@ -47,33 +50,23 @@ public class Canvas implements ApplicationListener {
 
 	private Sprite bodySprite;
 
-	private Random rand;
 	private World world;
 	private Texture ballTexture;
-	private List<Body> ballsBodies;
-	private List<Sprite> ballsSprites;
 	
 	@Override
 	public void create() {
-		this.sb = new SpriteBatch();
-		
-		this.font = new BitmapFont();
+		sb = new SpriteBatch();
+		font = new BitmapFont();
 		font.setColor(Color.BLACK);
-
-		this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
+		drawer = new CanvasDrawer(camera);
 
-		this.backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
+		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		this.backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
+		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-
-		this.rand = new Random();
-		this.ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
-		this.ballsBodies = new ArrayList<Body>();
-		this.ballsSprites = new ArrayList<Sprite>();
-		
-		this.drawer = new CanvasDrawer(camera);
+		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor());
@@ -82,19 +75,20 @@ public class Canvas implements ApplicationListener {
 		im.addProcessor(new ShapeEditionInputProcessor());
 		Gdx.input.setInputProcessor(im);
 
-		this.world = new World(new Vector2(0, 0), true);
+		world = new World(new Vector2(0, 0), true);
 
 		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
-				bodySprite = null;
-				clearWorld();
+				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
+					clearWorld();
+					createBody();
 
-				RigidBodyModel body = ObjectsManager.instance().getSelectedRigidBody();
-				bodySprite = new Sprite(body.getTexture());
-				bodySprite.setPosition(0, 0);
-				camera.position.set(body.getTexture().getRegionWidth()/2, body.getTexture().getRegionHeight()/2, 0);
-				camera.update();
-				createBody();
+					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+					bodySprite = new Sprite(model.getTexture());
+					bodySprite.setPosition(0, 0);
+					camera.position.set(model.getTexture().getRegionWidth()/2, model.getTexture().getRegionHeight()/2, 0);
+					camera.update();
+				}
 			}
 		});
 	}
@@ -195,13 +189,12 @@ public class Canvas implements ApplicationListener {
 	public void createBody() {
 		clearWorld();
 
-		RigidBodyModel body = ObjectsManager.instance().getSelectedRigidBody();
-		if (body.getPolygons().isEmpty())
-			return;
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model.getPolygons().isEmpty()) return;
 
 		Body body = world.createBody(new BodyDef());
 		
-		for (PolygonModel polygon : body.getPolygons()) {
+		for (PolygonModel polygon : model.getPolygons()) {
 			Vector2[] resizedPolygon = new Vector2[polygon.getVertices().size()];
 			for (int i=0; i<polygon.getVertices().size(); i++)
 				resizedPolygon[i] = new Vector2(polygon.getVertices().get(i)).mul(1f / PX_PER_METER);
