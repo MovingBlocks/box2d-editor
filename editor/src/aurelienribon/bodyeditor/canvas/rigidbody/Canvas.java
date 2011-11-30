@@ -1,13 +1,9 @@
-package aurelienribon.bodyeditor.renderpanel;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.OptionsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
-import aurelienribon.bodyeditor.renderpanel.input.BallThrowInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.input.PanZoomInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.input.ShapeCreationInputProcessor;
-import aurelienribon.bodyeditor.renderpanel.input.ShapeEditionInputProcessor;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import com.badlogic.gdx.ApplicationListener;
@@ -39,27 +35,23 @@ import java.util.Random;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class RenderPanel implements ApplicationListener {
+public class Canvas implements ApplicationListener {
 	private static final float PX_PER_METER = 50;
 
-	private RenderPanelDrawer drawer;
+	private CanvasDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
+	private OrthographicCamera camera;
 	private Texture backgroundLightTexture;
 	private Texture backgroundDarkTexture;
 
-	private OrthographicCamera camera;
-	private int zoom = 100;
-	private final int[] zoomLevels = {16, 25, 33, 50, 66, 100, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 4000, 5000};
-
-	private Sprite assetSprite;
-	int[] potWidths = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 5096};
+	private Sprite bodySprite;
 
 	private Random rand;
 	private World world;
 	private Texture ballTexture;
-	private List<Body> ballModels;
-	private List<Sprite> ballSprites;
+	private List<Body> ballsBodies;
+	private List<Sprite> ballsSprites;
 	
 	@Override
 	public void create() {
@@ -78,10 +70,10 @@ public class RenderPanel implements ApplicationListener {
 
 		this.rand = new Random();
 		this.ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
-		this.ballModels = new ArrayList<Body>();
-		this.ballSprites = new ArrayList<Sprite>();
+		this.ballsBodies = new ArrayList<Body>();
+		this.ballsSprites = new ArrayList<Sprite>();
 		
-		this.drawer = new RenderPanelDrawer(camera);
+		this.drawer = new CanvasDrawer(camera);
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor());
@@ -94,13 +86,13 @@ public class RenderPanel implements ApplicationListener {
 
 		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
-				assetSprite = null;
+				bodySprite = null;
 				clearWorld();
 
-				RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
-				assetSprite = new Sprite(am.getTexture());
-				assetSprite.setPosition(0, 0);
-				camera.position.set(am.getTexture().getRegionWidth()/2, am.getTexture().getRegionHeight()/2, 0);
+				RigidBodyModel body = ObjectsManager.instance().getSelectedRigidBody();
+				bodySprite = new Sprite(body.getTexture());
+				bodySprite.setPosition(0, 0);
+				camera.position.set(body.getTexture().getRegionWidth()/2, body.getTexture().getRegionHeight()/2, 0);
 				camera.update();
 				createBody();
 			}
@@ -109,8 +101,8 @@ public class RenderPanel implements ApplicationListener {
 
 	@Override
 	public void render() {
-		if (assetSprite != null)
-			assetSprite.setColor(1, 1, 1, OptionsManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
+		if (bodySprite != null)
+			bodySprite.setColor(1, 1, 1, OptionsManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
 
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
@@ -138,12 +130,12 @@ public class RenderPanel implements ApplicationListener {
 
 		sb.setProjectionMatrix(camera.combined);
 		sb.begin();
-		if (assetSprite != null && OptionsManager.instance().isAssetDrawn)
-			assetSprite.draw(sb);
-		for (int i=0; i<ballSprites.size(); i++) {
-			Sprite sp = ballSprites.get(i);
-			Vector2 pos = ballModels.get(i).getWorldCenter().mul(PX_PER_METER).sub(sp.getWidth()/2, sp.getHeight()/2);
-			float angleDeg = ballModels.get(i).getAngle() * MathUtils.radiansToDegrees;
+		if (bodySprite != null && OptionsManager.instance().isAssetDrawn)
+			bodySprite.draw(sb);
+		for (int i=0; i<ballsSprites.size(); i++) {
+			Sprite sp = ballsSprites.get(i);
+			Vector2 pos = ballsBodies.get(i).getWorldCenter().mul(PX_PER_METER).sub(sp.getWidth()/2, sp.getHeight()/2);
+			float angleDeg = ballsBodies.get(i).getAngle() * MathUtils.radiansToDegrees;
 			sp.setPosition(pos.x, pos.y);
 			sp.setRotation(angleDeg);
 			sp.draw(sb);
@@ -203,13 +195,13 @@ public class RenderPanel implements ApplicationListener {
 	public void createBody() {
 		clearWorld();
 
-		RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
-		if (am.getPolygons().isEmpty())
+		RigidBodyModel body = ObjectsManager.instance().getSelectedRigidBody();
+		if (body.getPolygons().isEmpty())
 			return;
 
 		Body body = world.createBody(new BodyDef());
 		
-		for (PolygonModel polygon : am.getPolygons()) {
+		for (PolygonModel polygon : body.getPolygons()) {
 			Vector2[] resizedPolygon = new Vector2[polygon.getVertices().size()];
 			for (int i=0; i<polygon.getVertices().size(); i++)
 				resizedPolygon[i] = new Vector2(polygon.getVertices().get(i)).mul(1f / PX_PER_METER);
@@ -242,7 +234,7 @@ public class RenderPanel implements ApplicationListener {
 		bd.angle = rand.nextFloat() * MathUtils.PI;
 		Body b = world.createBody(bd);
 		b.applyLinearImpulse(force.mul(2 / PX_PER_METER), orig);
-		ballModels.add(b);
+		ballsBodies.add(b);
 
 		CircleShape shape = new CircleShape();
 		shape.setRadius(radius / PX_PER_METER);
@@ -251,7 +243,7 @@ public class RenderPanel implements ApplicationListener {
 		Sprite sp = new Sprite(ballTexture);
 		sp.setSize(radius*2, radius*2);
 		sp.setOrigin(sp.getWidth()/2, sp.getHeight()/2);
-		ballSprites.add(sp);
+		ballsSprites.add(sp);
 	}
 
 	public OrthographicCamera getCamera() {
@@ -275,8 +267,8 @@ public class RenderPanel implements ApplicationListener {
 	// -------------------------------------------------------------------------
 
 	private void clearWorld() {
-		ballModels.clear();
-		ballSprites.clear();
+		ballsBodies.clear();
+		ballsSprites.clear();
 		Iterator<Body> bodies = world.getBodies();
 		while (bodies.hasNext())
 			world.destroyBody(bodies.next());

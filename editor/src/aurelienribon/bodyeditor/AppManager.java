@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.bodyeditor.renderpanel.RenderPanel;
+import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class AppManager {
 	// Components
 	// -------------------------------------------------------------------------
 
-	private final RenderPanel renderPanel = new RenderPanel();
+	private final Canvas renderPanel = new Canvas();
 	private Component renderCanvas;
 
-	public RenderPanel getRenderPanel() {
+	public Canvas getRenderPanel() {
 		return renderPanel;
 	}
 

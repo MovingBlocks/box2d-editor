@@ -220,7 +220,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 		if (!path.equals(""))
 			IoManager.instance().setOutputFile(new File(path));
 		if (clearAssetsChk.isSelected())
-			ObjectsManager.instance().getRigidBodiesList().clear();
+			ObjectsManager.instance().getRigidBodies().clear();
 		dispose();
 	}//GEN-LAST:event_okBtnActionPerformed
 

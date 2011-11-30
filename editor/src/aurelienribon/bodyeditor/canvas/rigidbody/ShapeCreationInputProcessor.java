@@ -1,9 +1,9 @@
-package aurelienribon.bodyeditor.renderpanel.input;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.bodyeditor.renderpanel.RenderPanel;
+import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;

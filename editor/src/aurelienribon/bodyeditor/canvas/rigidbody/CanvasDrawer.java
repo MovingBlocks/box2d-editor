@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class RenderPanelDrawer {
+public class CanvasDrawer {
 	private static final Color SHAPE_LINE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color SHAPE_POLY_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
@@ -29,7 +29,7 @@ public class RenderPanelDrawer {
 	private final OrthographicCamera camera;
 	private final ImmediateModeRenderer imr;
 
-	public RenderPanelDrawer(OrthographicCamera camera) {
+	public CanvasDrawer(OrthographicCamera camera) {
 		this.camera = camera;
 		this.imr = new ImmediateModeRenderer();
 	}
@@ -37,9 +37,9 @@ public class RenderPanelDrawer {
 	// -------------------------------------------------------------------------
 
 	public void draw() {
-		RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
-		List<ShapeModel> shapes = am.getShapes();
-		List<PolygonModel> polys = am.getPolygons();
+		RigidBodyModel body = ObjectsManager.instance().getSelectedRigidBody();
+		List<ShapeModel> shapes = body.getShapes();
+		List<PolygonModel> polys = body.getPolygons();
 
 		if (OptionsManager.instance().arePolyDrawn) {
 			drawPolys(polys);
