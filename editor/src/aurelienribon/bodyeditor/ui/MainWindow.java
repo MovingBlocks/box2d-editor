@@ -578,16 +578,16 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
 		AppManager.instance().insertPointBetweenSelected();
-		ObjectsManager.instance().getSelectedBody().computePolygons();
+		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
 
 	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
 		AppManager.instance().removeSelectedPoints();
-		ObjectsManager.instance().getSelectedBody().computePolygons();
+		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
 	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
-		ObjectsManager.instance().getSelectedBody().clear();
+		ObjectsManager.instance().getSelectedRigidBody().clear();
 		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
@@ -605,7 +605,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
 		OptionsManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
-		ObjectsManager.instance().getSelectedBody().computePolygons();
+		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 

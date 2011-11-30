@@ -72,7 +72,7 @@ public class Main {
 			if (file.exists()) {
 				try {
 					String fullpath = file.getCanonicalPath();
-					ObjectsManager.instance().getBodiesList().add(new RigidBodyModel(fullpath));
+					ObjectsManager.instance().getRigidBodiesList().add(new RigidBodyModel(fullpath));
 				} catch (IOException ex) {
 					System.err.println("Cannot use file: " + path);
 				}

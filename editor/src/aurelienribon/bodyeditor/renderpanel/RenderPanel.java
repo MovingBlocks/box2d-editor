@@ -97,14 +97,12 @@ public class RenderPanel implements ApplicationListener {
 				assetSprite = null;
 				clearWorld();
 
-				RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
-				if (am != RigidBodyModel.EMPTY) {
-					assetSprite = new Sprite(am.getTexture());
-					assetSprite.setPosition(0, 0);
-					camera.position.set(am.getTexture().getRegionWidth()/2, am.getTexture().getRegionHeight()/2, 0);
-					camera.update();
-					createBody();
-				}
+				RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
+				assetSprite = new Sprite(am.getTexture());
+				assetSprite.setPosition(0, 0);
+				camera.position.set(am.getTexture().getRegionWidth()/2, am.getTexture().getRegionHeight()/2, 0);
+				camera.update();
+				createBody();
 			}
 		});
 	}
@@ -205,7 +203,7 @@ public class RenderPanel implements ApplicationListener {
 	public void createBody() {
 		clearWorld();
 
-		RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
+		RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
 		if (am.getPolygons().isEmpty())
 			return;
 
