@@ -37,7 +37,7 @@ public class RenderPanelDrawer {
 	// -------------------------------------------------------------------------
 
 	public void draw() {
-		RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
+		RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
 		List<ShapeModel> shapes = am.getShapes();
 		List<PolygonModel> polys = am.getPolygons();
 

@@ -29,19 +29,19 @@ public class ObjectsPanel extends javax.swing.JPanel {
 	
     public ObjectsPanel() {
         initComponents();
-		bodiesList.setModel(new AutoListModel(ObjectsManager.instance().getBodiesList()));
+		bodiesList.setModel(new AutoListModel(ObjectsManager.instance().getRigidBodiesList()));
 		bodiesList.setCellRenderer(listCellRdr);
 
 		bodiesList.addListSelectionListener(new ListSelectionListener() {
 			@Override public void valueChanged(ListSelectionEvent e) {
-				ObjectsManager.instance().setSelectedBody((RigidBodyModel)bodiesList.getSelectedValue());
+				ObjectsManager.instance().setSelectedRigidBody((RigidBodyModel)bodiesList.getSelectedValue());
 			}
 		});
 
 		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals("selectedAsset")) {
-					RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
+					RigidBodyModel am = ObjectsManager.instance().getSelectedRigidBody();
 					if (am != bodiesList.getSelectedValue() || bodiesList.getSelectedValues().length > 1)
 						bodiesList.setSelectedValue(am, true);
 				}

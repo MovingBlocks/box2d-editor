@@ -14,13 +14,6 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class RigidBodyModel {
-	public static final RigidBodyModel EMPTY = new RigidBodyModel(null) {
-		@Override public List<ShapeModel> getShapes() {return new ArrayList<ShapeModel>();}
-		@Override public List<PolygonModel> getPolygons() {return new ArrayList<PolygonModel>();}
-	};
-
-	// -------------------------------------------------------------------------
-
 	private final List<ShapeModel> shapes = new ArrayList<ShapeModel>();
 	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
 	private final String path;

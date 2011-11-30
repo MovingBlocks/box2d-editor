@@ -54,7 +54,7 @@ public class AppManager {
 	// -------------------------------------------------------------------------
 
 	public void removeSelectedPoints() {
-		for (ShapeModel shape : ObjectsManager.instance().getSelectedBody().getShapes())
+		for (ShapeModel shape : ObjectsManager.instance().getSelectedRigidBody().getShapes())
 			for (Vector2 p : selectedPoints)
 				shape.getVertices().remove(p);
 	}
@@ -62,7 +62,7 @@ public class AppManager {
 	public void insertPointBetweenSelected() {
 		List<Vector2> toAdd = new ArrayList<Vector2>();
 
-		for (ShapeModel shape : ObjectsManager.instance().getSelectedBody().getShapes()) {
+		for (ShapeModel shape : ObjectsManager.instance().getSelectedRigidBody().getShapes()) {
 			List<Vector2> vs = shape.getVertices();
 			for (int i=0, n=vs.size(); i<n; i++) {
 				Vector2 p1 = vs.get(i);
