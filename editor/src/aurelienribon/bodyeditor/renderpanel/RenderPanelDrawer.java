@@ -1,9 +1,9 @@
 package aurelienribon.bodyeditor.renderpanel;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.OptionsManager;
-import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
@@ -37,7 +37,7 @@ public class RenderPanelDrawer {
 	// -------------------------------------------------------------------------
 
 	public void draw() {
-		AssetModel am = AssetsManager.instance().getSelectedAsset();
+		RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
 		List<ShapeModel> shapes = am.getShapes();
 		List<PolygonModel> polys = am.getPolygons();
 

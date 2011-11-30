@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.renderpanel.input;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Input.Buttons;
@@ -50,7 +50,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint != null) {
 			draggedPoint = null;
-			AssetsManager.instance().getSelectedAsset().computePolygons();
+			ObjectsManager.instance().getSelectedBody().computePolygons();
 			AppManager.instance().getRenderPanel().createBody();
 		}
 
@@ -72,7 +72,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint != null) {
 			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
-			AssetsManager.instance().getSelectedAsset().getPolygons().clear();
+			ObjectsManager.instance().getSelectedBody().getPolygons().clear();
 			AppManager.instance().getRenderPanel().createBody();
 
 			float dx = p.x - draggedPoint.x;
@@ -122,7 +122,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private Vector2[] getAllShapePoints() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		for (ShapeModel shape : AssetsManager.instance().getSelectedAsset().getShapes())
+		for (ShapeModel shape : ObjectsManager.instance().getSelectedBody().getShapes())
 			points.addAll(shape.getVertices());
 		return points.toArray(new Vector2[points.size()]);
 	}

@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
 
 public class Theme {
@@ -29,20 +31,30 @@ public class Theme {
 
 	public static void apply(Component cmp) {
 		if (cmp instanceof JComponent) {
-			JComponent jcmp = (JComponent) cmp;
-			Border border = jcmp.getBorder();
+			JComponent c = (JComponent) cmp;
+			Border border = c.getBorder();
 			if (border != null && border instanceof GroupBorder) {
-				Font font = jcmp.getFont();
-				jcmp.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
-				jcmp.setBackground(Theme.MAIN_ALT_BACKGROUND);
-				jcmp.setForeground(Theme.MAIN_ALT_FOREGROUND);
-				jcmp.setOpaque(false);
+				Font font = c.getFont();
+				c.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+				c.setBackground(Theme.MAIN_ALT_BACKGROUND);
+				c.setForeground(Theme.MAIN_ALT_FOREGROUND);
+				c.setOpaque(false);
 			}
 		}
 
+		if (cmp instanceof JLabel) {
+			JLabel c = (JLabel) cmp;
+			c.setForeground(Theme.MAIN_FOREGROUND);
+		}
+
+		if (cmp instanceof JCheckBox) {
+			JCheckBox c = (JCheckBox) cmp;
+			c.setForeground(Theme.MAIN_FOREGROUND);
+		}
+
 		if (cmp instanceof Container) {
-			Container ctn = (Container) cmp;
-			for (Component child : ctn.getComponents())
+			Container c = (Container) cmp;
+			for (Component child : c.getComponents())
 				apply(child);
 		}
 	}
