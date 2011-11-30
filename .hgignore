@@ -6,15 +6,24 @@ editor/nbbuild.xml
 editor/build/*
 editor/dist/*
 editor/nbproject/*
+editor/bin/*
+editor/.classpath
+editor/.project
 
 libgdx-fixtureatlas/manifest.mf
 libgdx-fixtureatlas/nbbuild.xml
 libgdx-fixtureatlas/build/*
 libgdx-fixtureatlas/dist/*
 libgdx-fixtureatlas/nbproject/*
+libgdx-fixtureatlas/bin/*
+libgdx-fixtureatlas/.classpath
+libgdx-fixtureatlas/.project
 
 libgdx-fixtureatlas-demo/manifest.mf
 libgdx-fixtureatlas-demo/nbbuild.xml
 libgdx-fixtureatlas-demo/build/*
 libgdx-fixtureatlas-demo/dist/*
 libgdx-fixtureatlas-demo/nbproject/*
+libgdx-fixtureatlas-demo/bin/*
+libgdx-fixtureatlas-demo/.classpath
+libgdx-fixtureatlas-demo/.project
