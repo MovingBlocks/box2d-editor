@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.renderpanel.input;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.renderpanel.RenderPanel;
 import com.badlogic.gdx.Input.Buttons;
@@ -24,7 +24,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			return false;
 		isActive = true;
 
-		List<ShapeModel> selectionShapes = AssetsManager.instance().getSelectedAsset().getShapes();
+		List<ShapeModel> selectionShapes = ObjectsManager.instance().getSelectedBody().getShapes();
 		ShapeModel lastShape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
 
 		if (lastShape == null || lastShape.isClosed()) {
@@ -34,7 +34,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 		if (lastShape.getVertices().size() >= 3 && AppManager.instance().nearestPoint == lastShape.getVertices().get(0)) {
 			lastShape.close();
-			AssetsManager.instance().getSelectedAsset().computePolygons();
+			ObjectsManager.instance().getSelectedBody().computePolygons();
 			AppManager.instance().getRenderPanel().createBody();
 		} else {
 			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
@@ -66,7 +66,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		Vector2 p1 = AppManager.instance().getRenderPanel().screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
 
-		List<ShapeModel> selectionShapes = AssetsManager.instance().getSelectedAsset().getShapes();
+		List<ShapeModel> selectionShapes = ObjectsManager.instance().getSelectedBody().getShapes();
 		ShapeModel shape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
 
 		if (shape != null && !shape.isClosed() && shape.getVertices().size() >= 3)

@@ -1,7 +1,7 @@
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.IoManager;
-import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.ui.MainWindow;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
@@ -72,7 +72,7 @@ public class Main {
 			if (file.exists()) {
 				try {
 					String fullpath = file.getCanonicalPath();
-					AssetsManager.instance().getList().add(new AssetModel(fullpath));
+					ObjectsManager.instance().getBodiesList().add(new RigidBodyModel(fullpath));
 				} catch (IOException ex) {
 					System.err.println("Cannot use file: " + path);
 				}

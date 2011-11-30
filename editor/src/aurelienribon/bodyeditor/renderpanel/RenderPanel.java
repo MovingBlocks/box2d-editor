@@ -1,8 +1,8 @@
 package aurelienribon.bodyeditor.renderpanel;
 
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.OptionsManager;
-import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.renderpanel.input.BallThrowInputProcessor;
 import aurelienribon.bodyeditor.renderpanel.input.PanZoomInputProcessor;
@@ -92,13 +92,13 @@ public class RenderPanel implements ApplicationListener {
 
 		this.world = new World(new Vector2(0, 0), true);
 
-		AssetsManager.instance().addChangeListener(new ChangeListener() {
+		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				assetSprite = null;
 				clearWorld();
 
-				AssetModel am = AssetsManager.instance().getSelectedAsset();
-				if (am != AssetModel.EMPTY) {
+				RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
+				if (am != RigidBodyModel.EMPTY) {
 					assetSprite = new Sprite(am.getTexture());
 					assetSprite.setPosition(0, 0);
 					camera.position.set(am.getTexture().getRegionWidth()/2, am.getTexture().getRegionHeight()/2, 0);
@@ -205,7 +205,7 @@ public class RenderPanel implements ApplicationListener {
 	public void createBody() {
 		clearWorld();
 
-		AssetModel am = AssetsManager.instance().getSelectedAsset();
+		RigidBodyModel am = ObjectsManager.instance().getSelectedBody();
 		if (am.getPolygons().isEmpty())
 			return;
 

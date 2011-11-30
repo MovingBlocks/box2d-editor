@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
 import aurelienribon.bodyeditor.OptionsManager;
@@ -118,7 +118,7 @@ public class MainWindow extends javax.swing.JFrame {
         shape_polygonizerCbox = new javax.swing.JComboBox();
         shape_drawGridChk = new javax.swing.JCheckBox();
         shape_enableSnapToGridChk = new javax.swing.JCheckBox();
-        manageAssetsPanel = new aurelienribon.bodyeditor.ui.ManageAssetsPanel();
+        manageAssetsPanel = new aurelienribon.bodyeditor.ui.ObjectsPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Physics Body Editor");
@@ -164,8 +164,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jLabel2.setForeground(Theme.MAIN_ALT_FOREGROUND);
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Tools");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -181,7 +180,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(tools_removePointsBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tools_clearPointsBtn)
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addContainerGap(239, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +200,7 @@ public class MainWindow extends javax.swing.JFrame {
             renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
                 .addGroup(renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -331,7 +330,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel1.setOpaque(false);
 
-        shape_drawShapeChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawShapeChk.setSelected(true);
         shape_drawShapeChk.setText("Draw shapes");
         shape_drawShapeChk.setOpaque(false);
@@ -341,7 +339,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_drawAssetOpacity50Chk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
         shape_drawAssetOpacity50Chk.setOpaque(false);
         shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
@@ -350,7 +347,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_drawAssetChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawAssetChk.setSelected(true);
         shape_drawAssetChk.setText("Draw asset");
         shape_drawAssetChk.setOpaque(false);
@@ -360,7 +356,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_drawPolysChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawPolysChk.setSelected(true);
         shape_drawPolysChk.setText("Draw convex polygons");
         shape_drawPolysChk.setOpaque(false);
@@ -402,10 +397,8 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, Theme.SEPARATOR));
         jPanel4.setOpaque(false);
 
-        jLabel6.setForeground(Theme.MAIN_FOREGROUND);
         jLabel6.setText("Polygonizer:");
 
-        jLabel9.setForeground(Theme.MAIN_FOREGROUND);
         jLabel9.setText("Grid gap (pixels):");
 
         shape_grigGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
@@ -422,7 +415,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_drawGridChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_drawGridChk.setText("Draw grid");
         shape_drawGridChk.setOpaque(false);
         shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
@@ -431,7 +423,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        shape_enableSnapToGridChk.setForeground(Theme.MAIN_FOREGROUND);
         shape_enableSnapToGridChk.setText("Enable snap-to-grid");
         shape_enableSnapToGridChk.setOpaque(false);
         shape_enableSnapToGridChk.addActionListener(new java.awt.event.ActionListener() {
@@ -501,19 +492,12 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanelLayout.setHorizontalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(manageAssetsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(configPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(manageAssetsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                    .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(logoPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(configPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sidePanelLayout.setVerticalGroup(
@@ -525,7 +509,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(manageAssetsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+                .addComponent(manageAssetsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -594,16 +578,16 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
 		AppManager.instance().insertPointBetweenSelected();
-		AssetsManager.instance().getSelectedAsset().computePolygons();
+		ObjectsManager.instance().getSelectedBody().computePolygons();
 	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
 
 	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
 		AppManager.instance().removeSelectedPoints();
-		AssetsManager.instance().getSelectedAsset().computePolygons();
+		ObjectsManager.instance().getSelectedBody().computePolygons();
 	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
 
 	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
-		AssetsManager.instance().getSelectedAsset().clear();
+		ObjectsManager.instance().getSelectedBody().clear();
 		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
 
@@ -621,7 +605,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
 		OptionsManager.instance().polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
-		AssetsManager.instance().getSelectedAsset().computePolygons();
+		ObjectsManager.instance().getSelectedBody().computePolygons();
 		AppManager.instance().getRenderPanel().createBody();
 	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
 
@@ -641,7 +625,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel logoHelpLbl;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JLabel logoWebsiteLbl;
-    private aurelienribon.bodyeditor.ui.ManageAssetsPanel manageAssetsPanel;
+    private aurelienribon.bodyeditor.ui.ObjectsPanel manageAssetsPanel;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JPanel renderPanelWrapper;

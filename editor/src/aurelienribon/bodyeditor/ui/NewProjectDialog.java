@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.AssetsManager;
+import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.IoManager;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -220,7 +220,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 		if (!path.equals(""))
 			IoManager.instance().setOutputFile(new File(path));
 		if (clearAssetsChk.isSelected())
-			AssetsManager.instance().getList().clear();
+			ObjectsManager.instance().getBodiesList().clear();
 		dispose();
 	}//GEN-LAST:event_okBtnActionPerformed
 

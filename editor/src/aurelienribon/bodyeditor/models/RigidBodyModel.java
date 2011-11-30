@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class AssetModel {
-	public static final AssetModel EMPTY = new AssetModel(null) {
+public class RigidBodyModel {
+	public static final RigidBodyModel EMPTY = new RigidBodyModel(null) {
 		@Override public List<ShapeModel> getShapes() {return new ArrayList<ShapeModel>();}
 		@Override public List<PolygonModel> getPolygons() {return new ArrayList<PolygonModel>();}
 	};
@@ -26,7 +26,7 @@ public class AssetModel {
 	private final String path;
 	private final TextureRegion texture;
 
-	public AssetModel(String path) {
+	public RigidBodyModel(String path) {
 		this.path = path;
 		if (path == null) {
 			this.texture = null;
@@ -39,17 +39,17 @@ public class AssetModel {
 			return;
 		}
 
-		Pixmap tempPm = new Pixmap(file);
-		int origW = tempPm.getWidth();
-		int origH = tempPm.getHeight();
+		Pixmap tempPixmap = new Pixmap(file);
+		int origW = tempPixmap.getWidth();
+		int origH = tempPixmap.getHeight();
 		int w = getNearestPOT(origW);
 		int h = getNearestPOT(origH);
 
-		Pixmap assetPixmap = new Pixmap(w, h, tempPm.getFormat());
-		assetPixmap.drawPixmap(tempPm, 0, 0, 0, 0, origW, origH);
-		tempPm.dispose();
+		Pixmap pixmap = new Pixmap(w, h, tempPixmap.getFormat());
+		pixmap.drawPixmap(tempPixmap, 0, 0, 0, 0, origW, origH);
+		tempPixmap.dispose();
 
-		Texture assetTexture = new Texture(assetPixmap);
+		Texture assetTexture = new Texture(pixmap);
 		assetTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 		texture = new TextureRegion(assetTexture, 0, 0, origW, origH);

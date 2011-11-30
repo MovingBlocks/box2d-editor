@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.models.AssetModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.utils.FileUtils;
@@ -145,7 +145,7 @@ public class IoManager extends ChangeableObject {
 		Element assetsElem = doc.createElement("assets");
 		doc.appendChild(assetsElem);
 
-		for (AssetModel am : AssetsManager.instance().getList()) {
+		for (RigidBodyModel am : ObjectsManager.instance().getBodiesList()) {
 			Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
 
 			Element assetElem = doc.createElement("asset");
@@ -192,7 +192,7 @@ public class IoManager extends ChangeableObject {
 			JSONArray assetsElem = new JSONArray();
 			doc.put("assets", assetsElem);
 
-			for (AssetModel am : AssetsManager.instance().getList()) {
+			for (RigidBodyModel am : ObjectsManager.instance().getBodiesList()) {
 				Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
 
 				JSONObject assetElem = new JSONObject();
@@ -240,7 +240,7 @@ public class IoManager extends ChangeableObject {
 	private void exportAsBinary() throws IOException {
 		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
 
-		for (AssetModel am : AssetsManager.instance().getList()) {
+		for (RigidBodyModel am : ObjectsManager.instance().getBodiesList()) {
 			Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
 
 			String name = relativize(am.getPath());
@@ -282,7 +282,7 @@ public class IoManager extends ChangeableObject {
 		if (outputFile == null || !outputFile.isFile())
 			throw new IOException("output file was not set");
 
-		AssetsManager.instance().getList().clear();
+		ObjectsManager.instance().getBodiesList().clear();
 		String ext = FilenameUtils.getExtension(outputFile.getName());
 		if (ext.equalsIgnoreCase("xml")) {
 			importAsXml();
@@ -330,14 +330,14 @@ public class IoManager extends ChangeableObject {
 					polygons[j] = new PolygonModel(vertices);
 				}
 
-				AssetModel am = new AssetModel(path);
+				RigidBodyModel am = new RigidBodyModel(path);
 				am.getShapes().addAll(Arrays.asList(shapes));
 				am.getPolygons().addAll(Arrays.asList(polygons));
-				AssetsManager.instance().getList().add(am);
+				ObjectsManager.instance().getBodiesList().add(am);
 			}
 
 		} catch (SAXException ex) {
-			AssetsManager.instance().getList().clear();
+			ObjectsManager.instance().getBodiesList().clear();
 			throw new IOException("XML file was corrupted");
 		} catch (ParserConfigurationException ex) {
 		} catch (XPathExpressionException ex) {
@@ -387,14 +387,14 @@ public class IoManager extends ChangeableObject {
 					polygons[j] = new PolygonModel(vertices);
 				}
 
-				AssetModel am = new AssetModel(path);
+				RigidBodyModel am = new RigidBodyModel(path);
 				am.getShapes().addAll(Arrays.asList(shapes));
 				am.getPolygons().addAll(Arrays.asList(polygons));
-				AssetsManager.instance().getList().add(am);
+				ObjectsManager.instance().getBodiesList().add(am);
 			}
 
 		} catch (JSONException ex) {
-			AssetsManager.instance().getList().clear();
+			ObjectsManager.instance().getBodiesList().clear();
 			throw new IOException("JSON file was corrupted");
 		}
 	}
@@ -429,10 +429,10 @@ public class IoManager extends ChangeableObject {
 				polygons[i] = new PolygonModel(vertices);
 			}
 
-			AssetModel am = new AssetModel(path);
+			RigidBodyModel am = new RigidBodyModel(path);
 			am.getShapes().addAll(Arrays.asList(shapes));
 			am.getPolygons().addAll(Arrays.asList(polygons));
-			AssetsManager.instance().getList().add(am);
+			ObjectsManager.instance().getBodiesList().add(am);
 		}
 	}
 
