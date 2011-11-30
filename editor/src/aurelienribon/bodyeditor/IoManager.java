@@ -51,6 +51,7 @@ public class IoManager extends ChangeableObject {
 	// Output file
 	// -------------------------------------------------------------------------
 
+	public  static final String PROP_OUTPUTFILE = "outputFile";
 	private File outputFile;
 
 	public File getOutputFile() {
@@ -59,7 +60,7 @@ public class IoManager extends ChangeableObject {
 
 	public void setOutputFile(File outputFile) {
 		this.outputFile = outputFile;
-		firePropertyChanged("outputFile");
+		firePropertyChanged(PROP_OUTPUTFILE);
 	}
 
 	/**
@@ -145,14 +146,14 @@ public class IoManager extends ChangeableObject {
 		Element assetsElem = doc.createElement("assets");
 		doc.appendChild(assetsElem);
 
-		for (RigidBodyModel am : ObjectsManager.instance().getRigidBodiesList()) {
-			Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
+		for (RigidBodyModel body : ObjectsManager.instance().getRigidBodies()) {
+			Vector2 normalizeCoeff = getNormalizeCoeff(body.getImagePath());
 
 			Element assetElem = doc.createElement("asset");
-			assetElem.setAttribute("relativePath", relativize(am.getPath()));
+			assetElem.setAttribute("relativePath", relativize(body.getImagePath()));
 			assetsElem.appendChild(assetElem);
 
-			for (ShapeModel shape : am.getShapes()) {
+			for (ShapeModel shape : body.getShapes()) {
 				Element shapeElem = doc.createElement("shape");
 				assetElem.appendChild(shapeElem);
 				for (Vector2 vertex : shape.getVertices()) {
@@ -163,7 +164,7 @@ public class IoManager extends ChangeableObject {
 				}
 			}
 
-			for (PolygonModel polygon : am.getPolygons()) {
+			for (PolygonModel polygon : body.getPolygons()) {
 				Element polygonElem = doc.createElement("polygon");
 				assetElem.appendChild(polygonElem);
 				for (Vector2 vertex : polygon.getVertices()) {
@@ -192,16 +193,16 @@ public class IoManager extends ChangeableObject {
 			JSONArray assetsElem = new JSONArray();
 			doc.put("assets", assetsElem);
 
-			for (RigidBodyModel am : ObjectsManager.instance().getRigidBodiesList()) {
-				Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
+			for (RigidBodyModel body : ObjectsManager.instance().getRigidBodies()) {
+				Vector2 normalizeCoeff = getNormalizeCoeff(body.getImagePath());
 
 				JSONObject assetElem = new JSONObject();
-				assetElem.put("relativePath", relativize(am.getPath()));
+				assetElem.put("relativePath", relativize(body.getImagePath()));
 				assetsElem.put(assetElem);
 
 				JSONArray shapesElem = new JSONArray();
 				assetElem.put("shapes", shapesElem);
-				for (ShapeModel shape : am.getShapes()) {
+				for (ShapeModel shape : body.getShapes()) {
 					JSONObject shapeElem = new JSONObject();
 					shapesElem.put(shapeElem);
 					JSONArray verticesElem = new JSONArray();
@@ -216,7 +217,7 @@ public class IoManager extends ChangeableObject {
 
 				JSONArray polygonsElem = new JSONArray();
 				assetElem.put("polygons", polygonsElem);
-				for (PolygonModel shape : am.getPolygons()) {
+				for (PolygonModel shape : body.getPolygons()) {
 					JSONObject polygonElem = new JSONObject();
 					polygonsElem.put(polygonElem);
 					JSONArray verticesElem = new JSONArray();
@@ -240,14 +241,14 @@ public class IoManager extends ChangeableObject {
 	private void exportAsBinary() throws IOException {
 		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
 
-		for (RigidBodyModel am : ObjectsManager.instance().getRigidBodiesList()) {
-			Vector2 normalizeCoeff = getNormalizeCoeff(am.getPath());
+		for (RigidBodyModel body : ObjectsManager.instance().getRigidBodies()) {
+			Vector2 normalizeCoeff = getNormalizeCoeff(body.getImagePath());
 
-			String name = relativize(am.getPath());
+			String name = relativize(body.getImagePath());
 			os.writeUTF(name);
 
-			os.writeInt(am.getShapes().size());
-			for (ShapeModel shape : am.getShapes()) {
+			os.writeInt(body.getShapes().size());
+			for (ShapeModel shape : body.getShapes()) {
 				os.writeInt(shape.getVertices().size());
 				for (Vector2 vertex : shape.getVertices()) {
 					os.writeFloat(vertex.x / normalizeCoeff.x);
@@ -255,8 +256,8 @@ public class IoManager extends ChangeableObject {
 				}
 			}
 
-			os.writeInt(am.getPolygons().size());
-			for (PolygonModel polygon : am.getPolygons()) {
+			os.writeInt(body.getPolygons().size());
+			for (PolygonModel polygon : body.getPolygons()) {
 				os.writeInt(polygon.getVertices().size());
 				for (Vector2 vertex : polygon.getVertices()) {
 					os.writeFloat(vertex.x / normalizeCoeff.x);
@@ -282,7 +283,7 @@ public class IoManager extends ChangeableObject {
 		if (outputFile == null || !outputFile.isFile())
 			throw new IOException("output file was not set");
 
-		ObjectsManager.instance().getRigidBodiesList().clear();
+		ObjectsManager.instance().getRigidBodies().clear();
 		String ext = FilenameUtils.getExtension(outputFile.getName());
 		if (ext.equalsIgnoreCase("xml")) {
 			importAsXml();
@@ -330,14 +331,15 @@ public class IoManager extends ChangeableObject {
 					polygons[j] = new PolygonModel(vertices);
 				}
 
-				RigidBodyModel am = new RigidBodyModel(path);
-				am.getShapes().addAll(Arrays.asList(shapes));
-				am.getPolygons().addAll(Arrays.asList(polygons));
-				ObjectsManager.instance().getRigidBodiesList().add(am);
+				RigidBodyModel body = new RigidBodyModel();
+				body.setImagePath(path);
+				body.getShapes().addAll(Arrays.asList(shapes));
+				body.getPolygons().addAll(Arrays.asList(polygons));
+				ObjectsManager.instance().getRigidBodies().add(body);
 			}
 
 		} catch (SAXException ex) {
-			ObjectsManager.instance().getRigidBodiesList().clear();
+			ObjectsManager.instance().getRigidBodies().clear();
 			throw new IOException("XML file was corrupted");
 		} catch (ParserConfigurationException ex) {
 		} catch (XPathExpressionException ex) {
@@ -387,14 +389,15 @@ public class IoManager extends ChangeableObject {
 					polygons[j] = new PolygonModel(vertices);
 				}
 
-				RigidBodyModel am = new RigidBodyModel(path);
-				am.getShapes().addAll(Arrays.asList(shapes));
-				am.getPolygons().addAll(Arrays.asList(polygons));
-				ObjectsManager.instance().getRigidBodiesList().add(am);
+				RigidBodyModel body = new RigidBodyModel();
+				body.setImagePath(path);
+				body.getShapes().addAll(Arrays.asList(shapes));
+				body.getPolygons().addAll(Arrays.asList(polygons));
+				ObjectsManager.instance().getRigidBodies().add(body);
 			}
 
 		} catch (JSONException ex) {
-			ObjectsManager.instance().getRigidBodiesList().clear();
+			ObjectsManager.instance().getRigidBodies().clear();
 			throw new IOException("JSON file was corrupted");
 		}
 	}
@@ -429,10 +432,11 @@ public class IoManager extends ChangeableObject {
 				polygons[i] = new PolygonModel(vertices);
 			}
 
-			RigidBodyModel am = new RigidBodyModel(path);
-			am.getShapes().addAll(Arrays.asList(shapes));
-			am.getPolygons().addAll(Arrays.asList(polygons));
-			ObjectsManager.instance().getRigidBodiesList().add(am);
+			RigidBodyModel body = new RigidBodyModel();
+			body.setImagePath(path);
+			body.getShapes().addAll(Arrays.asList(shapes));
+			body.getPolygons().addAll(Arrays.asList(polygons));
+			ObjectsManager.instance().getRigidBodies().add(body);
 		}
 	}
 

@@ -1,7 +1,7 @@
-package aurelienribon.bodyeditor.renderpanel.input;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.renderpanel.RenderPanel;
+import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
@@ -39,7 +39,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean scrolled(int amount) {
-		RenderPanel app = AppManager.instance().getRenderPanel();
+		Canvas app = AppManager.instance().getRenderPanel();
 		int[] zl = app.getZoomLevels();
 
 		if (app.getZoom() == zl[0] && amount < 0) {

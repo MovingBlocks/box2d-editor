@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel.input;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;

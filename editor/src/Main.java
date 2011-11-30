@@ -1,7 +1,5 @@
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.IoManager;
-import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.ui.MainWindow;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
@@ -48,33 +46,18 @@ public class Main {
     }
 
 	private static void parseArgs(String[] args) {
-		final String ARG_PRJ_FILE = "prjfile";
-		final String ARG_ASSETS_FILES = "assets";
+		String ARG_PROJECT_PATH = "project";
 
-		String prjFilePath = getArg(args, ARG_PRJ_FILE);
-		if (!prjFilePath.equals("")) {
-			File file = new File(prjFilePath);
+		String projectPath = getArg(args, ARG_PROJECT_PATH);
+		if (!projectPath.equals("")) {
+			File file = new File(projectPath);
 			if (!file.isFile()) {
 				try {
 					file.createNewFile();
 					file = file.getCanonicalFile();
 					IoManager.instance().setOutputFile(file);
 				} catch (IOException ex) {
-					System.err.println("Cannot use file: " + prjFilePath);
-				}
-			}
-		}
-
-		String assetsList = getArg(args, ARG_ASSETS_FILES);
-		String[] assetsPaths = assetsList.split(";");
-		for (String path : assetsPaths) {
-			File file = new File(path);
-			if (file.exists()) {
-				try {
-					String fullpath = file.getCanonicalPath();
-					ObjectsManager.instance().getRigidBodiesList().add(new RigidBodyModel(fullpath));
-				} catch (IOException ex) {
-					System.err.println("Cannot use file: " + path);
+					System.err.println("Cannot use file: " + projectPath);
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.renderpanel.input;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
