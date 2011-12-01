@@ -1,10 +1,6 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.IoManager;
-import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
-import aurelienribon.bodyeditor.Settings;
 import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
@@ -88,13 +84,6 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        renderPanelWrapper = new javax.swing.JPanel();
-        renderPanel = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        tools_insertPointsBtn = new javax.swing.JButton();
-        tools_removePointsBtn = new javax.swing.JButton();
-        tools_clearPointsBtn = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         sidePanel = new javax.swing.JPanel();
         logoPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -105,116 +94,14 @@ public class MainWindow extends javax.swing.JFrame {
         cfg_newProjectBtn = new javax.swing.JButton();
         cfg_loadProjectBtn = new javax.swing.JButton();
         cfg_saveBtn = new javax.swing.JButton();
-        optionsPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        shape_drawShapeChk = new javax.swing.JCheckBox();
-        shape_drawAssetOpacity50Chk = new javax.swing.JCheckBox();
-        shape_drawAssetChk = new javax.swing.JCheckBox();
-        shape_drawPolysChk = new javax.swing.JCheckBox();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        shape_grigGapSpinner = new javax.swing.JSpinner();
-        shape_polygonizerCbox = new javax.swing.JComboBox();
-        shape_drawGridChk = new javax.swing.JCheckBox();
-        shape_enableSnapToGridChk = new javax.swing.JCheckBox();
         manageAssetsPanel = new aurelienribon.bodyeditor.ui.ObjectsPanel();
+        renderPanelWrapper = new javax.swing.JPanel();
+        renderPanel = new javax.swing.JPanel();
+        bottomPanel = new javax.swing.JPanel();
+        rigidBodyOptionsPanel1 = new aurelienribon.bodyeditor.ui.RigidBodyOptionsPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Physics Body Editor");
-
-        renderPanelWrapper.setBackground(Theme.MAIN_BACKGROUND);
-
-        renderPanel.setBackground(Theme.MAIN_ALT_BACKGROUND);
-        renderPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, Theme.SEPARATOR));
-        renderPanel.setLayout(new java.awt.BorderLayout());
-
-        jPanel3.setBorder(new aurelienribon.utils.ui.GroupBorder());
-
-        tools_insertPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_add.png"))); // NOI18N
-        tools_insertPointsBtn.setText("Insert point(s)");
-        tools_insertPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tools_insertPointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
-        tools_insertPointsBtn.setOpaque(false);
-        tools_insertPointsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tools_insertPointsBtnActionPerformed(evt);
-            }
-        });
-
-        tools_removePointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_remove.png"))); // NOI18N
-        tools_removePointsBtn.setText("Remove point(s)");
-        tools_removePointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tools_removePointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
-        tools_removePointsBtn.setOpaque(false);
-        tools_removePointsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tools_removePointsBtnActionPerformed(evt);
-            }
-        });
-
-        tools_clearPointsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_delete.png"))); // NOI18N
-        tools_clearPointsBtn.setText("Clear all points");
-        tools_clearPointsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tools_clearPointsBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
-        tools_clearPointsBtn.setOpaque(false);
-        tools_clearPointsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tools_clearPointsBtnActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Tools");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(tools_insertPointsBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tools_removePointsBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tools_clearPointsBtn)
-                .addContainerGap(239, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tools_insertPointsBtn)
-                    .addComponent(tools_removePointsBtn)
-                    .addComponent(tools_clearPointsBtn))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout renderPanelWrapperLayout = new javax.swing.GroupLayout(renderPanelWrapper);
-        renderPanelWrapper.setLayout(renderPanelWrapperLayout);
-        renderPanelWrapperLayout.setHorizontalGroup(
-            renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
-                .addGroup(renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        renderPanelWrapperLayout.setVerticalGroup(
-            renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        getContentPane().add(renderPanelWrapper, java.awt.BorderLayout.CENTER);
 
         sidePanel.setBackground(Theme.MAIN_BACKGROUND);
 
@@ -236,7 +123,7 @@ public class MainWindow extends javax.swing.JFrame {
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -302,9 +189,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(configPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(configPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cfg_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                    .addComponent(cfg_outputFileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                     .addGroup(configPanelLayout.createSequentialGroup()
-                        .addComponent(cfg_newProjectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                        .addComponent(cfg_newProjectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cfg_loadProjectBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -325,167 +212,8 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         aurelienribon.utils.ui.GroupBorder groupBorder2 = new aurelienribon.utils.ui.GroupBorder();
-        groupBorder2.setTitle("Options");
-        optionsPanel.setBorder(groupBorder2);
-
-        jPanel1.setOpaque(false);
-
-        shape_drawShapeChk.setSelected(true);
-        shape_drawShapeChk.setText("Draw shapes");
-        shape_drawShapeChk.setOpaque(false);
-        shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawShapeChkActionPerformed(evt);
-            }
-        });
-
-        shape_drawAssetOpacity50Chk.setText("...with opacity at 50%");
-        shape_drawAssetOpacity50Chk.setOpaque(false);
-        shape_drawAssetOpacity50Chk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetOpacity50ChkActionPerformed(evt);
-            }
-        });
-
-        shape_drawAssetChk.setSelected(true);
-        shape_drawAssetChk.setText("Draw asset");
-        shape_drawAssetChk.setOpaque(false);
-        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetChkActionPerformed(evt);
-            }
-        });
-
-        shape_drawPolysChk.setSelected(true);
-        shape_drawPolysChk.setText("Draw convex polygons");
-        shape_drawPolysChk.setOpaque(false);
-        shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawPolysChkActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(shape_drawShapeChk)
-                    .addComponent(shape_drawPolysChk)
-                    .addComponent(shape_drawAssetChk)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(shape_drawAssetOpacity50Chk)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_drawAssetChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_drawAssetOpacity50Chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_drawShapeChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_drawPolysChk)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, Theme.SEPARATOR));
-        jPanel4.setOpaque(false);
-
-        jLabel6.setText("Polygonizer:");
-
-        jLabel9.setText("Grid gap (pixels):");
-
-        shape_grigGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
-        shape_grigGapSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                shape_grigGapSpinnerStateChanged(evt);
-            }
-        });
-
-        shape_polygonizerCbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BAYAZIT", "EWJORDAN" }));
-        shape_polygonizerCbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_polygonizerCboxActionPerformed(evt);
-            }
-        });
-
-        shape_drawGridChk.setText("Draw grid");
-        shape_drawGridChk.setOpaque(false);
-        shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawGridChkActionPerformed(evt);
-            }
-        });
-
-        shape_enableSnapToGridChk.setText("Enable snap-to-grid");
-        shape_enableSnapToGridChk.setOpaque(false);
-        shape_enableSnapToGridChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_enableSnapToGridChkActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_grigGapSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_polygonizerCbox, 0, 90, Short.MAX_VALUE))
-                    .addComponent(shape_enableSnapToGridChk)
-                    .addComponent(shape_drawGridChk))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(shape_drawGridChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shape_enableSnapToGridChk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(shape_grigGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(shape_polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
-        optionsPanel.setLayout(optionsPanelLayout);
-        optionsPanelLayout.setHorizontalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        optionsPanelLayout.setVerticalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        aurelienribon.utils.ui.GroupBorder groupBorder3 = new aurelienribon.utils.ui.GroupBorder();
-        groupBorder3.setTitle("Images");
-        manageAssetsPanel.setBorder(groupBorder3);
+        groupBorder2.setTitle("Bodies & Objects");
+        manageAssetsPanel.setBorder(groupBorder2);
 
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
         sidePanel.setLayout(sidePanelLayout);
@@ -494,8 +222,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(manageAssetsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                    .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(manageAssetsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                     .addComponent(logoPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(configPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -507,13 +234,54 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(configPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(manageAssetsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                .addComponent(manageAssetsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         getContentPane().add(sidePanel, java.awt.BorderLayout.WEST);
+
+        renderPanelWrapper.setBackground(Theme.MAIN_BACKGROUND);
+
+        renderPanel.setBackground(Theme.MAIN_ALT_BACKGROUND);
+        renderPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, Theme.SEPARATOR));
+        renderPanel.setLayout(new java.awt.BorderLayout());
+
+        bottomPanel.setBorder(new aurelienribon.utils.ui.GroupBorder());
+
+        rigidBodyOptionsPanel1.setOpaque(false);
+
+        javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
+        bottomPanel.setLayout(bottomPanelLayout);
+        bottomPanelLayout.setHorizontalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(rigidBodyOptionsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        bottomPanelLayout.setVerticalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(rigidBodyOptionsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        javax.swing.GroupLayout renderPanelWrapperLayout = new javax.swing.GroupLayout(renderPanelWrapper);
+        renderPanelWrapper.setLayout(renderPanelWrapperLayout);
+        renderPanelWrapperLayout.setHorizontalGroup(
+            renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
+                .addGroup(renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        renderPanelWrapperLayout.setVerticalGroup(
+            renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        getContentPane().add(renderPanelWrapper, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -560,86 +328,21 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_cfg_saveBtnActionPerformed
 
-	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
-		Settings.isShapeDrawn = shape_drawShapeChk.isSelected();
-	}//GEN-LAST:event_shape_drawShapeChkActionPerformed
-
-	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
-		Settings.isPolygonDrawn = shape_drawPolysChk.isSelected();
-	}//GEN-LAST:event_shape_drawPolysChkActionPerformed
-
-	private void shape_drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetChkActionPerformed
-		Settings.isImageDrawn = shape_drawAssetChk.isSelected();
-	}//GEN-LAST:event_shape_drawAssetChkActionPerformed
-
-	private void shape_drawAssetOpacity50ChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetOpacity50ChkActionPerformed
-		Settings.isImageSemiOpacity = shape_drawAssetOpacity50Chk.isSelected();
-	}//GEN-LAST:event_shape_drawAssetOpacity50ChkActionPerformed
-
-	private void tools_insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_insertPointsBtnActionPerformed
-		AppManager.instance().insertPointBetweenSelected();
-		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-	}//GEN-LAST:event_tools_insertPointsBtnActionPerformed
-
-	private void tools_removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_removePointsBtnActionPerformed
-		AppManager.instance().removeSelectedPoints();
-		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-	}//GEN-LAST:event_tools_removePointsBtnActionPerformed
-
-	private void tools_clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tools_clearPointsBtnActionPerformed
-		ObjectsManager.instance().getSelectedRigidBody().clear();
-		AppManager.instance().getRenderPanel().createBody();
-	}//GEN-LAST:event_tools_clearPointsBtnActionPerformed
-
-	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
-		Settings.isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
-	}//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
-
-	private void shape_drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawGridChkActionPerformed
-		Settings.isGridShown = shape_drawGridChk.isSelected();
-	}//GEN-LAST:event_shape_drawGridChkActionPerformed
-
-	private void shape_grigGapSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_shape_grigGapSpinnerStateChanged
-		Settings.gridGap = (Integer)shape_grigGapSpinner.getValue();
-	}//GEN-LAST:event_shape_grigGapSpinnerStateChanged
-
-	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
-		Settings.polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
-		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-		AppManager.instance().getRenderPanel().createBody();
-	}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton cfg_loadProjectBtn;
     private javax.swing.JButton cfg_newProjectBtn;
     private javax.swing.JTextField cfg_outputFileLbl;
     private javax.swing.JButton cfg_saveBtn;
     private javax.swing.JPanel configPanel;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel logoHelpLbl;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JLabel logoWebsiteLbl;
     private aurelienribon.bodyeditor.ui.ObjectsPanel manageAssetsPanel;
-    private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel renderPanel;
     private javax.swing.JPanel renderPanelWrapper;
-    private javax.swing.JCheckBox shape_drawAssetChk;
-    private javax.swing.JCheckBox shape_drawAssetOpacity50Chk;
-    private javax.swing.JCheckBox shape_drawGridChk;
-    private javax.swing.JCheckBox shape_drawPolysChk;
-    private javax.swing.JCheckBox shape_drawShapeChk;
-    private javax.swing.JCheckBox shape_enableSnapToGridChk;
-    private javax.swing.JSpinner shape_grigGapSpinner;
-    private javax.swing.JComboBox shape_polygonizerCbox;
+    private aurelienribon.bodyeditor.ui.RigidBodyOptionsPanel rigidBodyOptionsPanel1;
     private javax.swing.JPanel sidePanel;
-    private javax.swing.JButton tools_clearPointsBtn;
-    private javax.swing.JButton tools_insertPointsBtn;
-    private javax.swing.JButton tools_removePointsBtn;
     // End of variables declaration//GEN-END:variables
 }
