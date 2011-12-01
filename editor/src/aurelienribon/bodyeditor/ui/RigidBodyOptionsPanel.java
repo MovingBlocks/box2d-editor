@@ -32,14 +32,14 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
         insertPointsBtn = new javax.swing.JButton();
         removePointsBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        shape_drawShapeChk = new javax.swing.JCheckBox();
-        shape_drawGridChk = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
-        shape_enableSnapToGridChk = new javax.swing.JCheckBox();
-        shape_drawPolysChk = new javax.swing.JCheckBox();
-        shape_drawAssetChk = new javax.swing.JCheckBox();
-        shape_polygonizerCbox = new javax.swing.JComboBox();
-        shape_gridGapSpinner = new javax.swing.JSpinner();
+        drawShapeChk = new javax.swing.JCheckBox();
+        drawGridChk = new javax.swing.JCheckBox();
+        enableSnapToGridChk = new javax.swing.JCheckBox();
+        drawPolysChk = new javax.swing.JCheckBox();
+        drawAssetChk = new javax.swing.JCheckBox();
+        polygonizerCbox = new javax.swing.JComboBox();
+        gridGapSpinner = new javax.swing.JSpinner();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -135,62 +135,62 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 10, 0, 0, Theme.MAIN_BACKGROUND));
         jPanel2.setOpaque(false);
 
-        shape_drawShapeChk.setSelected(true);
-        shape_drawShapeChk.setText("Draw shapes");
-        shape_drawShapeChk.setOpaque(false);
-        shape_drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawShapeChkActionPerformed(evt);
-            }
-        });
-
-        shape_drawGridChk.setText("Draw grid with gap (px):");
-        shape_drawGridChk.setOpaque(false);
-        shape_drawGridChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawGridChkActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Polygonizer:");
 
-        shape_enableSnapToGridChk.setText("Enable snap-to-grid");
-        shape_enableSnapToGridChk.setOpaque(false);
-        shape_enableSnapToGridChk.addActionListener(new java.awt.event.ActionListener() {
+        drawShapeChk.setSelected(true);
+        drawShapeChk.setText("Draw shapes");
+        drawShapeChk.setOpaque(false);
+        drawShapeChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_enableSnapToGridChkActionPerformed(evt);
+                drawShapeChkActionPerformed(evt);
             }
         });
 
-        shape_drawPolysChk.setSelected(true);
-        shape_drawPolysChk.setText("Draw convex polygons");
-        shape_drawPolysChk.setOpaque(false);
-        shape_drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
+        drawGridChk.setText("Draw grid with gap:");
+        drawGridChk.setOpaque(false);
+        drawGridChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawPolysChkActionPerformed(evt);
+                drawGridChkActionPerformed(evt);
             }
         });
 
-        shape_drawAssetChk.setSelected(true);
-        shape_drawAssetChk.setText("Draw background image");
-        shape_drawAssetChk.setOpaque(false);
-        shape_drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
+        enableSnapToGridChk.setText("Enable snap-to-grid");
+        enableSnapToGridChk.setOpaque(false);
+        enableSnapToGridChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_drawAssetChkActionPerformed(evt);
+                enableSnapToGridChkActionPerformed(evt);
             }
         });
 
-        shape_polygonizerCbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BAYAZIT", "EWJORDAN" }));
-        shape_polygonizerCbox.addActionListener(new java.awt.event.ActionListener() {
+        drawPolysChk.setSelected(true);
+        drawPolysChk.setText("Draw convex polygons");
+        drawPolysChk.setOpaque(false);
+        drawPolysChk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shape_polygonizerCboxActionPerformed(evt);
+                drawPolysChkActionPerformed(evt);
             }
         });
 
-        shape_gridGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
-        shape_gridGapSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+        drawAssetChk.setSelected(true);
+        drawAssetChk.setText("Draw background image");
+        drawAssetChk.setOpaque(false);
+        drawAssetChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawAssetChkActionPerformed(evt);
+            }
+        });
+
+        polygonizerCbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BAYAZIT", "EWJORDAN" }));
+        polygonizerCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                polygonizerCboxActionPerformed(evt);
+            }
+        });
+
+        gridGapSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.03f), Float.valueOf(0.0010f), Float.valueOf(1.0f), Float.valueOf(0.01f)));
+        gridGapSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                shape_gridGapSpinnerStateChanged(evt);
+                gridGapSpinnerStateChanged(evt);
             }
         });
 
@@ -201,21 +201,21 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(shape_drawAssetChk)
-                    .addComponent(shape_drawShapeChk)
-                    .addComponent(shape_drawPolysChk))
+                    .addComponent(drawAssetChk)
+                    .addComponent(drawShapeChk)
+                    .addComponent(drawPolysChk))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(shape_drawGridChk)
+                        .addComponent(drawGridChk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(shape_enableSnapToGridChk))
-                .addContainerGap())
+                        .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(enableSnapToGridChk))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,56 +223,56 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(shape_drawAssetChk)
+                        .addComponent(drawAssetChk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_drawShapeChk)
+                        .addComponent(drawShapeChk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_drawPolysChk))
+                        .addComponent(drawPolysChk))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(shape_drawGridChk)
-                            .addComponent(shape_gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(drawGridChk)
+                            .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(shape_enableSnapToGridChk)
+                        .addComponent(enableSnapToGridChk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(shape_polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
         add(jPanel2);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void shape_drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawShapeChkActionPerformed
-		Settings.isShapeDrawn = shape_drawShapeChk.isSelected();
-}//GEN-LAST:event_shape_drawShapeChkActionPerformed
+	private void drawShapeChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawShapeChkActionPerformed
+		Settings.isShapeDrawn = drawShapeChk.isSelected();
+}//GEN-LAST:event_drawShapeChkActionPerformed
 
-	private void shape_drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawAssetChkActionPerformed
-		Settings.isImageDrawn = shape_drawAssetChk.isSelected();
-}//GEN-LAST:event_shape_drawAssetChkActionPerformed
+	private void drawAssetChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawAssetChkActionPerformed
+		Settings.isImageDrawn = drawAssetChk.isSelected();
+}//GEN-LAST:event_drawAssetChkActionPerformed
 
-	private void shape_drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawPolysChkActionPerformed
-		Settings.isPolygonDrawn = shape_drawPolysChk.isSelected();
-}//GEN-LAST:event_shape_drawPolysChkActionPerformed
+	private void drawPolysChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawPolysChkActionPerformed
+		Settings.isPolygonDrawn = drawPolysChk.isSelected();
+}//GEN-LAST:event_drawPolysChkActionPerformed
 
-	private void shape_gridGapSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_shape_gridGapSpinnerStateChanged
-		Settings.gridGap = (Integer)shape_gridGapSpinner.getValue();
-}//GEN-LAST:event_shape_gridGapSpinnerStateChanged
+	private void gridGapSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridGapSpinnerStateChanged
+		Settings.gridGap = (Float)gridGapSpinner.getValue();
+}//GEN-LAST:event_gridGapSpinnerStateChanged
 
-	private void shape_polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_polygonizerCboxActionPerformed
-		Settings.polygonizer = Polygonizers.valueOf((String) shape_polygonizerCbox.getSelectedItem());
+	private void polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polygonizerCboxActionPerformed
+		Settings.polygonizer = Polygonizers.valueOf((String) polygonizerCbox.getSelectedItem());
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 		AppManager.instance().getRenderPanel().createBody();
-}//GEN-LAST:event_shape_polygonizerCboxActionPerformed
+}//GEN-LAST:event_polygonizerCboxActionPerformed
 
-	private void shape_drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_drawGridChkActionPerformed
-		Settings.isGridShown = shape_drawGridChk.isSelected();
-}//GEN-LAST:event_shape_drawGridChkActionPerformed
+	private void drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawGridChkActionPerformed
+		Settings.isGridShown = drawGridChk.isSelected();
+}//GEN-LAST:event_drawGridChkActionPerformed
 
-	private void shape_enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shape_enableSnapToGridChkActionPerformed
-		Settings.isSnapToGridEnabled = shape_enableSnapToGridChk.isSelected();
-}//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
+	private void enableSnapToGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableSnapToGridChkActionPerformed
+		Settings.isSnapToGridEnabled = enableSnapToGridChk.isSelected();
+}//GEN-LAST:event_enableSnapToGridChkActionPerformed
 
 	private void insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertPointsBtnActionPerformed
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
@@ -327,20 +327,20 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearPointsBtn;
+    private javax.swing.JCheckBox drawAssetChk;
+    private javax.swing.JCheckBox drawGridChk;
+    private javax.swing.JCheckBox drawPolysChk;
+    private javax.swing.JCheckBox drawShapeChk;
+    private javax.swing.JCheckBox enableSnapToGridChk;
+    private javax.swing.JSpinner gridGapSpinner;
     private javax.swing.JButton insertPointsBtn;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JComboBox polygonizerCbox;
     private javax.swing.JButton removePointsBtn;
     private javax.swing.JButton setBackgroundImageBtn;
-    private javax.swing.JCheckBox shape_drawAssetChk;
-    private javax.swing.JCheckBox shape_drawGridChk;
-    private javax.swing.JCheckBox shape_drawPolysChk;
-    private javax.swing.JCheckBox shape_drawShapeChk;
-    private javax.swing.JCheckBox shape_enableSnapToGridChk;
-    private javax.swing.JSpinner shape_gridGapSpinner;
-    private javax.swing.JComboBox shape_polygonizerCbox;
     // End of variables declaration//GEN-END:variables
 
 	// -------------------------------------------------------------------------

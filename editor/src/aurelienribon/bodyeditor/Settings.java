@@ -12,6 +12,6 @@ public class Settings {
 	public static boolean isBackgroundLight = false;
 	public static boolean isSnapToGridEnabled = false;
 	public static boolean isGridShown = false;
-	public static int gridGap = 10;
+	public static float gridGap = 0.03f;
 	public static Polygonizers polygonizer = Polygonizers.BAYAZIT;
 }
