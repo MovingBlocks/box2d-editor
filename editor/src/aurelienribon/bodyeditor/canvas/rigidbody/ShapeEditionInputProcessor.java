@@ -119,7 +119,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		float zoom = canvas.getCamera().zoom;
 
 		for (Vector2 v : getAllShapePoints())
-			if (v.dst(p) < 10*zoom)
+			if (v.dst(p) < 0.025f*zoom)
 				AppManager.instance().nearestPoint = v;
 
 		return false;

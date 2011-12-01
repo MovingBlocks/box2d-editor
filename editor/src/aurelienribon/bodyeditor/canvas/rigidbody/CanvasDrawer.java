@@ -124,7 +124,7 @@ public class CanvasDrawer {
 	}
 
 	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint, float zoom) {
-		float w = 10 * zoom;
+		float w = 0.025f * zoom;
 
 		for (ShapeModel shape : shapes) {
 			for (Vector2 p : shape.getVertices()) {
@@ -155,7 +155,7 @@ public class CanvasDrawer {
 	}
 
 	private void drawBallThrowPath(Vector2 p1, Vector2 p2, float zoom) {
-		float w = 20 * zoom;
+		float w = 0.03f * zoom;
 		if (p1 != null && p2 != null) {
 			drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);
 			drawer.fillRect(p2.cpy().sub(w/2, w/2), w, w, BALLTHROWPATH_COLOR);

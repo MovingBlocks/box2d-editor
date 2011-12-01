@@ -90,7 +90,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 			float zoom = canvas.getCamera().zoom;
 
 			if (!lastShape.isClosed() && vs.size() >= 3)
-				if (vs.get(0).dst(p) < 10*zoom)
+				if (vs.get(0).dst(p) < 0.025f*zoom)
 					AppManager.instance().nearestPoint = vs.get(0);
 		}
 
