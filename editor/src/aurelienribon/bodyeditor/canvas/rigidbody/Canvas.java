@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.ObjectsManager;
-import aurelienribon.bodyeditor.OptionsManager;
+import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
@@ -29,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -44,23 +45,28 @@ public class Canvas implements ApplicationListener {
 	private CanvasDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
-	private OrthographicCamera camera;
+	private OrthographicCamera worldCamera;
+	private OrthographicCamera screenCamera;
+
 	private Texture backgroundLightTexture;
 	private Texture backgroundDarkTexture;
-
+	private Texture ballTexture;
 	private Sprite bodySprite;
 
 	private World world;
-	private Texture ballTexture;
+
+	// -------------------------------------------------------------------------
+	// Gdx API
+	// -------------------------------------------------------------------------
 	
 	@Override
 	public void create() {
+		drawer = new CanvasDrawer();
 		sb = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.update();
-		drawer = new CanvasDrawer(camera);
+		worldCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -86,8 +92,8 @@ public class Canvas implements ApplicationListener {
 					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 					bodySprite = new Sprite(model.getTexture());
 					bodySprite.setPosition(0, 0);
-					camera.position.set(model.getTexture().getRegionWidth()/2, model.getTexture().getRegionHeight()/2, 0);
-					camera.update();
+					worldCamera.position.set(model.getTexture().getRegionWidth()/2, model.getTexture().getRegionHeight()/2, 0);
+					worldCamera.update();
 				}
 			}
 		});
@@ -95,9 +101,6 @@ public class Canvas implements ApplicationListener {
 
 	@Override
 	public void render() {
-		if (bodySprite != null)
-			bodySprite.setColor(1, 1, 1, OptionsManager.instance().isAssetDrawnWithOpacity50 ? 0.5f : 1f);
-
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		GL10 gl = Gdx.gl10;
@@ -110,7 +113,7 @@ public class Canvas implements ApplicationListener {
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
 		sb.disableBlending();
-		if (OptionsManager.instance().isBackgroundLight) {
+		if (Settings.isBackgroundLight) {
 			float tw = backgroundLightTexture.getWidth();
 			float th = backgroundLightTexture.getHeight();
 			sb.draw(backgroundLightTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
@@ -122,10 +125,12 @@ public class Canvas implements ApplicationListener {
 		sb.enableBlending();
 		sb.end();
 
-		sb.setProjectionMatrix(camera.combined);
+		sb.setProjectionMatrix(worldCamera.combined);
 		sb.begin();
-		if (bodySprite != null && OptionsManager.instance().isAssetDrawn)
-			bodySprite.draw(sb);
+		if (bodySprite != null) {
+			bodySprite.setColor(1, 1, 1, Settings.isImageSemiOpacity ? 0.5f : 1f);
+			if (Settings.isImageDrawn) bodySprite.draw(sb);
+		}
 		for (int i=0; i<ballsSprites.size(); i++) {
 			Sprite sp = ballsSprites.get(i);
 			Vector2 pos = ballsBodies.get(i).getWorldCenter().mul(PX_PER_METER).sub(sp.getWidth()/2, sp.getHeight()/2);
@@ -136,18 +141,14 @@ public class Canvas implements ApplicationListener {
 		}
 		sb.end();
 
-		if (OptionsManager.instance().isGridShown) {
-			OrthographicCamera cam = new OrthographicCamera(w, h);
-			cam.apply(gl);
-			drawer.drawGrid(w, h, OptionsManager.instance().gridGap);
-		}
-
-		camera.apply(gl);
-		drawer.draw();
+		screenCamera.apply(gl);
+		drawer.drawScreen(screenCamera);
+		worldCamera.apply(gl);
+		drawer.drawWorld(worldCamera);
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
-		font.draw(sb, "Zoom: " + zoom + "%", 5, 45);
+		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 5, 45);
 		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
 		sb.end();
 	}
@@ -156,9 +157,9 @@ public class Canvas implements ApplicationListener {
 	public void resize(int width, int height) {
 		GL10 gl = Gdx.gl10;
 		gl.glViewport(0, 0, width, height);
-		camera.viewportWidth = width;
-		camera.viewportHeight = height;
-		camera.update();
+		worldCamera.viewportWidth = width;
+		worldCamera.viewportHeight = height;
+		worldCamera.update();
 	}
 
 	@Override public void resume() {}
@@ -172,18 +173,22 @@ public class Canvas implements ApplicationListener {
 	private final Vector3 vec = new Vector3();
 
 	public Vector2 screenToWorld(int x, int y) {
-		camera.unproject(vec.set(x, y, 0));
+		worldCamera.unproject(vec.set(x, y, 0));
 		return new Vector2(vec.x, vec.y);
 	}
 
 	public Vector2 alignedScreenToWorld(int x, int y) {
 		Vector2 p = screenToWorld(x, y);
-		if (OptionsManager.instance().isSnapToGridEnabled) {
-			float gap = OptionsManager.instance().gridGap;
+		if (Settings.isSnapToGridEnabled) {
+			float gap = Settings.gridGap;
 			p.x = Math.round(p.x / gap) * gap;
 			p.y = Math.round(p.y / gap) * gap;
 		}
 		return p;
+	}
+
+	public OrthographicCamera getCamera() {
+		return worldCamera;
 	}
 
 	public void createBody() {
@@ -237,22 +242,6 @@ public class Canvas implements ApplicationListener {
 		sp.setSize(radius*2, radius*2);
 		sp.setOrigin(sp.getWidth()/2, sp.getHeight()/2);
 		ballsSprites.add(sp);
-	}
-
-	public OrthographicCamera getCamera() {
-		return camera;
-	}
-
-	public int getZoom() {
-		return zoom;
-	}
-
-	public void setZoom(int zoom) {
-		this.zoom = zoom;
-	}
-
-	public int[] getZoomLevels() {
-		return zoomLevels;
 	}
 
 	// -------------------------------------------------------------------------
