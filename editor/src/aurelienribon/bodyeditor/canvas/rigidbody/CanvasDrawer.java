@@ -9,6 +9,7 @@ import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.utils.gdx.PrimitiveDrawer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -24,6 +25,7 @@ public class CanvasDrawer {
 	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
+	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
 	private final PrimitiveDrawer drawer = new PrimitiveDrawer(new ImmediateModeRenderer());
 
@@ -37,11 +39,13 @@ public class CanvasDrawer {
 		}
 	}
 
-	public void drawWorld(OrthographicCamera camera) {
-		drawAxis(camera);
-
+	public void drawWorld(OrthographicCamera camera, Sprite bodySprite) {
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return;
+
+		drawAxis(camera);
+		if (bodySprite != null)
+			drawer.drawRect(0, 0, bodySprite.getWidth(), bodySprite.getHeight(), AXIS_COLOR, 1);
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
@@ -73,13 +77,13 @@ public class CanvasDrawer {
 	private void drawAxis(OrthographicCamera camera) {
 		float w = 0.03f * camera.zoom;
 
-		drawer.drawLine(0, 0, 1, 0, GRID_COLOR, 3);
-		drawer.drawLine(1, 0, 1-w, -w, GRID_COLOR, 3);
-		drawer.drawLine(1, 0, 1-w, +w, GRID_COLOR, 3);
+		drawer.drawLine(0, 0, 1, 0, AXIS_COLOR, 3);
+		drawer.drawLine(1, 0, 1-w, -w, AXIS_COLOR, 3);
+		drawer.drawLine(1, 0, 1-w, +w, AXIS_COLOR, 3);
 
-		drawer.drawLine(0, 0, 0, 1, GRID_COLOR, 3);
-		drawer.drawLine(0, 1, -w, 1-w, GRID_COLOR, 3);
-		drawer.drawLine(0, 1, +w, 1-w, GRID_COLOR, 3);
+		drawer.drawLine(0, 0, 0, 1, AXIS_COLOR, 3);
+		drawer.drawLine(0, 1, -w, 1-w, AXIS_COLOR, 3);
+		drawer.drawLine(0, 1, +w, 1-w, AXIS_COLOR, 3);
 	}
 
 	private void drawGrid(OrthographicCamera camera, int gapPx) {

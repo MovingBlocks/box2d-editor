@@ -76,10 +76,11 @@ public class Canvas implements ApplicationListener {
 		screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
-		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
-		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
+		
+		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor(this));
@@ -113,7 +114,11 @@ public class Canvas implements ApplicationListener {
 					bodySprite.setColor(1, 1, 1, 0.5f);
 
 					float bodySpriteRatio = bodySprite.getWidth() / bodySprite.getHeight();
-					bodySprite.setSize(1f, 1f/bodySpriteRatio);
+					if (bodySpriteRatio >= 1) {
+						bodySprite.setSize(1f, 1f/bodySpriteRatio);
+					} else {
+						bodySprite.setSize(1f*bodySpriteRatio, 1f);
+					}
 				}
 			}
 		});
@@ -161,7 +166,7 @@ public class Canvas implements ApplicationListener {
 		screenCamera.apply(gl);
 		drawer.drawScreen(screenCamera);
 		worldCamera.apply(gl);
-		drawer.drawWorld(worldCamera);
+		drawer.drawWorld(worldCamera, bodySprite);
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();

@@ -9,6 +9,7 @@ import aurelienribon.bodyeditor.models.RigidBodyModel;
 import java.awt.Window;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -274,24 +275,51 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_shape_enableSnapToGridChkActionPerformed
 
 	private void insertPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertPointsBtnActionPerformed
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) {
+			Window wnd = SwingUtilities.getWindowAncestor(this);
+			JOptionPane.showMessageDialog(wnd, "Please create or choose a rigid body first.");
+			return;
+		}
+
 		AppManager.instance().insertPointBetweenSelected();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 }//GEN-LAST:event_insertPointsBtnActionPerformed
 
 	private void removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePointsBtnActionPerformed
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) {
+			Window wnd = SwingUtilities.getWindowAncestor(this);
+			JOptionPane.showMessageDialog(wnd, "Please create or choose a rigid body first.");
+			return;
+		}
+
 		AppManager.instance().removeSelectedPoints();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 }//GEN-LAST:event_removePointsBtnActionPerformed
 
 	private void clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPointsBtnActionPerformed
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) {
+			Window wnd = SwingUtilities.getWindowAncestor(this);
+			JOptionPane.showMessageDialog(wnd, "Please create or choose a rigid body first.");
+			return;
+		}
+
 		ObjectsManager.instance().getSelectedRigidBody().clear();
 		AppManager.instance().getRenderPanel().createBody();
 }//GEN-LAST:event_clearPointsBtnActionPerformed
 
 	private void setBackgroundImageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setBackgroundImageBtnActionPerformed
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) {
+			Window wnd = SwingUtilities.getWindowAncestor(this);
+			JOptionPane.showMessageDialog(wnd, "Please create or choose a rigid body first.");
+			return;
+		}
+
 		File image = promptImage();
 		if (image != null && image.isFile()) {
-			RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 			model.setImagePath(image.getPath());
 			ObjectsManager.instance().setSelectedRigidBody(model);
 		}
