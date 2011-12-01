@@ -75,7 +75,7 @@ public class Canvas implements ApplicationListener {
 		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
 
 		InputMultiplexer im = new InputMultiplexer();
-		im.addProcessor(new PanZoomInputProcessor());
+		im.addProcessor(new PanZoomInputProcessor(this));
 		im.addProcessor(new BallThrowInputProcessor());
 		im.addProcessor(new ShapeCreationInputProcessor());
 		im.addProcessor(new ShapeEditionInputProcessor());
