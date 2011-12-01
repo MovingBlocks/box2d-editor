@@ -2,8 +2,8 @@ package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.Polygon;
@@ -16,63 +16,67 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeEditionInputProcessor extends InputAdapter {
-	boolean isActive = false;
+	private final Canvas canvas;
+	private boolean isActive = false;
 	private Vector2 draggedPoint;
+
+	public ShapeEditionInputProcessor(Canvas canvas) {
+		this.canvas = canvas;
+	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		boolean isValid = button == Buttons.LEFT;
-
-		if (!isValid)
-			return false;
-		isActive = true;
+		isActive = InputHelper.isShapeEditionEnabled(button);
+		if (!isActive) return false;
 
 		draggedPoint = AppManager.instance().nearestPoint;
 		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
 
 		if (draggedPoint == null) {
 			selectedPoints.clear();
-			Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
+			Vector2 p = canvas.screenToWorld(x, y);
 			AppManager.instance().mousePath.add(p);
 		} else if (!selectedPoints.contains(draggedPoint)) {
 			selectedPoints.clear();
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!isActive)
-			return false;
+		if (!isActive) return false;
 		isActive = false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 
 		if (draggedPoint != null) {
 			draggedPoint = null;
-			ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-			AppManager.instance().getRenderPanel().createBody();
+			model.computePolygons();
+			canvas.createBody();
 		}
 
 		List<Vector2> mousePath = AppManager.instance().mousePath;
+
 		if (mousePath.size() > 2) {
-			Vector2[] polygonPoints = mousePath.toArray(new Vector2[mousePath.size()]);
-			Vector2[] testedPoints = getAllShapePoints();
-			Vector2[] result = getPointsInPolygon(polygonPoints, testedPoints);
-			Collections.addAll(AppManager.instance().selectedPoints, result);
+			List<Vector2> circledPoints = getPointsInPolygon(mousePath, getAllShapePoints());
+			AppManager.instance().selectedPoints.addAll(circledPoints);
 		}
+
 		mousePath.clear();
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!isActive)
-			return false;
+		if (!isActive) return false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 
 		if (draggedPoint != null) {
-			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
-			ObjectsManager.instance().getSelectedRigidBody().getPolygons().clear();
-			AppManager.instance().getRenderPanel().createBody();
+			Vector2 p = canvas.alignedScreenToWorld(x, y);
+			model.getPolygons().clear();
+			canvas.createBody();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
@@ -84,20 +88,25 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 					sp.add(dx, dy);
 			}
 		} else {
-			Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
+			Vector2 p = canvas.screenToWorld(x, y);
 			AppManager.instance().mousePath.add(p);
 		}
 		
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchMoved(int x, int y) {
+		if (!isActive) return false;
+		
 		// Nearest point computation
-		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
+
+		Vector2 p = canvas.screenToWorld(x, y);
 		AppManager.instance().nearestPoint = null;
+		float zoom = canvas.getCamera().zoom;
+
 		for (Vector2 v : getAllShapePoints())
-			if (v.dst(p) < 10 * AppManager.instance().getRenderPanel().getCamera().zoom)
+			if (v.dst(p) < 10*zoom)
 				AppManager.instance().nearestPoint = v;
 
 		return false;
@@ -105,24 +114,27 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	// -------------------------------------------------------------------------
 
-	private Vector2[] getPointsInPolygon(Vector2[] polygonPoints, Vector2[] points) {
+	private List<Vector2> getPointsInPolygon(List<Vector2> polygonPoints, List<Vector2> testedPoints) {
 		List<Vector2> circledPoints = new ArrayList<Vector2>();
 		Polygon polygon = new Polygon();
 
 		for (Vector2 p : polygonPoints)
 			polygon.addPoint((int)(p.x * 1000), (int)(p.y * 1000));
 
-		for (Vector2 p : points)
+		for (Vector2 p : testedPoints)
 			if (polygon.contains(p.x * 1000, p.y * 1000))
 				circledPoints.add(p);
 
-		return circledPoints.toArray(new Vector2[0]);
+		return Collections.unmodifiableList(circledPoints);
 	}
 
-	private Vector2[] getAllShapePoints() {
+	private List<Vector2> getAllShapePoints() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		for (ShapeModel shape : ObjectsManager.instance().getSelectedRigidBody().getShapes())
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+
+		for (ShapeModel shape : model.getShapes())
 			points.addAll(shape.getVertices());
-		return points.toArray(new Vector2[points.size()]);
+
+		return Collections.unmodifiableList(points);
 	}
 }
