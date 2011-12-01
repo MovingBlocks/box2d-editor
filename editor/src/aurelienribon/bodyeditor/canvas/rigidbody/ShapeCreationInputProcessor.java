@@ -2,8 +2,8 @@ package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -14,68 +14,83 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeCreationInputProcessor extends InputAdapter {
+	private final Canvas canvas;
 	boolean isActive = false;
+
+	public ShapeCreationInputProcessor(Canvas canvas) {
+		this.canvas = canvas;
+	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		boolean isValid = button == Buttons.LEFT && InputHelper.isShapeCreationKeyDown();
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 
-		if (!isValid)
-			return false;
-		isActive = true;
+		isActive = button == Buttons.LEFT && InputHelper.isShapeCreationKeyDown() && model != null;
+		if (!isActive) return false;
 
-		List<ShapeModel> selectionShapes = ObjectsManager.instance().getSelectedRigidBody().getShapes();
-		ShapeModel lastShape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
+		// Get the current edited shape
+
+		List<ShapeModel> shapes = model.getShapes();
+		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
 
 		if (lastShape == null || lastShape.isClosed()) {
 			lastShape = new ShapeModel();
-			selectionShapes.add(lastShape);
+			shapes.add(lastShape);
 		}
 
-		if (lastShape.getVertices().size() >= 3 && AppManager.instance().nearestPoint == lastShape.getVertices().get(0)) {
+		// Add a vertex to the shape or close it
+
+		List<Vector2> vs = lastShape.getVertices();
+		Vector2 nearestPoint = AppManager.instance().nearestPoint;
+
+		if (vs.size() >= 3 && nearestPoint == vs.get(0)) {
 			lastShape.close();
-			ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-			AppManager.instance().getRenderPanel().createBody();
+			model.computePolygons();
+			canvas.createBody();
 		} else {
-			Vector2 p = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
-			lastShape.getVertices().add(p);
+			Vector2 p = canvas.alignedScreenToWorld(x, y);
+			vs.add(p);
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!isActive)
-			return false;
 		isActive = false;
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!isActive)
-			return false;
+		if (!isActive) return false;
 		touchMoved(x, y);
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchMoved(int x, int y) {
+		if (!isActive) return false;
+		
 		// Nearest point computation
-		Vector2 p1 = AppManager.instance().getRenderPanel().screenToWorld(x, y);
+
 		AppManager.instance().nearestPoint = null;
+		Vector2 p = canvas.screenToWorld(x, y);
 
-		List<ShapeModel> selectionShapes = ObjectsManager.instance().getSelectedRigidBody().getShapes();
-		ShapeModel shape = selectionShapes.isEmpty() ? null : selectionShapes.get(selectionShapes.size()-1);
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		List<ShapeModel> shapes = model.getShapes();
+		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
+		List<Vector2> vs = lastShape.getVertices();
+		float zoom = canvas.getCamera().zoom;
 
-		if (shape != null && !shape.isClosed() && shape.getVertices().size() >= 3)
-			if (shape.getVertices().get(0).dst(p1) < 10 * AppManager.instance().getRenderPanel().getCamera().zoom)
-				AppManager.instance().nearestPoint = shape.getVertices().get(0);
+		if (lastShape != null && !lastShape.isClosed() && vs.size() >= 3)
+			if (vs.get(0).dst(p) < 10*zoom)
+				AppManager.instance().nearestPoint = vs.get(0);
 
 		// Next point assignment
-		Vector2 p2 = AppManager.instance().getRenderPanel().alignedScreenToWorld(x, y);
-		AppManager.instance().nextPoint = p2;
+
+		p = canvas.alignedScreenToWorld(x, y);
+		AppManager.instance().nextPoint = p;
 		return false;
 	}
 }
