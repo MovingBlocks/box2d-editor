@@ -55,6 +55,8 @@ public class ObjectsPanel extends javax.swing.JPanel {
 
 					if (bodiesList.getSelectedValue() != selectedBody) bodiesList.setSelectedValue(selectedBody, true);
 					if (objectsList.getSelectedValue() != selectedObject) objectsList.setSelectedValue(selectedObject, true);
+
+					((AutoListModel)bodiesList.getModel()).forceRefresh();
 				}
 			}
 		});
@@ -146,7 +148,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			RigidBodyModel model = (RigidBodyModel)value;
 			String path = IoManager.instance().relativize(model.getImagePath());
 			String txt = model.getName();
-			if (!model.getImagePath().equals("")) txt += " (\"" + path + "\")";
+			if (!model.getImagePath().equals("")) txt += "  --  \"" + path + "\"";
 
 			label.setText(txt);
 
@@ -174,7 +176,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			DynamicObjectModel model = (DynamicObjectModel)value;
 			String txt = model.getName();
 			if (!model.getRigidBodies().isEmpty()) {
-				txt += " (" + model.getRigidBodies().get(0);
+				txt += "  (" + model.getRigidBodies().get(0);
 				for (int i=1; i<model.getRigidBodies().size(); i++)
 					txt += " + " + model.getRigidBodies().get(i).getName();
 				txt += ")";

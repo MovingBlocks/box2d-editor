@@ -39,10 +39,11 @@ import java.util.Random;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Canvas implements ApplicationListener {
-	private static final float PX_PER_METER = 50;
-	private final Random rand = new Random();
+	private static final float PX_PER_METER = 300;
 	private final List<Body> ballsBodies = new ArrayList<Body>();
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
+	private final Random rand = new Random();
+	private final Vector3 vec3 = new Vector3();
 
 	private CanvasDrawer drawer;
 	private SpriteBatch sb;
@@ -67,7 +68,11 @@ public class Canvas implements ApplicationListener {
 		sb = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
-		worldCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+		worldCamera = new OrthographicCamera(2, 2/ratio);
+		worldCamera.position.set(0.5f, 0.5f/ratio, 0);
+
 		screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
@@ -88,10 +93,12 @@ public class Canvas implements ApplicationListener {
 		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
-					worldCamera.position.set(0, 0, 0);
-					worldCamera.update();
-
 					clearWorld();
+					bodySprite = null;
+
+					float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+					worldCamera.position.set(0.5f, 0.5f/ratio, 0);
+					worldCamera.update();
 
 					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 					if (model == null) return;
@@ -103,8 +110,10 @@ public class Canvas implements ApplicationListener {
 
 					bodySprite = new Sprite(tex);
 					bodySprite.setPosition(0, 0);
-					worldCamera.position.set(bodySprite.getWidth()/2, bodySprite.getHeight()/2, 0);
-					worldCamera.update();
+					bodySprite.setColor(1, 1, 1, 0.5f);
+
+					float bodySpriteRatio = bodySprite.getWidth() / bodySprite.getHeight();
+					bodySprite.setSize(1f, 1f/bodySpriteRatio);
 				}
 			}
 		});
@@ -138,10 +147,7 @@ public class Canvas implements ApplicationListener {
 
 		sb.setProjectionMatrix(worldCamera.combined);
 		sb.begin();
-		if (bodySprite != null) {
-			bodySprite.setColor(1, 1, 1, Settings.isImageSemiOpacity ? 0.5f : 1f);
-			if (Settings.isImageDrawn) bodySprite.draw(sb);
-		}
+		if (bodySprite != null && Settings.isImageDrawn) bodySprite.draw(sb);
 		for (int i=0; i<ballsSprites.size(); i++) {
 			Sprite sp = ballsSprites.get(i);
 			Vector2 pos = ballsBodies.get(i).getWorldCenter().mul(PX_PER_METER).sub(sp.getWidth()/2, sp.getHeight()/2);
@@ -168,8 +174,8 @@ public class Canvas implements ApplicationListener {
 	public void resize(int width, int height) {
 		GL10 gl = Gdx.gl10;
 		gl.glViewport(0, 0, width, height);
-		worldCamera.viewportWidth = width;
-		worldCamera.viewportHeight = height;
+		worldCamera.viewportWidth = 2;
+		worldCamera.viewportHeight = 2 / ((float)width / height);
 		worldCamera.update();
 	}
 
@@ -181,11 +187,9 @@ public class Canvas implements ApplicationListener {
 	// Public API
 	// -------------------------------------------------------------------------
 
-	private final Vector3 vec = new Vector3();
-
 	public Vector2 screenToWorld(int x, int y) {
-		worldCamera.unproject(vec.set(x, y, 0));
-		return new Vector2(vec.x, vec.y);
+		worldCamera.unproject(vec3.set(x, y, 0));
+		return new Vector2(vec3.x, vec3.y);
 	}
 
 	public Vector2 alignedScreenToWorld(int x, int y) {

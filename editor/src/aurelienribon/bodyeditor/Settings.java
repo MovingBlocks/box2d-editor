@@ -7,7 +7,6 @@ import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
  */
 public class Settings {
 	public static boolean isImageDrawn = true;
-	public static boolean isImageSemiOpacity = false;
 	public static boolean isShapeDrawn = true;
 	public static boolean isPolygonDrawn = true;
 	public static boolean isBackgroundLight = false;

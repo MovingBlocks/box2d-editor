@@ -38,6 +38,8 @@ public class CanvasDrawer {
 	}
 
 	public void drawWorld(OrthographicCamera camera) {
+		drawAxis(camera);
+
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return;
 
@@ -67,6 +69,18 @@ public class CanvasDrawer {
 	// -------------------------------------------------------------------------
 	// Internals
 	// -------------------------------------------------------------------------
+
+	private void drawAxis(OrthographicCamera camera) {
+		float w = 0.03f * camera.zoom;
+
+		drawer.drawLine(0, 0, 1, 0, GRID_COLOR, 3);
+		drawer.drawLine(1, 0, 1-w, -w, GRID_COLOR, 3);
+		drawer.drawLine(1, 0, 1-w, +w, GRID_COLOR, 3);
+
+		drawer.drawLine(0, 0, 0, 1, GRID_COLOR, 3);
+		drawer.drawLine(0, 1, -w, 1-w, GRID_COLOR, 3);
+		drawer.drawLine(0, 1, +w, 1-w, GRID_COLOR, 3);
+	}
 
 	private void drawGrid(OrthographicCamera camera, int gapPx) {
 		float w = camera.viewportWidth;
