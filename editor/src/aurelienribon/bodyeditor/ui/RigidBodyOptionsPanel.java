@@ -361,7 +361,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 	};
 
     private File promptImage() {
-		File outputFile = IoManager.instance().getOutputFile();
+		File outputFile = IoManager.instance().getProjectFile();
 		String startupPath = outputFile != null ? outputFile.getParent() : ".";
 
 		JFileChooser chooser = new JFileChooser(startupPath);

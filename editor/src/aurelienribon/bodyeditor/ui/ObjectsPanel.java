@@ -63,7 +63,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 
 		IoManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(IoManager.PROP_OUTPUTFILE)) {
+				if (propertyName.equals(IoManager.PROP_PROJECTFILE)) {
 					((AutoListModel)bodiesList.getModel()).forceRefresh();
 				}
 			}

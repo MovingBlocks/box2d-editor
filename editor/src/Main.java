@@ -55,7 +55,7 @@ public class Main {
 				try {
 					file.createNewFile();
 					file = file.getCanonicalFile();
-					IoManager.instance().setOutputFile(file);
+					IoManager.instance().setProjectFile(file);
 				} catch (IOException ex) {
 					System.err.println("Cannot use file: " + projectPath);
 				}
