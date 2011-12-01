@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class AppManager {
