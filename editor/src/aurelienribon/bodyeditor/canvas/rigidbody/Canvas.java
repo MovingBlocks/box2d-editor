@@ -78,7 +78,7 @@ public class Canvas implements ApplicationListener {
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor(this));
-		im.addProcessor(new BallThrowInputProcessor(this));
+		im.addProcessor(new CollisionTestInputProcessor(this));
 		im.addProcessor(new ShapeCreationInputProcessor(this));
 		im.addProcessor(new ShapeEditionInputProcessor(this));
 		Gdx.input.setInputProcessor(im);
