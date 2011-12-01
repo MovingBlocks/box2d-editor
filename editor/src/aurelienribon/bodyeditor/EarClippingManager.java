@@ -36,7 +36,7 @@ public class EarClippingManager {
 			points = vertices.toArray(new Vector2[0]);
 		}
 
-		switch (OptionsManager.instance().polygonizer) {
+		switch (Settings.polygonizer) {
 			case EWJORDAN:
 				polygons = EwjordanDecomposer.decompose(points);
 				break;
