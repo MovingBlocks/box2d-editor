@@ -5,6 +5,7 @@ import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.utils.ShapeUtils;
+import aurelienribon.utils.gdx.TextureHelper;
 import aurelienribon.utils.notifications.ChangeListener;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -86,13 +88,22 @@ public class Canvas implements ApplicationListener {
 		ObjectsManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
+					worldCamera.position.set(0, 0, 0);
+					worldCamera.update();
+
 					clearWorld();
-					createBody();
 
 					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
-					bodySprite = new Sprite(model.getTexture());
+					if (model == null) return;
+
+					createBody();
+
+					TextureRegion tex = TextureHelper.getPOTTexture(model.getImagePath());
+					if (tex == null) return;
+
+					bodySprite = new Sprite(tex);
 					bodySprite.setPosition(0, 0);
-					worldCamera.position.set(model.getTexture().getRegionWidth()/2, model.getTexture().getRegionHeight()/2, 0);
+					worldCamera.position.set(bodySprite.getWidth()/2, bodySprite.getHeight()/2, 0);
 					worldCamera.update();
 				}
 			}
@@ -195,7 +206,7 @@ public class Canvas implements ApplicationListener {
 		clearWorld();
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
-		if (model.getPolygons().isEmpty()) return;
+		if (model == null || model.getPolygons().isEmpty()) return;
 
 		Body body = world.createBody(new BodyDef());
 		
