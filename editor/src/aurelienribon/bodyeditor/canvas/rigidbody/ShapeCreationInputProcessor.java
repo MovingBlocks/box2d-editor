@@ -4,6 +4,8 @@ import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public class ShapeCreationInputProcessor extends InputAdapter {
 	private final Canvas canvas;
-	boolean isActive = false;
+	boolean touchDown = false;
 
 	public ShapeCreationInputProcessor(Canvas canvas) {
 		this.canvas = canvas;
@@ -22,12 +24,14 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		isActive = InputHelper.isShapeCreationEnabled(button);
-		if (!isActive) return false;
+		touchDown = InputHelper.isShapeCreationEnabled() && button == Buttons.LEFT;
+		if (!touchDown) return false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
 
 		// Get the current edited shape
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		List<ShapeModel> shapes = model.getShapes();
 		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
 
@@ -55,40 +59,59 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		isActive = false;
+		touchDown = false;
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!isActive) return false;
+		if (!touchDown) return false;
 		touchMoved(x, y);
 		return false;
 	}
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!isActive) return false;
-		
+		if (!InputHelper.isShapeCreationEnabled()) return false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
+
 		// Nearest point computation
 
 		AppManager.instance().nearestPoint = null;
 		Vector2 p = canvas.screenToWorld(x, y);
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		List<ShapeModel> shapes = model.getShapes();
 		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
-		List<Vector2> vs = lastShape.getVertices();
-		float zoom = canvas.getCamera().zoom;
 
-		if (lastShape != null && !lastShape.isClosed() && vs.size() >= 3)
-			if (vs.get(0).dst(p) < 10*zoom)
-				AppManager.instance().nearestPoint = vs.get(0);
+		if (lastShape != null) {
+			List<Vector2> vs = lastShape.getVertices();
+			float zoom = canvas.getCamera().zoom;
+
+			if (!lastShape.isClosed() && vs.size() >= 3)
+				if (vs.get(0).dst(p) < 10*zoom)
+					AppManager.instance().nearestPoint = vs.get(0);
+		}
 
 		// Next point assignment
 
-		p = canvas.alignedScreenToWorld(x, y);
-		AppManager.instance().nextPoint = p;
+		AppManager.instance().nextPoint = canvas.alignedScreenToWorld(x, y);
+		return false;
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		if (!InputHelper.isShapeCreationEnabled()) return false;
+		int x = Gdx.input.getX();
+		int y = Gdx.input.getY();
+		AppManager.instance().nextPoint = canvas.alignedScreenToWorld(x, y);
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		AppManager.instance().nextPoint = null;
 		return false;
 	}
 }

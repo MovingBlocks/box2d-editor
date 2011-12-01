@@ -4,6 +4,7 @@ import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import java.awt.Polygon;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public class ShapeEditionInputProcessor extends InputAdapter {
 	private final Canvas canvas;
-	private boolean isActive = false;
+	private boolean touchDown = false;
 	private Vector2 draggedPoint;
 
 	public ShapeEditionInputProcessor(Canvas canvas) {
@@ -26,8 +27,11 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		isActive = InputHelper.isShapeEditionEnabled(button);
-		if (!isActive) return false;
+		touchDown = InputHelper.isShapeEditionEnabled() && button == Buttons.LEFT;
+		if (!touchDown) return false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
 
 		draggedPoint = AppManager.instance().nearestPoint;
 		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
@@ -45,10 +49,15 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!isActive) return false;
-		isActive = false;
+		if (!touchDown) {
+			touchDown = false;
+			return false;
+		}
+
+		touchDown = false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
 
 		if (draggedPoint != null) {
 			draggedPoint = null;
@@ -69,9 +78,10 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!isActive) return false;
+		if (!touchDown) return false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
 
 		if (draggedPoint != null) {
 			Vector2 p = canvas.alignedScreenToWorld(x, y);
@@ -97,8 +107,11 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!isActive) return false;
-		
+		if (!InputHelper.isShapeEditionEnabled()) return false;
+
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		if (model == null) return false;
+
 		// Nearest point computation
 
 		Vector2 p = canvas.screenToWorld(x, y);

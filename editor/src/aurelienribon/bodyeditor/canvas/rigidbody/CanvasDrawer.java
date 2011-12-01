@@ -46,6 +46,7 @@ public class CanvasDrawer {
 		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
 		List<Vector2> mousePath = AppManager.instance().mousePath;
 		Vector2 nearestPoint = AppManager.instance().nearestPoint;
+		Vector2 nextPoint = AppManager.instance().nextPoint;
 		Vector2 ballThrowP1 = AppManager.instance().ballThrowP1;
 		Vector2 ballThrowP2 = AppManager.instance().ballThrowP2;
 		float zoom = camera.zoom;
@@ -56,7 +57,7 @@ public class CanvasDrawer {
 
 		if (Settings.isShapeDrawn) {
 			drawShapes(shapes);
-			drawPoints(shapes, selectedPoints, nearestPoint, zoom);
+			drawPoints(shapes, selectedPoints, nearestPoint, nextPoint, zoom);
 		}
 
 		drawMousePath(mousePath);
@@ -104,15 +105,18 @@ public class CanvasDrawer {
 		}
 	}
 
-	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, float zoom) {
+	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint, float zoom) {
 		float w = 10 * zoom;
+
 		for (ShapeModel shape : shapes) {
 			for (Vector2 p : shape.getVertices()) {
 				if (p == nearestPoint || selectedPoints.contains(p))
-					drawer.fillRect(p, w, w, SHAPE_COLOR);
-				drawer.drawRect(p, w, w, SHAPE_COLOR, 2);
+					drawer.fillRect(p.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR);
+				drawer.drawRect(p.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
 			}
 		}
+
+		if (nextPoint != null) drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
 	}
 
 	private void drawPolygons(List<PolygonModel> polygons) {
@@ -133,10 +137,10 @@ public class CanvasDrawer {
 	}
 
 	private void drawBallThrowPath(Vector2 p1, Vector2 p2, float zoom) {
-		float w = 10 * zoom;
+		float w = 20 * zoom;
 		if (p1 != null && p2 != null) {
 			drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);
-			drawer.drawRect(p2, w, w, BALLTHROWPATH_COLOR, 3);
+			drawer.fillRect(p2.cpy().sub(w/2, w/2), w, w, BALLTHROWPATH_COLOR);
 		}
 	}
 }

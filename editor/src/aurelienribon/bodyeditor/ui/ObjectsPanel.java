@@ -47,6 +47,18 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			}
 		});
 
+		ObjectsManager.instance().addChangeListener(new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
+					RigidBodyModel selectedBody = ObjectsManager.instance().getSelectedRigidBody();
+					DynamicObjectModel selectedObject = ObjectsManager.instance().getSelectedDynamicObject();
+
+					if (bodiesList.getSelectedValue() != selectedBody) bodiesList.setSelectedValue(selectedBody, true);
+					if (objectsList.getSelectedValue() != selectedObject) objectsList.setSelectedValue(selectedObject, true);
+				}
+			}
+		});
+
 		IoManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(IoManager.PROP_OUTPUTFILE)) {
@@ -74,6 +86,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			RigidBodyModel model = new RigidBodyModel();
 			model.setName(name);
 			ObjectsManager.instance().getRigidBodies().add(model);
+			ObjectsManager.instance().setSelectedRigidBody(model);
 		}
 	}
 
@@ -99,6 +112,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			DynamicObjectModel model = new DynamicObjectModel();
 			model.setName(name);
 			ObjectsManager.instance().getDynamicObjects().add(model);
+			ObjectsManager.instance().setSelectedDynamicObject(model);
 		}
 	}
 
