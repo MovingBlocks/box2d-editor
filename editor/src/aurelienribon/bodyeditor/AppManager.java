@@ -48,8 +48,8 @@ public class AppManager {
 	public Vector2 nextPoint;
 	public Vector2 nearestPoint;
 
-	public Vector2 ballThrowFirstPoint;
-	public Vector2 ballThrowLastPoint;
+	public Vector2 ballThrowP1;
+	public Vector2 ballThrowP2;
 
 	// -------------------------------------------------------------------------
 

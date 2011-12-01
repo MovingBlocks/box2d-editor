@@ -1,55 +1,53 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
-import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class BallThrowInputProcessor extends InputAdapter {
-	boolean isActive = false;
+	private final Canvas canvas;
+	private boolean isActive = false;
+
+	public BallThrowInputProcessor(Canvas canvas) {
+		this.canvas = canvas;
+	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		boolean isValid = button == Buttons.LEFT && InputHelper.isTestCollisionKeyDown();
+		isActive = button == Buttons.LEFT && InputHelper.isTestCollisionKeyDown();
+		if (!isActive) return false;
 
-		if (!isValid)
-			return false;
-		isActive = true;
-
-		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
-		AppManager.instance().ballThrowFirstPoint = p;
-		return true;
+		Vector2 p = canvas.screenToWorld(x, y);
+		AppManager.instance().ballThrowP1 = p;
+		AppManager.instance().ballThrowP2 = p;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!isActive)
-			return false;
+		if (!isActive) return false;
 		isActive = false;
 
-		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
-		AppManager.instance().ballThrowLastPoint = p;
+		Vector2 p1 = AppManager.instance().ballThrowP1;
+		Vector2 p2 = AppManager.instance().ballThrowP2;
+		Vector2 delta = new Vector2(p2).sub(p1);
+		canvas.fireBall(p1, delta);
 		
-		Vector2 delta = new Vector2(AppManager.instance().ballThrowLastPoint).sub(AppManager.instance().ballThrowFirstPoint);
-		AppManager.instance().getRenderPanel().fireBall(AppManager.instance().ballThrowFirstPoint, delta);
-		
-		AppManager.instance().ballThrowFirstPoint = null;
-		AppManager.instance().ballThrowLastPoint = null;
-		return true;
+		AppManager.instance().ballThrowP1 = null;
+		AppManager.instance().ballThrowP2 = null;
+		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!isActive)
-			return false;
+		if (!isActive) return false;
 
-		Vector2 p = AppManager.instance().getRenderPanel().screenToWorld(x, y);
-		AppManager.instance().ballThrowLastPoint = p;
-		return true;
+		Vector2 p = canvas.screenToWorld(x, y);
+		AppManager.instance().ballThrowP2 = p;
+		return false;
 	}
 }
