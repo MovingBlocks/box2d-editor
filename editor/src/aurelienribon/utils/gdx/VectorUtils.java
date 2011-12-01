@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.utils;
+package aurelienribon.utils.gdx;
 
 import com.badlogic.gdx.math.Vector2;
 

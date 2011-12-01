@@ -4,16 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class PrimitiveDrawer {
-	private final ImmediateModeRenderer imr;
+	private final ImmediateModeRenderer10 imr;
 
-	public PrimitiveDrawer(ImmediateModeRenderer imr) {
+	public PrimitiveDrawer(ImmediateModeRenderer10 imr) {
 		this.imr = imr;
 	}
 

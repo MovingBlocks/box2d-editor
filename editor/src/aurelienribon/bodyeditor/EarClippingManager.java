@@ -2,7 +2,7 @@ package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
 import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
-import aurelienribon.bodyeditor.utils.ShapeUtils;
+import aurelienribon.utils.gdx.ShapeUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;

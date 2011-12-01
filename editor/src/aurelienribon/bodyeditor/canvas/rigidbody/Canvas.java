@@ -4,7 +4,7 @@ import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
-import aurelienribon.bodyeditor.utils.ShapeUtils;
+import aurelienribon.utils.gdx.ShapeUtils;
 import aurelienribon.utils.gdx.TextureHelper;
 import aurelienribon.utils.notifications.ChangeListener;
 import com.badlogic.gdx.ApplicationListener;

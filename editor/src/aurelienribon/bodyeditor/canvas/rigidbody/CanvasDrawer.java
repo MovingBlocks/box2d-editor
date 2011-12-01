@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class CanvasDrawer {
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
-	private final PrimitiveDrawer drawer = new PrimitiveDrawer(new ImmediateModeRenderer());
+	private final PrimitiveDrawer drawer = new PrimitiveDrawer(new ImmediateModeRenderer10());
 	private final SpriteBatch sb = new SpriteBatch();
 	private final Sprite v00Sprite;
 	private final Sprite v10Sprite;

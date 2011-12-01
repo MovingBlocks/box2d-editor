@@ -30,7 +30,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		addComponentListener(new ComponentAdapter() {
 			@Override public void componentShown(ComponentEvent e) {
-				File outputFile = IoManager.instance().getOutputFile();
+				File outputFile = IoManager.instance().getProjectFile();
 				if (outputFile != null) {
 					try {
 						IoManager.instance().importFromOutputFile();
@@ -45,8 +45,8 @@ public class MainWindow extends javax.swing.JFrame {
 		IoManager.instance().addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				cfg_outputFileLbl.setText("");
-				if (IoManager.instance().getOutputFile() != null)
-					cfg_outputFileLbl.setText(IoManager.instance().getOutputFile().getPath());
+				if (IoManager.instance().getProjectFile() != null)
+					cfg_outputFileLbl.setText(IoManager.instance().getProjectFile().getPath());
 			}
 		});
 
@@ -293,7 +293,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_cfg_newProjectBtnActionPerformed
 
 	private void cfg_loadProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cfg_loadProjectBtnActionPerformed
-		File outputFile = IoManager.instance().getOutputFile();
+		File outputFile = IoManager.instance().getProjectFile();
 		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
 		if (!startupDir.isDirectory())
 			startupDir = new File(".");
@@ -304,7 +304,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
-			IoManager.instance().setOutputFile(selectedFile);
+			IoManager.instance().setProjectFile(selectedFile);
 			try {
 				IoManager.instance().importFromOutputFile();
 			} catch (IOException ex) {
@@ -314,7 +314,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_cfg_loadProjectBtnActionPerformed
 
 	private void cfg_saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cfg_saveBtnActionPerformed
-		File outputFile = IoManager.instance().getOutputFile();
+		File outputFile = IoManager.instance().getProjectFile();
 		if (outputFile == null) {
 			JOptionPane.showMessageDialog(this, "Output file has not been set yet.");
 			return;

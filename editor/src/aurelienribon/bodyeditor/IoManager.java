@@ -1,10 +1,10 @@
 package aurelienribon.bodyeditor;
 
+import aurelienribon.bodyeditor.io.JsonHelper;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.bodyeditor.utils.FileUtils;
-import aurelienribon.bodyeditor.utils.FileUtils.NoCommonPathFoundException;
+import aurelienribon.utils.io.FilenameHelper;
 import aurelienribon.utils.notifications.ChangeableObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -15,7 +15,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +23,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -51,16 +51,16 @@ public class IoManager extends ChangeableObject {
 	// Output file
 	// -------------------------------------------------------------------------
 
-	public  static final String PROP_OUTPUTFILE = "outputFile";
-	private File outputFile;
+	public  static final String PROP_PROJECTFILE = "projectFile";
+	private File projectFile;
 
-	public File getOutputFile() {
-		return outputFile;
+	public File getProjectFile() {
+		return projectFile;
 	}
 
-	public void setOutputFile(File outputFile) {
-		this.outputFile = outputFile;
-		firePropertyChanged(PROP_OUTPUTFILE);
+	public void setProjectFile(File projectFile) {
+		this.projectFile = projectFile;
+		firePropertyChanged(PROP_PROJECTFILE);
 	}
 
 	/**
@@ -70,14 +70,8 @@ public class IoManager extends ChangeableObject {
 	 * @return
 	 */
 	public String relativize(String filepath) {
-		if (outputFile == null)
-			return filepath;
-		try {
-			String path = FileUtils.getRelativePath(filepath, outputFile.getPath(), File.separator);
-			return path;
-		} catch (NoCommonPathFoundException ex) {
-			return null;
-		}
+		if (projectFile == null) return filepath;
+		return FilenameHelper.getRelativePath(filepath, projectFile.getPath());
 	}
 
 	/**
@@ -87,9 +81,8 @@ public class IoManager extends ChangeableObject {
 	 * @return
 	 */
 	public String combine(String childPath) {
-		if (outputFile == null)
-			return childPath;
-		return new File(outputFile.getParent(), childPath).getPath();
+		if (projectFile == null) return childPath;
+		return new File(projectFile.getParent(), childPath).getPath();
 	}
 
 	// -------------------------------------------------------------------------
@@ -122,14 +115,16 @@ public class IoManager extends ChangeableObject {
 	 * @throws IOException
 	 */
     public void exportToOutputFile() throws IOException {
-		if (outputFile == null)
-			throw new IOException("output file was not set");
+		if (projectFile == null) throw new IOException("output file was not set");
+		String ext = FilenameUtils.getExtension(projectFile.getName());
 
-		String ext = FilenameUtils.getExtension(outputFile.getName());
 		if (ext.equalsIgnoreCase("xml")) {
 			exportAsXml();
-		} else if(ext.equalsIgnoreCase("json")) {
-			exportAsJson();
+
+		} else if (ext.equalsIgnoreCase("json")) {
+			String str = JsonHelper.save();
+			FileUtils.writeStringToFile(projectFile, str);
+
 		} else {
 			exportAsBinary();
 		}
@@ -180,66 +175,14 @@ public class IoManager extends ChangeableObject {
 		format.setLineWidth(0);
 		format.setIndenting(true);
 		format.setIndent(4);
-		FileOutputStream fos = new FileOutputStream(outputFile);
+		FileOutputStream fos = new FileOutputStream(projectFile);
 		XMLSerializer serializer = new XMLSerializer(fos, format);
 		serializer.serialize(doc);
 		fos.close();
 	}
 
-	private void exportAsJson() throws IOException {
-		try {
-			JSONObject doc = new JSONObject();
-
-			JSONArray assetsElem = new JSONArray();
-			doc.put("assets", assetsElem);
-
-			for (RigidBodyModel body : ObjectsManager.instance().getRigidBodies()) {
-				Vector2 normalizeCoeff = getNormalizeCoeff(body.getImagePath());
-
-				JSONObject assetElem = new JSONObject();
-				assetElem.put("relativePath", relativize(body.getImagePath()));
-				assetsElem.put(assetElem);
-
-				JSONArray shapesElem = new JSONArray();
-				assetElem.put("shapes", shapesElem);
-				for (ShapeModel shape : body.getShapes()) {
-					JSONObject shapeElem = new JSONObject();
-					shapesElem.put(shapeElem);
-					JSONArray verticesElem = new JSONArray();
-					shapeElem.put("vertices", verticesElem);
-					for (Vector2 vertex : shape.getVertices()) {
-						JSONObject vertexElem = new JSONObject();
-						verticesElem.put(vertexElem);
-						vertexElem.put("x", vertex.x / normalizeCoeff.x);
-						vertexElem.put("y", vertex.y / normalizeCoeff.y);
-					}
-				}
-
-				JSONArray polygonsElem = new JSONArray();
-				assetElem.put("polygons", polygonsElem);
-				for (PolygonModel shape : body.getPolygons()) {
-					JSONObject polygonElem = new JSONObject();
-					polygonsElem.put(polygonElem);
-					JSONArray verticesElem = new JSONArray();
-					polygonElem.put("vertices", verticesElem);
-					for (Vector2 vertex : shape.getVertices()) {
-						JSONObject vertexElem = new JSONObject();
-						verticesElem.put(vertexElem);
-						vertexElem.put("x", vertex.x / normalizeCoeff.x);
-						vertexElem.put("y", vertex.y / normalizeCoeff.y);
-					}
-				}
-			}
-
-			FileWriter fw = new FileWriter(outputFile);
-			doc.write(fw);
-			fw.close();
-		} catch (JSONException ex) {
-		}
-	}
-
 	private void exportAsBinary() throws IOException {
-		DataOutputStream os = new DataOutputStream(new FileOutputStream(outputFile));
+		DataOutputStream os = new DataOutputStream(new FileOutputStream(projectFile));
 
 		for (RigidBodyModel body : ObjectsManager.instance().getRigidBodies()) {
 			Vector2 normalizeCoeff = getNormalizeCoeff(body.getImagePath());
@@ -280,15 +223,18 @@ public class IoManager extends ChangeableObject {
 	 * @throws IOException
 	 */
 	public void importFromOutputFile() throws IOException {
-		if (outputFile == null || !outputFile.isFile())
-			throw new IOException("output file was not set");
+		if (projectFile == null || !projectFile.isFile()) throw new IOException("output file was not set");
 
 		ObjectsManager.instance().getRigidBodies().clear();
-		String ext = FilenameUtils.getExtension(outputFile.getName());
+		String ext = FilenameUtils.getExtension(projectFile.getName());
+
 		if (ext.equalsIgnoreCase("xml")) {
 			importAsXml();
+
 		} else if (ext.equalsIgnoreCase("json")) {
-			importAsJson();
+			String str = FileUtils.readFileToString(projectFile);
+			JsonHelper.load(str);
+
 		} else {
 			importAsBinary();
 		}
@@ -296,7 +242,7 @@ public class IoManager extends ChangeableObject {
 
 	private void importAsXml() throws IOException {
 		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(outputFile);
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(projectFile);
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			NodeList assetsNodes = (NodeList)xpath.evaluate("/assets/asset", doc, XPathConstants.NODESET);
 
@@ -346,64 +292,8 @@ public class IoManager extends ChangeableObject {
 		}
 	}
 
-	private void importAsJson() throws IOException {
-		try {
-			String string = org.apache.commons.io.FileUtils.readFileToString(outputFile);
-			JSONObject doc = new JSONObject(string);
-
-			JSONArray assetsElem = doc.getJSONArray("assets");
-			for (int i=0; i<assetsElem.length(); i++) {
-				JSONObject assetElem = assetsElem.getJSONObject(i);
-
-				String name = assetElem.getString("relativePath");
-				String path = combine(name);
-				Vector2 normalizeCoeff = getNormalizeCoeff(path);
-
-				JSONArray shapesElem = assetElem.getJSONArray("shapes");
-				ShapeModel[] shapes = new ShapeModel[shapesElem.length()];
-				for (int j=0; j<shapesElem.length(); j++) {
-					JSONObject shapeElem = shapesElem.getJSONObject(j);
-					JSONArray verticesElem = shapeElem.getJSONArray("vertices");
-					Vector2[] vertices = new Vector2[verticesElem.length()];
-					for (int k=0; k<verticesElem.length(); k++) {
-						JSONObject vertexElem = verticesElem.getJSONObject(k);
-						float x = (float) (vertexElem.getDouble("x") * normalizeCoeff.x);
-						float y = (float) (vertexElem.getDouble("y") * normalizeCoeff.y);
-						vertices[k] = new Vector2(x, y);
-					}
-					shapes[j] = new ShapeModel(vertices);
-				}
-
-				JSONArray polygonsElem = assetElem.getJSONArray("polygons");
-				PolygonModel[] polygons = new PolygonModel[polygonsElem.length()];
-				for (int j=0; j<polygonsElem.length(); j++) {
-					JSONObject polygonElem = polygonsElem.getJSONObject(j);
-					JSONArray verticesElem = polygonElem.getJSONArray("vertices");
-					Vector2[] vertices = new Vector2[verticesElem.length()];
-					for (int k=0; k<verticesElem.length(); k++) {
-						JSONObject vertexElem = verticesElem.getJSONObject(k);
-						float x = (float) (vertexElem.getDouble("x") * normalizeCoeff.x);
-						float y = (float) (vertexElem.getDouble("y") * normalizeCoeff.y);
-						vertices[k] = new Vector2(x, y);
-					}
-					polygons[j] = new PolygonModel(vertices);
-				}
-
-				RigidBodyModel body = new RigidBodyModel();
-				body.setImagePath(path);
-				body.getShapes().addAll(Arrays.asList(shapes));
-				body.getPolygons().addAll(Arrays.asList(polygons));
-				ObjectsManager.instance().getRigidBodies().add(body);
-			}
-
-		} catch (JSONException ex) {
-			ObjectsManager.instance().getRigidBodies().clear();
-			throw new IOException("JSON file was corrupted");
-		}
-	}
-
 	private void importAsBinary() throws IOException {
-		DataInputStream is = new DataInputStream(new FileInputStream(outputFile));
+		DataInputStream is = new DataInputStream(new FileInputStream(projectFile));
 
 		while (is.available() > 0) {
 			String name = FilenameUtils.separatorsToSystem(is.readUTF());

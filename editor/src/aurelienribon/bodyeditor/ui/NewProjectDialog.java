@@ -15,9 +15,9 @@ public class NewProjectDialog extends javax.swing.JDialog {
         initComponents();
 		Theme.apply(getContentPane());
 
-		if (IoManager.instance().getOutputFile() != null) {
-			prjFileField.setText(IoManager.instance().getOutputFile().getPath());
-			updateRadios(IoManager.instance().getOutputFile().getPath());
+		if (IoManager.instance().getProjectFile() != null) {
+			prjFileField.setText(IoManager.instance().getProjectFile().getPath());
+			updateRadios(IoManager.instance().getProjectFile().getPath());
 		}
     }
 
@@ -198,7 +198,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void browseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseBtnActionPerformed
-		File outputFile = IoManager.instance().getOutputFile();
+		File outputFile = IoManager.instance().getProjectFile();
 		File startupDir = outputFile != null ? outputFile.getParentFile() : new File(".");
 		if (!startupDir.isDirectory())
 			startupDir = new File(".");
@@ -218,7 +218,7 @@ public class NewProjectDialog extends javax.swing.JDialog {
 	private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
 		String path = prjFileField.getText();
 		if (!path.equals(""))
-			IoManager.instance().setOutputFile(new File(path));
+			IoManager.instance().setProjectFile(new File(path));
 		if (clearAssetsChk.isSelected())
 			ObjectsManager.instance().getRigidBodies().clear();
 		dispose();
