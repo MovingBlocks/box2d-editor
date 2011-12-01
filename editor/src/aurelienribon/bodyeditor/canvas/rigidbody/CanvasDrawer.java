@@ -7,9 +7,12 @@ import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.utils.gdx.PrimitiveDrawer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -28,6 +31,22 @@ public class CanvasDrawer {
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
 	private final PrimitiveDrawer drawer = new PrimitiveDrawer(new ImmediateModeRenderer());
+	private final SpriteBatch sb = new SpriteBatch();
+	private final Sprite v00Sprite;
+	private final Sprite v10Sprite;
+	private final Sprite v01Sprite;
+
+	public CanvasDrawer() {
+		v00Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v00.png")));
+		v10Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v10.png")));
+		v01Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v01.png")));
+		v00Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		v10Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		v01Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		v00Sprite.setColor(AXIS_COLOR);
+		v10Sprite.setColor(AXIS_COLOR);
+		v01Sprite.setColor(AXIS_COLOR);
+	}
 
 	// -------------------------------------------------------------------------
 	// Public API
@@ -75,15 +94,30 @@ public class CanvasDrawer {
 	// -------------------------------------------------------------------------
 
 	private void drawAxis(OrthographicCamera camera) {
-		float w = 0.03f * camera.zoom;
+		float len = 0.03f * camera.zoom;
 
 		drawer.drawLine(0, 0, 1, 0, AXIS_COLOR, 3);
-		drawer.drawLine(1, 0, 1-w, -w, AXIS_COLOR, 3);
-		drawer.drawLine(1, 0, 1-w, +w, AXIS_COLOR, 3);
+		drawer.drawLine(1, 0, 1-len, -len, AXIS_COLOR, 3);
+		drawer.drawLine(1, 0, 1-len, +len, AXIS_COLOR, 3);
 
 		drawer.drawLine(0, 0, 0, 1, AXIS_COLOR, 3);
-		drawer.drawLine(0, 1, -w, 1-w, AXIS_COLOR, 3);
-		drawer.drawLine(0, 1, +w, 1-w, AXIS_COLOR, 3);
+		drawer.drawLine(0, 1, -len, 1-len, AXIS_COLOR, 3);
+		drawer.drawLine(0, 1, +len, 1-len, AXIS_COLOR, 3);
+
+		float size = 0.1f * camera.zoom;
+		v00Sprite.setSize(size, size);
+		v10Sprite.setSize(size, size);
+		v01Sprite.setSize(size, size);
+		v00Sprite.setPosition(-size, -size);
+		v10Sprite.setPosition(1, -size);
+		v01Sprite.setPosition(-size, 1-size/2);
+
+		sb.setProjectionMatrix(camera.combined);
+		sb.begin();
+		v00Sprite.draw(sb);
+		v10Sprite.draw(sb);
+		v01Sprite.draw(sb);
+		sb.end();
 	}
 
 	private void drawGrid(OrthographicCamera camera, int gapPx) {

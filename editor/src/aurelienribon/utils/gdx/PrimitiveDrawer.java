@@ -3,6 +3,7 @@ package aurelienribon.utils.gdx;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -62,16 +63,25 @@ public class PrimitiveDrawer {
 		drawRect(p.x, p.y, w, h, c, lineWidth);
 	}
 
-	public void fillRect(float x, float y, float w, float h, Color c) {
+	public void fillRect(float x, float y, float w, float h, Color c, TextureRegion tex) {
+		if (tex != null) tex.getTexture().bind();
 		imr.begin(GL10.GL_TRIANGLE_FAN);
-		imr.color(c.r, c.g, c.b, c.a); imr.vertex(x    , y    , 0);
-		imr.color(c.r, c.g, c.b, c.a); imr.vertex(x + w, y    , 0);
-		imr.color(c.r, c.g, c.b, c.a); imr.vertex(x + w, y + h, 0);
-		imr.color(c.r, c.g, c.b, c.a); imr.vertex(x    , y + h, 0);
+		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(0, 0); imr.vertex(x    , y    , 0);
+		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(1, 0); imr.vertex(x + w, y    , 0);
+		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(1, 1); imr.vertex(x + w, y + h, 0);
+		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(0, 1); imr.vertex(x    , y + h, 0);
 		imr.end();
 	}
 
+	public void fillRect(float x, float y, float w, float h, Color c) {
+		fillRect(x, y, w, h, c, null);
+	}
+
+	public void fillRect(Vector2 p, float w, float h, Color c, TextureRegion tex) {
+		fillRect(p.x, p.y, w, h, c, tex);
+	}
+
 	public void fillRect(Vector2 p, float w, float h, Color c) {
-		fillRect(p.x, p.y, w, h, c);
+		fillRect(p.x, p.y, w, h, c, null);
 	}
 }
