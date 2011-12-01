@@ -21,8 +21,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (button != Buttons.RIGHT)
-			return false;
+		if (button != Buttons.RIGHT) return false;
 
 		lastTouch.set(x, y);
 		return false;
@@ -30,8 +29,7 @@ public class PanZoomInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (!Gdx.input.isButtonPressed(Buttons.RIGHT))
-			return false;
+		if (!Gdx.input.isButtonPressed(Buttons.RIGHT)) return false;
 
 		Vector2 delta = new Vector2(x, y).sub(lastTouch).mul(canvas.getCamera().zoom);
 		canvas.getCamera().translate(-delta.x, delta.y, 0);

@@ -1,7 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import aurelienribon.bodyeditor.AppManager;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,7 +17,7 @@ public class BallThrowInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		isActive = button == Buttons.LEFT && InputHelper.isTestCollisionKeyDown();
+		isActive = InputHelper.isTestCollisionEnabled(button);
 		if (!isActive) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);

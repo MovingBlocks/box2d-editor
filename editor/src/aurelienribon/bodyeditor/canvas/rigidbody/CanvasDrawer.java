@@ -46,8 +46,8 @@ public class CanvasDrawer {
 		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
 		List<Vector2> mousePath = AppManager.instance().mousePath;
 		Vector2 nearestPoint = AppManager.instance().nearestPoint;
-		Vector2 ballThrowP1 = AppManager.instance().AppManager.this.ballThrowP1;
-		Vector2 ballThrowP2 = AppManager.instance().AppManager.this.ballThrowP2;
+		Vector2 ballThrowP1 = AppManager.instance().ballThrowP1;
+		Vector2 ballThrowP2 = AppManager.instance().ballThrowP2;
 		float zoom = camera.zoom;
 		
 		if (Settings.isPolygonDrawn) {

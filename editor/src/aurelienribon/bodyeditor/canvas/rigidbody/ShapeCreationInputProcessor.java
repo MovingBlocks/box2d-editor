@@ -4,7 +4,6 @@ import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -23,13 +22,12 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
-
-		isActive = button == Buttons.LEFT && InputHelper.isShapeCreationKeyDown() && model != null;
+		isActive = InputHelper.isShapeCreationEnabled(button);
 		if (!isActive) return false;
 
 		// Get the current edited shape
 
+		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		List<ShapeModel> shapes = model.getShapes();
 		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
 
@@ -43,7 +41,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		List<Vector2> vs = lastShape.getVertices();
 		Vector2 nearestPoint = AppManager.instance().nearestPoint;
 
-		if (vs.size() >= 3 && nearestPoint == vs.get(0)) {
+		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
 			lastShape.close();
 			model.computePolygons();
 			canvas.createBody();
