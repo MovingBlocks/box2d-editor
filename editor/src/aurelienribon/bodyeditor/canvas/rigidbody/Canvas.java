@@ -67,7 +67,6 @@ public class Canvas implements ApplicationListener {
 		drawer = new CanvasDrawer();
 		sb = new SpriteBatch();
 		font = new BitmapFont();
-		font.setColor(Color.BLACK);
 
 		float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
 		worldCamera = new OrthographicCamera(2, 2/ratio);
@@ -131,6 +130,8 @@ public class Canvas implements ApplicationListener {
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		gl.glEnable(GL10.GL_TEXTURE_2D | GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
@@ -170,6 +171,7 @@ public class Canvas implements ApplicationListener {
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
+		font.setColor(Color.BLACK);
 		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 5, 45);
 		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
 		sb.end();
