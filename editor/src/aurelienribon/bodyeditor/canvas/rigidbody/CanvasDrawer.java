@@ -52,19 +52,13 @@ public class CanvasDrawer {
 	// Public API
 	// -------------------------------------------------------------------------
 
-	public void drawScreen(OrthographicCamera camera) {
+	public void draw(OrthographicCamera camera, Sprite bodySprite) {
 		if (Settings.isGridShown) {
 			drawGrid(camera, Settings.gridGap);
 		}
-	}
 
-	public void drawWorld(OrthographicCamera camera, Sprite bodySprite) {
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return;
-
-		drawAxis(camera);
-		if (bodySprite != null)
-			drawer.drawRect(0, 0, bodySprite.getWidth(), bodySprite.getHeight(), AXIS_COLOR, 1);
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
@@ -75,6 +69,11 @@ public class CanvasDrawer {
 		Vector2 ballThrowP1 = AppManager.instance().ballThrowP1;
 		Vector2 ballThrowP2 = AppManager.instance().ballThrowP2;
 		float zoom = camera.zoom;
+
+		drawAxis(camera);
+		if (bodySprite != null) {
+			drawer.drawRect(0, 0, bodySprite.getWidth(), bodySprite.getHeight(), AXIS_COLOR, 1);
+		}
 		
 		if (Settings.isPolygonDrawn) {
 			drawPolygons(polygons);
@@ -120,24 +119,18 @@ public class CanvasDrawer {
 		sb.end();
 	}
 
-	private void drawGrid(OrthographicCamera camera, int gapPx) {
+	private void drawGrid(OrthographicCamera camera, float gap) {
+		if (gap <= 0) gap = 0.001f;
+		float x = camera.position.x;
+		float y = camera.position.y;
 		float w = camera.viewportWidth;
 		float h = camera.viewportHeight;
-		float gap = gapPx / camera.zoom;
-		float deltaX = (camera.position.x / camera.zoom) % gap;
-		float deltaY = (camera.position.y / camera.zoom) % gap;
+		float z = camera.zoom;
 
-		for (float x=-deltaX; x<w/2+gap; x+=gap)
-			drawer.drawLine(x, -h/2, x, +h/2, GRID_COLOR, 1);
-
-		for (float x=-deltaX-gap; x>-w/2-gap; x-=gap)
-			drawer.drawLine(x, -h/2, x, +h/2, GRID_COLOR, 1);
-
-		for (float y=-deltaY; y<h/2+gap; y+=gap)
-			drawer.drawLine(-w/2, y, +w/2, y, GRID_COLOR, 1);
-
-		for (float y=-deltaY-gap; y>-h/2-gap; y-=gap)
-			drawer.drawLine(-w/2, y, +w/2, y, GRID_COLOR, 1);
+		for (float d=0; d<x+w/2*z; d+=gap) drawer.drawLine(d, y-h/2*z, d, y+h/2*z, GRID_COLOR, 1);
+		for (float d=-gap; d>x-w/2*z; d-=gap) drawer.drawLine(d, y-h/2*z, d, y+h/2*z, GRID_COLOR, 1);
+		for (float d=0; d<y+h/2*z; d+=gap) drawer.drawLine(x-w/2*z, d, x+w/2*z, d, GRID_COLOR, 1);
+		for (float d=-gap; d>y-h/2*z; d-=gap) drawer.drawLine(x-w/2*z, d, x+w/2*z, d, GRID_COLOR, 1);
 	}
 
 	private void drawShapes(List<ShapeModel> shapes) {

@@ -48,8 +48,7 @@ public class Canvas implements ApplicationListener {
 	private CanvasDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
-	private OrthographicCamera worldCamera;
-	private OrthographicCamera screenCamera;
+	private OrthographicCamera camera;
 
 	private Texture backgroundLightTexture;
 	private Texture backgroundDarkTexture;
@@ -69,10 +68,8 @@ public class Canvas implements ApplicationListener {
 		font = new BitmapFont();
 
 		float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
-		worldCamera = new OrthographicCamera(2, 2/ratio);
-		worldCamera.position.set(0.5f, 0.5f/ratio, 0);
-
-		screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = new OrthographicCamera(2, 2/ratio);
+		camera.position.set(0.5f, 0.5f/ratio, 0);
 
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
@@ -97,8 +94,8 @@ public class Canvas implements ApplicationListener {
 					bodySprite = null;
 
 					float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
-					worldCamera.position.set(0.5f, 0.5f/ratio, 0);
-					worldCamera.update();
+					camera.position.set(0.5f, 0.5f/ratio, 0);
+					camera.update();
 
 					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 					if (model == null) return;
@@ -151,7 +148,7 @@ public class Canvas implements ApplicationListener {
 		sb.enableBlending();
 		sb.end();
 
-		sb.setProjectionMatrix(worldCamera.combined);
+		sb.setProjectionMatrix(camera.combined);
 		sb.begin();
 		if (bodySprite != null && Settings.isImageDrawn) bodySprite.draw(sb);
 		for (int i=0; i<ballsSprites.size(); i++) {
@@ -164,15 +161,13 @@ public class Canvas implements ApplicationListener {
 		}
 		sb.end();
 
-		screenCamera.apply(gl);
-		drawer.drawScreen(screenCamera);
-		worldCamera.apply(gl);
-		drawer.drawWorld(worldCamera, bodySprite);
+		camera.apply(gl);
+		drawer.draw(camera, bodySprite);
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
 		font.setColor(Color.BLACK);
-		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 5, 45);
+		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / camera.zoom), 5, 45);
 		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
 		sb.end();
 	}
@@ -181,9 +176,9 @@ public class Canvas implements ApplicationListener {
 	public void resize(int width, int height) {
 		GL10 gl = Gdx.gl10;
 		gl.glViewport(0, 0, width, height);
-		worldCamera.viewportWidth = 2;
-		worldCamera.viewportHeight = 2 / ((float)width / height);
-		worldCamera.update();
+		camera.viewportWidth = 2;
+		camera.viewportHeight = 2 / ((float)width / height);
+		camera.update();
 	}
 
 	@Override public void resume() {}
@@ -195,7 +190,7 @@ public class Canvas implements ApplicationListener {
 	// -------------------------------------------------------------------------
 
 	public Vector2 screenToWorld(int x, int y) {
-		worldCamera.unproject(vec3.set(x, y, 0));
+		camera.unproject(vec3.set(x, y, 0));
 		return new Vector2(vec3.x, vec3.y);
 	}
 
@@ -210,7 +205,7 @@ public class Canvas implements ApplicationListener {
 	}
 
 	public OrthographicCamera getCamera() {
-		return worldCamera;
+		return camera;
 	}
 
 	public void createBody() {
