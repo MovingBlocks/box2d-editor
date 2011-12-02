@@ -1,5 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
+import aurelienribon.bodyeditor.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
@@ -7,29 +8,27 @@ import com.badlogic.gdx.Input.Keys;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class InputHelper {
-	public static boolean isShapeEditionEnabled() {
-		return !isShapeCreationKeyDown() && !isCollisionTestKeyDown();
+	public static boolean isShapeCreationEnabled() {
+		return Settings.mode == Settings.Modes.CREATION;
 	}
 
-	public static boolean isShapeCreationEnabled() {
-		return isShapeCreationKeyDown() && !isCollisionTestKeyDown();
+	public static boolean isShapeEditionEnabled() {
+		return Settings.mode == Settings.Modes.EDITION;
 	}
 
 	public static boolean isCollisionTestEnabled() {
-		return !isShapeCreationKeyDown() && isCollisionTestKeyDown();
+		return Settings.mode == Settings.Modes.TEST;
 	}
 	
 	// -------------------------------------------------------------------------
 
-	private static boolean isShapeCreationKeyDown() {
+	public static boolean isCtrlDown() {
 		return Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)
-			|| Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)
-			|| Gdx.input.isKeyPressed(Keys.C);
+			|| Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
 	}
 
-	private static boolean isCollisionTestKeyDown() {
+	public static boolean isShiftDown() {
 		return Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)
-			|| Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT)
-			|| Gdx.input.isKeyPressed(Keys.S);
+			|| Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT);
 	}
 }

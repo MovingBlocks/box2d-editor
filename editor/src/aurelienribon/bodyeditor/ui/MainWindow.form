@@ -259,7 +259,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="renderPanel" alignment="1" pref="664" max="32767" attributes="0"/>
-                      <Component id="bottomPanel" alignment="1" pref="664" max="32767" attributes="0"/>
+                      <Component id="bottomPanel" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -269,7 +269,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="renderPanel" pref="648" max="32767" attributes="0"/>
+                  <Component id="renderPanel" pref="549" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="bottomPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -296,15 +296,13 @@
         </Container>
         <Container class="javax.swing.JPanel" name="bottomPanel">
           <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                <PropertyBean type="aurelienribon.utils.ui.GroupBorder"/>
-            </Property>
+            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rigidBodyOptionsPanel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rigidBodyOptionsPanel1" pref="664" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -315,9 +313,6 @@
           </Layout>
           <SubComponents>
             <Component class="aurelienribon.bodyeditor.ui.RigidBodyOptionsPanel" name="rigidBodyOptionsPanel1">
-              <Properties>
-                <Property name="opaque" type="boolean" value="false"/>
-              </Properties>
             </Component>
           </SubComponents>
         </Container>

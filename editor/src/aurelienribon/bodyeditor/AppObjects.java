@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class AppObjects {	
+public class AppObjects {
 	public static final List<Vector2> selectedPoints = new ArrayList<Vector2>();
 
 	public static Vector2 nextPoint;

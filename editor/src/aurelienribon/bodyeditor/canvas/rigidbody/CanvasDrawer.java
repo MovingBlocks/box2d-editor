@@ -164,7 +164,8 @@ public class CanvasDrawer {
 			}
 		}
 
-		if (nextPoint != null) drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
+		if (nextPoint != null && Settings.mode == Settings.Modes.CREATION)
+			drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
 	}
 
 	private void drawPolygons(List<PolygonModel> polygons) {
