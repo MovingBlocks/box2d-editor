@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -43,7 +43,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		// Add a vertex to the shape or close it
 
 		List<Vector2> vs = lastShape.getVertices();
-		Vector2 nearestPoint = AppManager.instance().nearestPoint;
+		Vector2 nearestPoint = AppObjects.nearestPoint;
 
 		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
 			lastShape.close();
@@ -79,7 +79,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 		// Nearest point computation
 
-		AppManager.instance().nearestPoint = null;
+		AppObjects.nearestPoint = null;
 		Vector2 p = canvas.screenToWorld(x, y);
 
 		List<ShapeModel> shapes = model.getShapes();
@@ -91,12 +91,12 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 			if (!lastShape.isClosed() && vs.size() >= 3)
 				if (vs.get(0).dst(p) < 0.025f*zoom)
-					AppManager.instance().nearestPoint = vs.get(0);
+					AppObjects.nearestPoint = vs.get(0);
 		}
 
 		// Next point assignment
 
-		AppManager.instance().nextPoint = canvas.alignedScreenToWorld(x, y);
+		AppObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
 		return false;
 	}
 
@@ -105,13 +105,13 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		if (!InputHelper.isShapeCreationEnabled()) return false;
 		int x = Gdx.input.getX();
 		int y = Gdx.input.getY();
-		AppManager.instance().nextPoint = canvas.alignedScreenToWorld(x, y);
+		AppObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		AppManager.instance().nextPoint = null;
+		AppObjects.nextPoint = null;
 		return false;
 	}
 }

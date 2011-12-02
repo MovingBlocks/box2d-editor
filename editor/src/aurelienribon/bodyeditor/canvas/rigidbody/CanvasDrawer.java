@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class CanvasDrawer {
 	private static final Color SHAPE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color POLYGON_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
-	private static final Color MOUSEPATH_COLOR = new Color(0.2f, 0.2f, 0.8f, 1);
+	private static final Color MOUSESELECTION_FILL_COLOR = new Color(0.2f, 0.2f, 0.8f, 0.2f);
+	private static final Color MOUSESELECTION_STROKE_COLOR = new Color(0.2f, 0.2f, 0.8f, 0.6f);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
@@ -62,12 +64,13 @@ public class CanvasDrawer {
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
-		List<Vector2> selectedPoints = AppManager.instance().selectedPoints;
-		List<Vector2> mousePath = AppManager.instance().mousePath;
-		Vector2 nearestPoint = AppManager.instance().nearestPoint;
-		Vector2 nextPoint = AppManager.instance().nextPoint;
-		Vector2 ballThrowP1 = AppManager.instance().ballThrowP1;
-		Vector2 ballThrowP2 = AppManager.instance().ballThrowP2;
+		List<Vector2> selectedPoints = AppObjects.selectedPoints;
+		Vector2 nearestPoint = AppObjects.nearestPoint;
+		Vector2 nextPoint = AppObjects.nextPoint;
+		Vector2 mouseSelectionP1 = AppObjects.mouseSelectionP1;
+		Vector2 mouseSelectionP2 = AppObjects.mouseSelectionP2; 
+		Vector2 ballThrowP1 = AppObjects.ballThrowP1;
+		Vector2 ballThrowP2 = AppObjects.ballThrowP2;
 		float zoom = camera.zoom;
 
 		drawAxis(camera);
@@ -84,7 +87,7 @@ public class CanvasDrawer {
 			drawPoints(shapes, selectedPoints, nearestPoint, nextPoint, zoom);
 		}
 
-		drawMousePath(mousePath);
+		drawMouseSelection(mouseSelectionP1, mouseSelectionP2);
 		drawBallThrowPath(ballThrowP1, ballThrowP2, zoom);
 	}
 
@@ -144,7 +147,7 @@ public class CanvasDrawer {
 			if (shape.isClosed()) {
 				drawer.drawLine(vs.get(0), vs.get(vs.size()-1), SHAPE_COLOR, 2);
 			} else {
-				Vector2 nextPoint = AppManager.instance().nextPoint;
+				Vector2 nextPoint = AppObjects.nextPoint;
 				if (nextPoint != null) drawer.drawLine(vs.get(vs.size()-1), nextPoint, SHAPE_LASTLINE_COLOR, 2);
 			}
 		}
@@ -174,18 +177,25 @@ public class CanvasDrawer {
 		}
 	}
 
-	private void drawMousePath(List<Vector2> mousePath) {
-		for (int i=1; i<mousePath.size(); i++)
-			drawer.drawLine(mousePath.get(i), mousePath.get(i-1), MOUSEPATH_COLOR, 1);
-		if (mousePath.size() > 1)
-			drawer.drawLine(mousePath.get(0), mousePath.get(mousePath.size()-1), MOUSEPATH_COLOR, 1);
+	private void drawMouseSelection(Vector2 p1, Vector2 p2) {
+		if (p1 == null || p2 == null) return;
+
+		Rectangle rect = new Rectangle(
+			Math.min(p1.x, p2.x),
+			Math.min(p1.y, p2.y),
+			Math.abs(p2.x - p1.x),
+			Math.abs(p2.y - p1.y));
+
+		drawer.fillRect(rect.x, rect.y, rect.width, rect.height, MOUSESELECTION_FILL_COLOR);
+		drawer.drawRect(rect.x, rect.y, rect.width, rect.height, MOUSESELECTION_STROKE_COLOR, 3);
 	}
 
 	private void drawBallThrowPath(Vector2 p1, Vector2 p2, float zoom) {
+		if (p1 == null || p2 == null) return;
+		
 		float w = 0.03f * zoom;
-		if (p1 != null && p2 != null) {
-			drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);
-			drawer.fillRect(p2.cpy().sub(w/2, w/2), w, w, BALLTHROWPATH_COLOR);
-		}
+
+		drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);
+		drawer.fillRect(p2.cpy().sub(w/2, w/2), w, w, BALLTHROWPATH_COLOR);
 	}
 }

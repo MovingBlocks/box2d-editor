@@ -1,5 +1,5 @@
-import aurelienribon.bodyeditor.AppManager;
 import aurelienribon.bodyeditor.IoManager;
+import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
 import aurelienribon.bodyeditor.ui.MainWindow;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
@@ -18,21 +18,22 @@ import javax.swing.UIManager;
 public class Main {
     public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
+			@Override public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (Exception ex) {}
+				} catch (Exception ex) {
+				}
 
-				LwjglCanvas glCanvas = new LwjglCanvas(AppManager.instance().getRenderPanel(), false);
-				AppManager.instance().setRenderCanvas(glCanvas.getCanvas());
+				LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), false);
 				
 				MainWindow mw = new MainWindow(glCanvas.getCanvas());
+
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
 					Math.min(1150, screenSize.width - 100),
 					Math.min(800, screenSize.height - 100)
 				);
+				
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
 
