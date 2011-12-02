@@ -1,5 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
+import aurelienribon.bodyeditor.AppEvents;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
@@ -118,6 +119,13 @@ public class Canvas implements ApplicationListener {
 				}
 			}
 		});
+
+		AppEvents.addListener(new AppEvents.Listener() {
+			@Override public void recreateWorldRequested() {
+				clearWorld();
+				createBody();
+			}
+		});
 	}
 
 	@Override
@@ -127,7 +135,7 @@ public class Canvas implements ApplicationListener {
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		gl.glEnable(GL10.GL_TEXTURE_2D | GL10.GL_BLEND);
+		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		int w = Gdx.graphics.getWidth();
@@ -209,8 +217,6 @@ public class Canvas implements ApplicationListener {
 	}
 
 	public void createBody() {
-		clearWorld();
-
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null || model.getPolygons().isEmpty()) return;
 

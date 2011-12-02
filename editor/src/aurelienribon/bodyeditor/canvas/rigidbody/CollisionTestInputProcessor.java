@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -27,8 +27,8 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		AppManager.instance().ballThrowP1 = p;
-		AppManager.instance().ballThrowP2 = p;
+		AppObjects.ballThrowP1 = p;
+		AppObjects.ballThrowP2 = p;
 		return false;
 	}
 
@@ -44,13 +44,13 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return false;
 
-		Vector2 p1 = AppManager.instance().ballThrowP1;
-		Vector2 p2 = AppManager.instance().ballThrowP2;
+		Vector2 p1 = AppObjects.ballThrowP1;
+		Vector2 p2 = AppObjects.ballThrowP2;
 		Vector2 delta = new Vector2(p2).sub(p1);
 		canvas.fireBall(p1, delta);
 		
-		AppManager.instance().ballThrowP1 = null;
-		AppManager.instance().ballThrowP2 = null;
+		AppObjects.ballThrowP1 = null;
+		AppObjects.ballThrowP2 = null;
 		return false;
 	}
 
@@ -62,7 +62,7 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		AppManager.instance().ballThrowP2 = p;
+		AppObjects.ballThrowP2 = p;
 		return false;
 	}
 }

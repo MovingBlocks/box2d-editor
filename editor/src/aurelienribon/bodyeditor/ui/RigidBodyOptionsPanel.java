@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.AppManager;
+import aurelienribon.bodyeditor.AppEvents;
+import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.ObjectsManager;
@@ -263,7 +264,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 	private void polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polygonizerCboxActionPerformed
 		Settings.polygonizer = Polygonizers.valueOf((String) polygonizerCbox.getSelectedItem());
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-		AppManager.instance().getRenderPanel().createBody();
+		AppEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_polygonizerCboxActionPerformed
 
 	private void drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawGridChkActionPerformed
@@ -282,7 +283,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 			return;
 		}
 
-		AppManager.instance().insertPointBetweenSelected();
+		AppObjects.insertPointsBetweenSelected();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 }//GEN-LAST:event_insertPointsBtnActionPerformed
 
@@ -294,7 +295,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 			return;
 		}
 
-		AppManager.instance().removeSelectedPoints();
+		AppObjects.removeSelectedPoints();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
 }//GEN-LAST:event_removePointsBtnActionPerformed
 
@@ -307,7 +308,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 		}
 
 		ObjectsManager.instance().getSelectedRigidBody().clear();
-		AppManager.instance().getRenderPanel().createBody();
+		AppEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_clearPointsBtnActionPerformed
 
 	private void setBackgroundImageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setBackgroundImageBtnActionPerformed

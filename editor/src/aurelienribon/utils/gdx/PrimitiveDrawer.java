@@ -50,6 +50,8 @@ public class PrimitiveDrawer {
 	}
 
 	public void drawRect(float x, float y, float w, float h, Color c, float lineWidth) {
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl10.glLineWidth(lineWidth);
 		imr.begin(GL10.GL_LINE_LOOP);
 		imr.color(c.r, c.g, c.b, c.a); imr.vertex(x    , y    , 0);
@@ -64,13 +66,24 @@ public class PrimitiveDrawer {
 	}
 
 	public void fillRect(float x, float y, float w, float h, Color c, TextureRegion tex) {
-		if (tex != null) tex.getTexture().bind();
+		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		if (tex != null) {
+			Gdx.gl.glEnable(GL10.GL_TEXTURE_2D);
+			tex.getTexture().bind();
+		}
+
 		imr.begin(GL10.GL_TRIANGLE_FAN);
 		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(0, 0); imr.vertex(x    , y    , 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(1, 0); imr.vertex(x + w, y    , 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(1, 1); imr.vertex(x + w, y + h, 0);
 		imr.color(c.r, c.g, c.b, c.a); imr.texCoord(0, 1); imr.vertex(x    , y + h, 0);
 		imr.end();
+
+		if (tex != null) {
+			Gdx.gl.glDisable(GL10.GL_TEXTURE_2D);
+		}
 	}
 
 	public void fillRect(float x, float y, float w, float h, Color c) {
