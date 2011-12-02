@@ -4,7 +4,6 @@ import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -97,21 +96,6 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		// Next point assignment
 
 		AppObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
-		return false;
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		if (!InputHelper.isShapeCreationEnabled()) return false;
-		int x = Gdx.input.getX();
-		int y = Gdx.input.getY();
-		AppObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		AppObjects.nextPoint = null;
 		return false;
 	}
 }
