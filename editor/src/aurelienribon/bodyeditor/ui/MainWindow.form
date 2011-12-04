@@ -269,7 +269,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="renderPanel" pref="549" max="32767" attributes="0"/>
+                  <Component id="renderPanel" pref="596" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="bottomPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -280,15 +280,8 @@
       <SubComponents>
         <Container class="javax.swing.JPanel" name="renderPanel">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="Theme.MAIN_ALT_BACKGROUND" type="code"/>
-            </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-                <MatteColorBorder>
-                  <Connection PropertyName="color" code="Theme.SEPARATOR" type="code"/>
-                </MatteColorBorder>
-              </Border>
+                <PropertyBean type="aurelienribon.utils.ui.GroupBorder"/>
             </Property>
           </Properties>
 

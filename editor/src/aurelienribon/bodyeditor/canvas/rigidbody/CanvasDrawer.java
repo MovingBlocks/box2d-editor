@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -32,13 +30,16 @@ public class CanvasDrawer {
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
-	private final PrimitiveDrawer drawer = new PrimitiveDrawer(new ImmediateModeRenderer10());
+	private final Canvas canvas;
+	private final PrimitiveDrawer drawer;
 	private final SpriteBatch sb = new SpriteBatch();
 	private final Sprite v00Sprite;
 	private final Sprite v10Sprite;
 	private final Sprite v01Sprite;
 
-	public CanvasDrawer() {
+	public CanvasDrawer(Canvas canvas, PrimitiveDrawer drawer) {
+		this.canvas = canvas;
+		this.drawer = drawer;
 		v00Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v00.png")));
 		v10Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v10.png")));
 		v01Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v01.png")));
@@ -64,13 +65,13 @@ public class CanvasDrawer {
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
-		List<Vector2> selectedPoints = AppObjects.selectedPoints;
-		Vector2 nearestPoint = AppObjects.nearestPoint;
-		Vector2 nextPoint = AppObjects.nextPoint;
-		Vector2 mouseSelectionP1 = AppObjects.mouseSelectionP1;
-		Vector2 mouseSelectionP2 = AppObjects.mouseSelectionP2; 
-		Vector2 ballThrowP1 = AppObjects.ballThrowP1;
-		Vector2 ballThrowP2 = AppObjects.ballThrowP2;
+		List<Vector2> selectedPoints = CanvasObjects.selectedPoints;
+		Vector2 nearestPoint = CanvasObjects.nearestPoint;
+		Vector2 nextPoint = CanvasObjects.nextPoint;
+		Vector2 mouseSelectionP1 = CanvasObjects.mouseSelectionP1;
+		Vector2 mouseSelectionP2 = CanvasObjects.mouseSelectionP2; 
+		Vector2 ballThrowP1 = CanvasObjects.ballThrowP1;
+		Vector2 ballThrowP2 = CanvasObjects.ballThrowP2;
 		float zoom = camera.zoom;
 
 		drawAxis(camera);
@@ -147,7 +148,7 @@ public class CanvasDrawer {
 			if (shape.isClosed()) {
 				drawer.drawLine(vs.get(0), vs.get(vs.size()-1), SHAPE_COLOR, 2);
 			} else {
-				Vector2 nextPoint = AppObjects.nextPoint;
+				Vector2 nextPoint = CanvasObjects.nextPoint;
 				if (nextPoint != null) drawer.drawLine(vs.get(vs.size()-1), nextPoint, SHAPE_LASTLINE_COLOR, 2);
 			}
 		}
@@ -164,8 +165,7 @@ public class CanvasDrawer {
 			}
 		}
 
-		if (nextPoint != null && Settings.mode == Settings.Modes.CREATION)
-			drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
+		if (nextPoint != null) drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
 	}
 
 	private void drawPolygons(List<PolygonModel> polygons) {

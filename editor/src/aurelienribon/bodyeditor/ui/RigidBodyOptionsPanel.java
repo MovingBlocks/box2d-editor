@@ -1,7 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.AppEvents;
-import aurelienribon.bodyeditor.AppObjects;
+import aurelienribon.bodyeditor.canvas.rigidbody.CanvasEvents;
+import aurelienribon.bodyeditor.canvas.rigidbody.CanvasObjects;
 import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.ObjectsManager;
@@ -41,10 +41,6 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
         drawShapeChk = new javax.swing.JCheckBox();
         polygonizerCbox = new javax.swing.JComboBox();
         enableSnapToGridChk = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        setCreationModeBtn = new javax.swing.JToggleButton();
-        setEditionModeBtn = new javax.swing.JToggleButton();
-        setTestModeBtn = new javax.swing.JToggleButton();
 
         setOpaque(false);
 
@@ -111,7 +107,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(insertPointsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(removePointsBtn))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel5Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {clearPointsBtn, setBackgroundImageBtn});
@@ -131,7 +127,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
                         .addComponent(insertPointsBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removePointsBtn)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(new aurelienribon.utils.ui.GroupBorder());
@@ -224,7 +220,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
                         .addComponent(drawGridChk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,72 +239,6 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
                     .addComponent(drawPolysChk)
                     .addComponent(jLabel6)
                     .addComponent(polygonizerCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
-        );
-
-        jPanel1.setBorder(new aurelienribon.utils.ui.GroupBorder());
-
-        buttonGroup1.add(setCreationModeBtn);
-        setCreationModeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_createShape.png"))); // NOI18N
-        setCreationModeBtn.setSelected(true);
-        setCreationModeBtn.setText("Creation");
-        setCreationModeBtn.setFocusable(false);
-        setCreationModeBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        setCreationModeBtn.setMargin(new java.awt.Insets(2, 2, 2, 3));
-        setCreationModeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setCreationModeBtnActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(setEditionModeBtn);
-        setEditionModeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_editShape.png"))); // NOI18N
-        setEditionModeBtn.setText("Edition");
-        setEditionModeBtn.setFocusable(false);
-        setEditionModeBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        setEditionModeBtn.setMargin(new java.awt.Insets(2, 2, 2, 3));
-        setEditionModeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setEditionModeBtnActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(setTestModeBtn);
-        setTestModeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_test.png"))); // NOI18N
-        setTestModeBtn.setText("Test");
-        setTestModeBtn.setFocusable(false);
-        setTestModeBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        setTestModeBtn.setMargin(new java.awt.Insets(2, 2, 2, 3));
-        setTestModeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setTestModeBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(setCreationModeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setEditionModeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setTestModeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {setCreationModeBtn, setEditionModeBtn, setTestModeBtn});
-
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(setCreationModeBtn)
-                    .addComponent(setEditionModeBtn)
-                    .addComponent(setTestModeBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -317,22 +247,14 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPanel1, jPanel5});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -355,7 +277,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 	private void polygonizerCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polygonizerCboxActionPerformed
 		Settings.polygonizer = Polygonizers.valueOf((String) polygonizerCbox.getSelectedItem());
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
-		AppEvents.fireRecreateWorldRequested();
+		CanvasEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_polygonizerCboxActionPerformed
 
 	private void drawGridChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawGridChkActionPerformed
@@ -374,8 +296,9 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 			return;
 		}
 
-		AppObjects.insertPointsBetweenSelected();
+		CanvasObjects.insertPointsBetweenSelected();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
+		CanvasEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_insertPointsBtnActionPerformed
 
 	private void removePointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePointsBtnActionPerformed
@@ -386,8 +309,9 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 			return;
 		}
 
-		AppObjects.removeSelectedPoints();
+		CanvasObjects.removeSelectedPoints();
 		ObjectsManager.instance().getSelectedRigidBody().computePolygons();
+		CanvasEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_removePointsBtnActionPerformed
 
 	private void clearPointsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPointsBtnActionPerformed
@@ -399,7 +323,7 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 		}
 
 		ObjectsManager.instance().getSelectedRigidBody().clear();
-		AppEvents.fireRecreateWorldRequested();
+		CanvasEvents.fireRecreateWorldRequested();
 }//GEN-LAST:event_clearPointsBtnActionPerformed
 
 	private void setBackgroundImageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setBackgroundImageBtnActionPerformed
@@ -417,18 +341,6 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
 		}
 	}//GEN-LAST:event_setBackgroundImageBtnActionPerformed
 
-	private void setCreationModeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCreationModeBtnActionPerformed
-		Settings.mode = Settings.Modes.CREATION;
-	}//GEN-LAST:event_setCreationModeBtnActionPerformed
-
-	private void setEditionModeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setEditionModeBtnActionPerformed
-		Settings.mode = Settings.Modes.EDITION;
-	}//GEN-LAST:event_setEditionModeBtnActionPerformed
-
-	private void setTestModeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTestModeBtnActionPerformed
-		Settings.mode = Settings.Modes.TEST;
-	}//GEN-LAST:event_setTestModeBtnActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton clearPointsBtn;
@@ -440,15 +352,11 @@ public class RigidBodyOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner gridGapSpinner;
     private javax.swing.JButton insertPointsBtn;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JComboBox polygonizerCbox;
     private javax.swing.JButton removePointsBtn;
     private javax.swing.JButton setBackgroundImageBtn;
-    private javax.swing.JToggleButton setCreationModeBtn;
-    private javax.swing.JToggleButton setEditionModeBtn;
-    private javax.swing.JToggleButton setTestModeBtn;
     // End of variables declaration//GEN-END:variables
 
 	// -------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppEvents;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
+import aurelienribon.utils.gdx.PrimitiveDrawer;
 import aurelienribon.utils.gdx.ShapeUtils;
 import aurelienribon.utils.gdx.TextureHelper;
 import aurelienribon.utils.notifications.ChangeListener;
@@ -18,7 +18,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -41,20 +43,30 @@ import java.util.Random;
  */
 public class Canvas implements ApplicationListener {
 	private static final float PX_PER_METER = 300;
+	private static final Color COLOR_AREAS = new Color(0f, 0f, 0f, 0.7f);
+	public static enum Modes {CREATION, EDITION, TEST}
+	
 	private final List<Body> ballsBodies = new ArrayList<Body>();
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final Random rand = new Random();
 	private final Vector3 vec3 = new Vector3();
 
+	private Modes mode = Modes.CREATION;
+
+	private PrimitiveDrawer pDrawer;
 	private CanvasDrawer drawer;
 	private SpriteBatch sb;
 	private BitmapFont font;
-	private OrthographicCamera camera;
+	private OrthographicCamera worldCamera;
+	private OrthographicCamera screenCamera;
 
 	private Texture backgroundLightTexture;
 	private Texture backgroundDarkTexture;
 	private Texture ballTexture;
 	private Sprite bodySprite;
+	private Sprite btnCreationSprite;
+	private Sprite btnEditionSprite;
+	private Sprite btnTestSprite;
 
 	private World world;
 
@@ -64,13 +76,20 @@ public class Canvas implements ApplicationListener {
 	
 	@Override
 	public void create() {
-		drawer = new CanvasDrawer();
+		pDrawer = new PrimitiveDrawer(new ImmediateModeRenderer10());
+		drawer = new CanvasDrawer(this, pDrawer);
 		sb = new SpriteBatch();
 		font = new BitmapFont();
-
-		float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
-		camera = new OrthographicCamera(2, 2/ratio);
-		camera.position.set(0.5f, 0.5f/ratio, 0);
+		
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
+		worldCamera = new OrthographicCamera(2, 2/w/h);
+		worldCamera.position.set(0.5f, 0.5f/w/h, 0);
+		worldCamera.update();
+		screenCamera = new OrthographicCamera(w, h);
+		screenCamera.position.set(w/2, h/2, 0);
+		screenCamera.update();
 
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
@@ -78,12 +97,25 @@ public class Canvas implements ApplicationListener {
 		
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		
+		TextureAtlas buttonsAtlas = new TextureAtlas(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/pack-buttons"));
+		
+		btnCreationSprite = buttonsAtlas.createSprite("btn_creation");
+		btnEditionSprite = buttonsAtlas.createSprite("btn_edition");
+		btnTestSprite = buttonsAtlas.createSprite("btn_test");
+		btnCreationSprite.setPosition(119, 3);
+		btnEditionSprite.setPosition(119, 3);
+		btnTestSprite.setPosition(119, 3);
+		btnCreationSprite.setColor(1, 1, 1, 1);
+		btnEditionSprite.setColor(1, 1, 1, 0);
+		btnTestSprite.setColor(1, 1, 1, 0);
 
 		InputMultiplexer im = new InputMultiplexer();
 		im.addProcessor(new PanZoomInputProcessor(this));
 		im.addProcessor(new CollisionTestInputProcessor(this));
 		im.addProcessor(new ShapeCreationInputProcessor(this));
 		im.addProcessor(new ShapeEditionInputProcessor(this));
+		im.addProcessor(new ModeInputProcessor(this));
 		Gdx.input.setInputProcessor(im);
 
 		world = new World(new Vector2(0, 0), true);
@@ -95,8 +127,8 @@ public class Canvas implements ApplicationListener {
 					bodySprite = null;
 
 					float ratio = (float)Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
-					camera.position.set(0.5f, 0.5f/ratio, 0);
-					camera.update();
+					worldCamera.position.set(0.5f, 0.5f/ratio, 0);
+					worldCamera.update();
 
 					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 					if (model == null) return;
@@ -120,7 +152,7 @@ public class Canvas implements ApplicationListener {
 			}
 		});
 
-		AppEvents.addListener(new AppEvents.Listener() {
+		CanvasEvents.addListener(new CanvasEvents.Listener() {
 			@Override public void recreateWorldRequested() {
 				clearWorld();
 				createBody();
@@ -156,7 +188,7 @@ public class Canvas implements ApplicationListener {
 		sb.enableBlending();
 		sb.end();
 
-		sb.setProjectionMatrix(camera.combined);
+		sb.setProjectionMatrix(worldCamera.combined);
 		sb.begin();
 		if (bodySprite != null && Settings.isImageDrawn) bodySprite.draw(sb);
 		for (int i=0; i<ballsSprites.size(); i++) {
@@ -169,14 +201,20 @@ public class Canvas implements ApplicationListener {
 		}
 		sb.end();
 
-		camera.apply(gl);
-		drawer.draw(camera, bodySprite);
+		worldCamera.apply(gl);
+		drawer.draw(worldCamera, bodySprite);
+		
+		screenCamera.apply(gl);
+		pDrawer.fillRect(0, 0, 220, 60, COLOR_AREAS);
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
-		font.setColor(Color.BLACK);
-		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / camera.zoom), 5, 45);
-		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 5, 25);
+		font.setColor(Color.WHITE);
+		font.draw(sb, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 10, 45);
+		font.draw(sb, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
+		btnTestSprite.draw(sb);
+		btnEditionSprite.draw(sb);
+		btnCreationSprite.draw(sb);
 		sb.end();
 	}
 
@@ -184,9 +222,9 @@ public class Canvas implements ApplicationListener {
 	public void resize(int width, int height) {
 		GL10 gl = Gdx.gl10;
 		gl.glViewport(0, 0, width, height);
-		camera.viewportWidth = 2;
-		camera.viewportHeight = 2 / ((float)width / height);
-		camera.update();
+		worldCamera.viewportWidth = 2;
+		worldCamera.viewportHeight = 2 / ((float)width / height);
+		worldCamera.update();
 	}
 
 	@Override public void resume() {}
@@ -198,7 +236,7 @@ public class Canvas implements ApplicationListener {
 	// -------------------------------------------------------------------------
 
 	public Vector2 screenToWorld(int x, int y) {
-		camera.unproject(vec3.set(x, y, 0));
+		worldCamera.unproject(vec3.set(x, y, 0));
 		return new Vector2(vec3.x, vec3.y);
 	}
 
@@ -213,7 +251,37 @@ public class Canvas implements ApplicationListener {
 	}
 
 	public OrthographicCamera getCamera() {
-		return camera;
+		return worldCamera;
+	}
+
+	public Modes getMode() {
+		return mode;
+	}
+
+	public void setNextMode() {
+		CanvasObjects.nextPoint = null;
+		
+		mode = mode == Modes.CREATION
+			? Modes.EDITION : mode == Modes.EDITION
+			? Modes.TEST : Modes.CREATION;
+		
+		switch (mode) {
+			case CREATION:
+				btnCreationSprite.setColor(1, 1, 1, 1);
+				btnEditionSprite.setColor(1, 1, 1, 0);
+				btnTestSprite.setColor(1, 1, 1, 0);
+				break;
+			case EDITION:
+				btnCreationSprite.setColor(1, 1, 1, 0);
+				btnEditionSprite.setColor(1, 1, 1, 1);
+				btnTestSprite.setColor(1, 1, 1, 0);
+				break;
+			case TEST:
+				btnCreationSprite.setColor(1, 1, 1, 0);
+				btnEditionSprite.setColor(1, 1, 1, 0);
+				btnTestSprite.setColor(1, 1, 1, 1);
+				break;
+		}
 	}
 
 	public void createBody() {
@@ -245,7 +313,7 @@ public class Canvas implements ApplicationListener {
 	}
 
 	public void fireBall(Vector2 orig, Vector2 force) {
-		float radius = rand.nextFloat() * 10 + 5;
+		float radius = rand.nextFloat() * 0.02f + 0.02f;
 
 		BodyDef bd = new BodyDef();
 		bd.angularDamping = 0.5f;

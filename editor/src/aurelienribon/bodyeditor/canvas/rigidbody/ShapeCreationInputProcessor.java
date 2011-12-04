@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -23,7 +22,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDown = InputHelper.isShapeCreationEnabled() && button == Buttons.LEFT;
+		touchDown = canvas.getMode() == Canvas.Modes.CREATION && button == Buttons.LEFT;
 		if (!touchDown) return false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
@@ -42,7 +41,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		// Add a vertex to the shape or close it
 
 		List<Vector2> vs = lastShape.getVertices();
-		Vector2 nearestPoint = AppObjects.nearestPoint;
+		Vector2 nearestPoint = CanvasObjects.nearestPoint;
 
 		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
 			lastShape.close();
@@ -71,14 +70,14 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!InputHelper.isShapeCreationEnabled()) return false;
+		if (canvas.getMode() != Canvas.Modes.CREATION) return false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return false;
 
 		// Nearest point computation
 
-		AppObjects.nearestPoint = null;
+		CanvasObjects.nearestPoint = null;
 		Vector2 p = canvas.screenToWorld(x, y);
 
 		List<ShapeModel> shapes = model.getShapes();
@@ -90,12 +89,12 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 			if (!lastShape.isClosed() && vs.size() >= 3)
 				if (vs.get(0).dst(p) < 0.025f*zoom)
-					AppObjects.nearestPoint = vs.get(0);
+					CanvasObjects.nearestPoint = vs.get(0);
 		}
 
 		// Next point assignment
 
-		AppObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
+		CanvasObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
 		return false;
 	}
 }

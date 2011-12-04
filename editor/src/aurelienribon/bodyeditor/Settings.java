@@ -6,9 +6,6 @@ import aurelienribon.bodyeditor.EarClippingManager.Polygonizers;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Settings {
-	public static enum Modes {CREATION, EDITION, TEST}
-
-	public static Modes mode = Modes.CREATION;
 	public static boolean isImageDrawn = true;
 	public static boolean isShapeDrawn = true;
 	public static boolean isPolygonDrawn = true;

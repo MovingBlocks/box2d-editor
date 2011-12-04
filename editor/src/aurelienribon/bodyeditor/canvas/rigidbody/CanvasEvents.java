@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor;
+package aurelienribon.bodyeditor.canvas.rigidbody;
 
 import java.util.EventListener;
 import javax.swing.event.EventListenerList;
@@ -6,7 +6,7 @@ import javax.swing.event.EventListenerList;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class AppEvents {
+public class CanvasEvents {
 	public static interface Listener extends EventListener {
 		public void recreateWorldRequested();
 	}
