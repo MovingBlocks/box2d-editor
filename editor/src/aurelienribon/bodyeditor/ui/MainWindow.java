@@ -242,8 +242,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         renderPanelWrapper.setBackground(Theme.MAIN_BACKGROUND);
 
-        renderPanel.setBackground(Theme.MAIN_ALT_BACKGROUND);
-        renderPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, Theme.SEPARATOR));
+        renderPanel.setBorder(new aurelienribon.utils.ui.GroupBorder());
         renderPanel.setLayout(new java.awt.BorderLayout());
 
         bottomPanel.setOpaque(false);
@@ -273,7 +272,7 @@ public class MainWindow extends javax.swing.JFrame {
             renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, renderPanelWrapperLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())

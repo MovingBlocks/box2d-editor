@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.AppObjects;
 import aurelienribon.bodyeditor.ObjectsManager;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -27,20 +26,20 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDown = InputHelper.isShapeEditionEnabled() && button == Buttons.LEFT;
+		touchDown = canvas.getMode() == Canvas.Modes.EDITION && button == Buttons.LEFT;
 		if (!touchDown) return false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return false;
 
-		draggedPoint = AppObjects.nearestPoint;
+		draggedPoint = CanvasObjects.nearestPoint;
 
 		if (draggedPoint == null) {
-			AppObjects.selectedPoints.clear();
-			AppObjects.mouseSelectionP1 = canvas.screenToWorld(x, y);
+			CanvasObjects.selectedPoints.clear();
+			CanvasObjects.mouseSelectionP1 = canvas.screenToWorld(x, y);
 
-		} else if (!AppObjects.selectedPoints.contains(draggedPoint)) {
-			AppObjects.selectedPoints.clear();
+		} else if (!CanvasObjects.selectedPoints.contains(draggedPoint)) {
+			CanvasObjects.selectedPoints.clear();
 		}
 
 		return false;
@@ -64,8 +63,8 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			canvas.createBody();
 		}
 
-		AppObjects.mouseSelectionP1 = null;
-		AppObjects.mouseSelectionP2 = null;
+		CanvasObjects.mouseSelectionP1 = null;
+		CanvasObjects.mouseSelectionP2 = null;
 		return false;
 	}
 
@@ -85,16 +84,16 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 			float dy = p.y - draggedPoint.y;
 			draggedPoint.add(dx, dy);
 
-			for (int i=0; i<AppObjects.selectedPoints.size(); i++) {
-				Vector2 sp = AppObjects.selectedPoints.get(i);
+			for (int i=0; i<CanvasObjects.selectedPoints.size(); i++) {
+				Vector2 sp = CanvasObjects.selectedPoints.get(i);
 				if (sp != draggedPoint)
 					sp.add(dx, dy);
 			}
 			
 		} else {
-			AppObjects.mouseSelectionP2 = canvas.screenToWorld(x, y);
-			AppObjects.selectedPoints.clear();
-			AppObjects.selectedPoints.addAll(getPointsInSelection());
+			CanvasObjects.mouseSelectionP2 = canvas.screenToWorld(x, y);
+			CanvasObjects.selectedPoints.clear();
+			CanvasObjects.selectedPoints.addAll(getPointsInSelection());
 		}
 		
 		return false;
@@ -102,7 +101,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (!InputHelper.isShapeEditionEnabled()) return false;
+		if (canvas.getMode() != Canvas.Modes.EDITION) return false;
 
 		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
 		if (model == null) return false;
@@ -110,12 +109,12 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		// Nearest point computation
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		AppObjects.nearestPoint = null;
+		CanvasObjects.nearestPoint = null;
 		float zoom = canvas.getCamera().zoom;
 
 		for (Vector2 v : getAllPoints())
 			if (v.dst(p) < 0.025f*zoom)
-				AppObjects.nearestPoint = v;
+				CanvasObjects.nearestPoint = v;
 
 		return false;
 	}
@@ -124,8 +123,8 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private List<Vector2> getPointsInSelection() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		Vector2 p1 = AppObjects.mouseSelectionP1;
-		Vector2 p2 = AppObjects.mouseSelectionP2;
+		Vector2 p1 = CanvasObjects.mouseSelectionP1;
+		Vector2 p2 = CanvasObjects.mouseSelectionP2;
 
 		if (p1 != null && p2 != null) {
 			Rectangle rect = new Rectangle(
