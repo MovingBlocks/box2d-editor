@@ -18,7 +18,7 @@ import res.Res;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class MainWindow extends javax.swing.JFrame {
-    public MainWindow(final Component canvas) {
+    public MainWindow() {
 		setContentPane(new PaintedPanel());
         initComponents();
 
@@ -36,9 +36,6 @@ public class MainWindow extends javax.swing.JFrame {
 		objectsPanel.getModel().add(p2, "Dynamic objects", null, false);
 		objectsPanel.setHeaderLayout(TabPanel.LAYOUT_GRID);
 
-		renderPanel.add(canvas, BorderLayout.CENTER);
-		canvas.requestFocusInWindow();
-
 		logoWebsiteLbl.addMouseListener(new MouseAdapter() {
 			@Override public void mouseClicked(MouseEvent e) {
 				SwingHelper.browse(MainWindow.this, "http://www.aurelienribon.com");
@@ -53,6 +50,11 @@ public class MainWindow extends javax.swing.JFrame {
 			}
 		});
     }
+
+	public void setCanvas(Component canvas) {
+		renderPanel.add(canvas, BorderLayout.CENTER);
+		canvas.requestFocusInWindow();
+	}
 
 	// -------------------------------------------------------------------------
 	// Generated Stuff
@@ -71,6 +73,7 @@ public class MainWindow extends javax.swing.JFrame {
         objectsPanel = new aurelienribon.ui.components.TabPanel();
         renderPanel = new javax.swing.JPanel();
         optionsPanel = new javax.swing.JPanel();
+        rigidBodiesOptionsPanel1 = new aurelienribon.bodyeditor.ui.RigidBodiesOptionsPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Physics Body Editor");
@@ -80,7 +83,7 @@ public class MainWindow extends javax.swing.JFrame {
         logoPanel.setOpaque(false);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/title.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/title.png"))); // NOI18N
 
         logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurelien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
 
@@ -127,16 +130,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         renderPanel.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
-        optionsPanel.setLayout(optionsPanelLayout);
-        optionsPanelLayout.setHorizontalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        optionsPanelLayout.setVerticalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 111, Short.MAX_VALUE)
-        );
+        optionsPanel.setLayout(new java.awt.CardLayout());
+        optionsPanel.add(rigidBodiesOptionsPanel1, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,7 +142,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -176,6 +171,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel optionsPanel;
     private aurelienribon.bodyeditor.ui.ProjectPanel projectPanel;
     private javax.swing.JPanel renderPanel;
+    private aurelienribon.bodyeditor.ui.RigidBodiesOptionsPanel rigidBodiesOptionsPanel1;
     private javax.swing.JPanel sidePanel;
     // End of variables declaration//GEN-END:variables
 }

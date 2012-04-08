@@ -1,17 +1,17 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas.rigidbodies;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
-import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.utils.gdx.PrimitiveDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class CanvasDrawer {
+public class RigidBodiesScreenDrawer {
 	private static final Color SHAPE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color POLYGON_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
@@ -30,16 +30,13 @@ public class CanvasDrawer {
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
-	private final Canvas canvas;
-	private final PrimitiveDrawer drawer;
+	private final ShapeRenderer drawer = new ShapeRenderer();
 	private final SpriteBatch sb = new SpriteBatch();
 	private final Sprite v00Sprite;
 	private final Sprite v10Sprite;
 	private final Sprite v01Sprite;
 
-	public CanvasDrawer(Canvas canvas, PrimitiveDrawer drawer) {
-		this.canvas = canvas;
-		this.drawer = drawer;
+	public RigidBodiesScreenDrawer() {
 		v00Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v00.png")));
 		v10Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v10.png")));
 		v01Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v01.png")));
@@ -65,13 +62,13 @@ public class CanvasDrawer {
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
-		List<Vector2> selectedPoints = CanvasObjects.selectedPoints;
-		Vector2 nearestPoint = CanvasObjects.nearestPoint;
-		Vector2 nextPoint = CanvasObjects.nextPoint;
-		Vector2 mouseSelectionP1 = CanvasObjects.mouseSelectionP1;
-		Vector2 mouseSelectionP2 = CanvasObjects.mouseSelectionP2;
-		Vector2 ballThrowP1 = CanvasObjects.ballThrowP1;
-		Vector2 ballThrowP2 = CanvasObjects.ballThrowP2;
+		List<Vector2> selectedPoints = RigidBodiesScreenObjects.selectedPoints;
+		Vector2 nearestPoint = RigidBodiesScreenObjects.nearestPoint;
+		Vector2 nextPoint = RigidBodiesScreenObjects.nextPoint;
+		Vector2 mouseSelectionP1 = RigidBodiesScreenObjects.mouseSelectionP1;
+		Vector2 mouseSelectionP2 = RigidBodiesScreenObjects.mouseSelectionP2;
+		Vector2 ballThrowP1 = RigidBodiesScreenObjects.ballThrowP1;
+		Vector2 ballThrowP2 = RigidBodiesScreenObjects.ballThrowP2;
 		float zoom = camera.zoom;
 
 		drawAxis(camera);
@@ -148,7 +145,7 @@ public class CanvasDrawer {
 			if (shape.isClosed()) {
 				drawer.drawLine(vs.get(0), vs.get(vs.size()-1), SHAPE_COLOR, 2);
 			} else {
-				Vector2 nextPoint = CanvasObjects.nextPoint;
+				Vector2 nextPoint = RigidBodiesScreenObjects.nextPoint;
 				if (nextPoint != null) drawer.drawLine(vs.get(vs.size()-1), nextPoint, SHAPE_LASTLINE_COLOR, 2);
 			}
 		}

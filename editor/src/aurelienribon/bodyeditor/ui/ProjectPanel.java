@@ -118,17 +118,17 @@ public class ProjectPanel extends javax.swing.JPanel {
 
         jPanel1.setOpaque(false);
 
-        newBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_new.png"))); // NOI18N
+        newBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_new.png"))); // NOI18N
         newBtn.setText("New project");
         newBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         newBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
-        loadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_open.png"))); // NOI18N
+        loadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_open.png"))); // NOI18N
         loadBtn.setText("Load project");
         loadBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         loadBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
-        saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/bodyeditor/ui/gfx/ic_save.png"))); // NOI18N
+        saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_save.png"))); // NOI18N
         saveBtn.setText("Save");
         saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         saveBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -146,7 +146,7 @@ public class ProjectPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pathLabel)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(newBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                        .addComponent(newBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(loadBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

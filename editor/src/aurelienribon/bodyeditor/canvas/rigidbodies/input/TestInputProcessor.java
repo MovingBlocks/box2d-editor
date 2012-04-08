@@ -1,6 +1,9 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreenObjects;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
@@ -9,25 +12,27 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class CollisionTestInputProcessor extends InputAdapter {
+public class TestInputProcessor extends InputAdapter {
 	private final Canvas canvas;
+	private final RigidBodiesScreen rbScreen;
 	private boolean touchDown = false;
 
-	public CollisionTestInputProcessor(Canvas canvas) {
+	public TestInputProcessor(Canvas canvas, RigidBodiesScreen rbScreen) {
 		this.canvas = canvas;
+		this.rbScreen = rbScreen;
 	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDown = canvas.getMode() == Canvas.Modes.TEST && button == Buttons.LEFT;
+		touchDown = button == Buttons.LEFT;
 		if (!touchDown) return false;
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		CanvasObjects.ballThrowP1 = p;
-		CanvasObjects.ballThrowP2 = p;
+		RigidBodiesScreenObjects.ballThrowP1 = p;
+		RigidBodiesScreenObjects.ballThrowP2 = p;
 		return false;
 	}
 
@@ -43,13 +48,13 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
-		Vector2 p1 = CanvasObjects.ballThrowP1;
-		Vector2 p2 = CanvasObjects.ballThrowP2;
+		Vector2 p1 = RigidBodiesScreenObjects.ballThrowP1;
+		Vector2 p2 = RigidBodiesScreenObjects.ballThrowP2;
 		Vector2 delta = new Vector2(p2).sub(p1);
-		canvas.fireBall(p1, delta);
+		rbScreen.fireBall(p1, delta);
 
-		CanvasObjects.ballThrowP1 = null;
-		CanvasObjects.ballThrowP2 = null;
+		RigidBodiesScreenObjects.ballThrowP1 = null;
+		RigidBodiesScreenObjects.ballThrowP2 = null;
 		return false;
 	}
 
@@ -61,7 +66,7 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		CanvasObjects.ballThrowP2 = p;
+		RigidBodiesScreenObjects.ballThrowP2 = p;
 		return false;
 	}
 }

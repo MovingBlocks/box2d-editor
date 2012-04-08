@@ -1,5 +1,6 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas;
 
+import aurelienribon.bodyeditor.canvas.Canvas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
@@ -34,8 +35,8 @@ public class PanZoomInputProcessor extends InputAdapter {
 
 		Vector2 p = canvas.screenToWorld(x, y);
 		Vector2 delta = new Vector2(p).sub(lastTouch);
-		canvas.getCamera().translate(-delta.x, -delta.y, 0);
-		canvas.getCamera().update();
+		canvas.worldCamera.translate(-delta.x, -delta.y, 0);
+		canvas.worldCamera.update();
 		lastTouch.set(canvas.screenToWorld(x, y));
 		return false;
 	}
@@ -55,8 +56,8 @@ public class PanZoomInputProcessor extends InputAdapter {
 			}
 		}
 
-		canvas.getCamera().zoom = 100f / zoomLevel;
-		canvas.getCamera().update();
+		canvas.worldCamera.zoom = 100f / zoomLevel;
+		canvas.worldCamera.update();
 		return false;
 	}
 }

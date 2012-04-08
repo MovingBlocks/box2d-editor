@@ -91,3 +91,11 @@ aurelienribon-ui-components-TabPanel .-ar-tab:selected {
 	-ar-stroke: null;
 	-ar-fill: lineargradient(0, 0, 0, 1, 0, #4D6082, 1, #3D5277);
 }
+
+/*******************************************************************************
+ * Misc
+ ******************************************************************************/
+
+.leftPanel {
+	-swing-border: matteborder(0, 0, 0, 1, #000);
+}

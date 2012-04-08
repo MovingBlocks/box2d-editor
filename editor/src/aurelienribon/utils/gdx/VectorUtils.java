@@ -16,43 +16,34 @@ public class VectorUtils {
 
 	public static Vector2[] mul(Vector2[] vs, float cx, float cy) {
 		Vector2[] ret = new Vector2[vs.length];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = mul(vs[i], cx, cy);
+		for (int i=0; i<ret.length; i++) ret[i] = mul(vs[i], cx, cy);
 		return ret;
 	}
 
 	public static Vector2[][] mul(Vector2[][] vss, float cx, float cy) {
 		Vector2[][] ret = new Vector2[vss.length][];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = mul(vss[i], cx, cy);
+		for (int i=0; i<ret.length; i++) ret[i] = mul(vss[i], cx, cy);
 		return ret;
 	}
 
 	// -------------------------------------------------------------------------
 
 	public static Vector2 getCopy(Vector2 v) {
-		if (v == null)
-			return null;
+		if (v == null) return null;
 		return v.cpy();
 	}
 
 	public static Vector2[] getCopy(Vector2[] vs) {
-		if (vs == null)
-			return null;
-
+		if (vs == null) return null;
 		Vector2[] ret = new Vector2[vs.length];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = getCopy(vs[i]);
+		for (int i=0; i<ret.length; i++) ret[i] = getCopy(vs[i]);
 		return ret;
 	}
 
 	public static Vector2[][] getCopy(Vector2[][] vss) {
-		if (vss == null)
-			return null;
-
+		if (vss == null) return null;
 		Vector2[][] ret = new Vector2[vss.length][];
-		for (int i=0; i<ret.length; i++)
-			ret[i] = getCopy(vss[i]);
+		for (int i=0; i<ret.length; i++) ret[i] = getCopy(vss[i]);
 		return ret;
 	}
 }
