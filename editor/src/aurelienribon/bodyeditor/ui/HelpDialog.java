@@ -1,13 +1,14 @@
 package aurelienribon.bodyeditor.ui;
 
+import javax.swing.JFrame;
+
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class HelpDialog extends javax.swing.JDialog {
-    public HelpDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public HelpDialog(JFrame frame) {
+        super(frame, true);
         initComponents();
-		Theme.apply(getContentPane());
     }
 
     @SuppressWarnings("unchecked")
@@ -21,13 +22,6 @@ public class HelpDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Physics Body Editor - Help");
 
-        jPanel1.setBackground(Theme.MAIN_BACKGROUND);
-
-        aurelienribon.utils.ui.GroupBorder groupBorder1 = new aurelienribon.utils.ui.GroupBorder();
-        groupBorder1.setTitle("Help");
-        jPanel4.setBorder(groupBorder1);
-
-        jLabel2.setForeground(Theme.MAIN_ALT_FOREGROUND);
         jLabel2.setText("<html> <b>Tutorial</b><br/> 1. Set the output file,<br/> 2. Add some images to the list,<br/> 3. Select an image and define its collision shape(s)<br/><br/>  <i>Note: if your output file extension is \".xml\" or \".json\", then saves will be done in XML or JSON format. For any other extension, saves will be done in binary.</i><br/><br/>  <font color=\"#FF8888\">Don't forget to save your work before closing the application! ;-)</font><br/><br/>  <b>Controls</b><br/> Create a shape with &lt;ctrl&gt;+&lt;left clics&gt;<br/> Edit a shape by dragging its vertices by holding &lt;left mouse button&gt;<br/> Test the collisions by holding &lt;shift&gt; and dragging the &lt;left mouse button&gt;<br/> Zoom with &lt;mouse scroll&gt;<br/> Pan by dragging the &lt;right mouse button&gt;<br/><br/>  <font color=\"#FF8888\">Mac OS users: if &lt;ctrl&gt; or &lt;shift&gt; is not recognized, you can also hold &lt;C&gt; or &lt;S&gt; (respectively).</font><br/><br/>  <b>Hints</b><br/> If you need to insert a vertex between two others, select these two vertices, and clic on the \"insert vertices\" button. A new vertex will be inserted between each pair of selected vertices.");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 

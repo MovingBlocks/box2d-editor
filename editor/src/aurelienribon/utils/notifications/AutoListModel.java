@@ -8,11 +8,11 @@ import javax.swing.event.ListDataListener;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com
  */
-public class AutoListModel implements ListModel {
+public class AutoListModel<T> implements ListModel<T> {
 	private final EventListenerList listeners = new EventListenerList();
-	private final ObservableList model;
+	private final ObservableList<T> model;
 
-	public AutoListModel(ObservableList model) {
+	public AutoListModel(ObservableList<T> model) {
 		this.model = model;
 		model.addListChangedListener(modelListener);
 
@@ -27,7 +27,7 @@ public class AutoListModel implements ListModel {
 	}
 
 	@Override
-	public Object getElementAt(int index) {
+	public T getElementAt(int index) {
 		return model.get(index);
 	}
 
@@ -73,16 +73,16 @@ public class AutoListModel implements ListModel {
 	// Listeners
 	// -------------------------------------------------------------------------
 
-	private final ObservableList.ListChangeListener modelListener = new ObservableList.ListChangeListener() {
+	private final ObservableList.ListChangeListener<T> modelListener = new ObservableList.ListChangeListener<T>() {
 		@Override
-		public void elementAdded(Object source, int idx, Object elem) {
+		public void elementAdded(Object source, int idx, T elem) {
 			fireIntervalAdded(idx, idx);
 			if (elem instanceof Changeable)
 				((Changeable)elem).addChangeListener(elemChangeListener);
 		}
 
 		@Override
-		public void elementRemoved(Object source, int idx, Object elem) {
+		public void elementRemoved(Object source, int idx, T elem) {
 			fireIntervalRemoved(idx, idx);
 			if (elem instanceof Changeable)
 				((Changeable)elem).removeChangeListener(elemChangeListener);

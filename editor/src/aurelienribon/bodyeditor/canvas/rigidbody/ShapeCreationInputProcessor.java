@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -25,7 +25,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		touchDown = canvas.getMode() == Canvas.Modes.CREATION && button == Buttons.LEFT;
 		if (!touchDown) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		// Get the current edited shape
@@ -72,7 +72,7 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 	public boolean touchMoved(int x, int y) {
 		if (canvas.getMode() != Canvas.Modes.CREATION) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		// Nearest point computation

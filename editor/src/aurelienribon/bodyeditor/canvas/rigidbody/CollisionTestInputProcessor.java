@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
@@ -22,7 +22,7 @@ public class CollisionTestInputProcessor extends InputAdapter {
 		touchDown = canvas.getMode() == Canvas.Modes.TEST && button == Buttons.LEFT;
 		if (!touchDown) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
@@ -40,14 +40,14 @@ public class CollisionTestInputProcessor extends InputAdapter {
 
 		touchDown = false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		Vector2 p1 = CanvasObjects.ballThrowP1;
 		Vector2 p2 = CanvasObjects.ballThrowP2;
 		Vector2 delta = new Vector2(p2).sub(p1);
 		canvas.fireBall(p1, delta);
-		
+
 		CanvasObjects.ballThrowP1 = null;
 		CanvasObjects.ballThrowP2 = null;
 		return false;
@@ -57,7 +57,7 @@ public class CollisionTestInputProcessor extends InputAdapter {
 	public boolean touchDragged(int x, int y, int pointer) {
 		if (!touchDown) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);

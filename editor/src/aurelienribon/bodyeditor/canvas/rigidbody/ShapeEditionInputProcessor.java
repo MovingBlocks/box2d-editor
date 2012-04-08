@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeEditionInputProcessor extends InputAdapter {
@@ -29,7 +28,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		touchDown = canvas.getMode() == Canvas.Modes.EDITION && button == Buttons.LEFT;
 		if (!touchDown) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		draggedPoint = CanvasObjects.nearestPoint;
@@ -54,7 +53,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 		touchDown = false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		if (draggedPoint != null) {
@@ -72,7 +71,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 	public boolean touchDragged(int x, int y, int pointer) {
 		if (!touchDown) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		if (draggedPoint != null) {
@@ -89,13 +88,13 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 				if (sp != draggedPoint)
 					sp.add(dx, dy);
 			}
-			
+
 		} else {
 			CanvasObjects.mouseSelectionP2 = canvas.screenToWorld(x, y);
 			CanvasObjects.selectedPoints.clear();
 			CanvasObjects.selectedPoints.addAll(getPointsInSelection());
 		}
-		
+
 		return false;
 	}
 
@@ -103,7 +102,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 	public boolean touchMoved(int x, int y) {
 		if (canvas.getMode() != Canvas.Modes.EDITION) return false;
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		// Nearest point computation
@@ -143,7 +142,7 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private List<Vector2> getAllPoints() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 
 		for (ShapeModel shape : model.getShapes())
 			points.addAll(shape.getVertices());

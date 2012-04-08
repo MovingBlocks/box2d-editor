@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class ShapeModel {

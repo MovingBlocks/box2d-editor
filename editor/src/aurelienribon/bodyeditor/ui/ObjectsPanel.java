@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.bodyeditor.models.DynamicObjectModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
@@ -25,33 +25,33 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ObjectsPanel extends javax.swing.JPanel {
 	private final ImageIcon assetIcon = new ImageIcon(ObjectsPanel.class.getResource("gfx/ic_texture.png"));
-	
+
     public ObjectsPanel() {
         initComponents();
-		bodiesList.setModel(new AutoListModel(ObjectsManager.instance().getRigidBodies()));
-		objectsList.setModel(new AutoListModel(ObjectsManager.instance().getDynamicObjects()));
+		bodiesList.setModel(new AutoListModel(Ctx.bodies.getModels()));
+		objectsList.setModel(new AutoListModel(Ctx.bodies.getDynamicObjects()));
 		bodiesList.setCellRenderer(bodiesListCellRenderer);
 		objectsList.setCellRenderer(objectsListCellRenderer);
 
 		bodiesList.addListSelectionListener(new ListSelectionListener() {
 			@Override public void valueChanged(ListSelectionEvent e) {
 				RigidBodyModel model = (RigidBodyModel) bodiesList.getSelectedValue();
-				ObjectsManager.instance().setSelectedRigidBody(model);
+				Ctx.bodies.setSelectedRigidBody(model);
 			}
 		});
 
 		objectsList.addListSelectionListener(new ListSelectionListener() {
 			@Override public void valueChanged(ListSelectionEvent e) {
 				DynamicObjectModel model = (DynamicObjectModel) objectsList.getSelectedValue();
-				ObjectsManager.instance().setSelectedDynamicObject(model);
+				Ctx.bodies.setSelectedDynamicObject(model);
 			}
 		});
 
-		ObjectsManager.instance().addChangeListener(new ChangeListener() {
+		Ctx.bodies.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
-					RigidBodyModel selectedBody = ObjectsManager.instance().getSelectedRigidBody();
-					DynamicObjectModel selectedObject = ObjectsManager.instance().getSelectedDynamicObject();
+					RigidBodyModel selectedBody = Ctx.bodies.getSelectedModel();
+					DynamicObjectModel selectedObject = Ctx.bodies.getSelectedDynamicObject();
 
 					if (bodiesList.getSelectedValue() != selectedBody) bodiesList.setSelectedValue(selectedBody, true);
 					if (objectsList.getSelectedValue() != selectedObject) objectsList.setSelectedValue(selectedObject, true);
@@ -61,7 +61,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 			}
 		});
 
-		IoManager.instance().addChangeListener(new ChangeListener() {
+		Ctx.io.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(IoManager.PROP_PROJECTFILE)) {
 					((AutoListModel)bodiesList.getModel()).forceRefresh();
@@ -87,19 +87,19 @@ public class ObjectsPanel extends javax.swing.JPanel {
 		if (name != null) {
 			RigidBodyModel model = new RigidBodyModel();
 			model.setName(name);
-			ObjectsManager.instance().getRigidBodies().add(model);
-			ObjectsManager.instance().setSelectedRigidBody(model);
+			Ctx.bodies.getModels().add(model);
+			Ctx.bodies.setSelectedRigidBody(model);
 		}
 	}
 
 	private void delRigidBody() {
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
-		if (model != null) ObjectsManager.instance().getRigidBodies().remove(model);
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
+		if (model != null) Ctx.bodies.getModels().remove(model);
 	}
 
 
 	private void editRigidBody() {
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model != null) {
 			Window wnd = SwingUtilities.getWindowAncestor(this);
 			String name = JOptionPane.showInputDialog(wnd, "Name of the selected rigid body?", model.getName());
@@ -113,19 +113,19 @@ public class ObjectsPanel extends javax.swing.JPanel {
 		if (name != null) {
 			DynamicObjectModel model = new DynamicObjectModel();
 			model.setName(name);
-			ObjectsManager.instance().getDynamicObjects().add(model);
-			ObjectsManager.instance().setSelectedDynamicObject(model);
+			Ctx.bodies.getDynamicObjects().add(model);
+			Ctx.bodies.setSelectedDynamicObject(model);
 		}
 	}
 
 	private void delDynamicObject() {
-		DynamicObjectModel model = ObjectsManager.instance().getSelectedDynamicObject();
-		if (model != null) ObjectsManager.instance().getDynamicObjects().remove(model);
+		DynamicObjectModel model = Ctx.bodies.getSelectedDynamicObject();
+		if (model != null) Ctx.bodies.getDynamicObjects().remove(model);
 	}
 
 
 	private void editDynamicObject() {
-		DynamicObjectModel model = ObjectsManager.instance().getSelectedDynamicObject();
+		DynamicObjectModel model = Ctx.bodies.getSelectedDynamicObject();
 		if (model != null) {
 			Window wnd = SwingUtilities.getWindowAncestor(this);
 			String name = JOptionPane.showInputDialog(wnd, "Name of the selected dynamic object?", model.getName());
@@ -146,7 +146,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			RigidBodyModel model = (RigidBodyModel)value;
-			String path = IoManager.instance().relativize(model.getImagePath());
+			String path = Ctx.io.relativize(model.getImagePath());
 			String txt = model.getName();
 			if (!model.getImagePath().equals("")) txt += "  --  \"" + path + "\"";
 
@@ -200,7 +200,7 @@ public class ObjectsPanel extends javax.swing.JPanel {
 	// -------------------------------------------------------------------------
 	// Generated stuff
 	// -------------------------------------------------------------------------
-	
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
