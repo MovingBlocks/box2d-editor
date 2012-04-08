@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.canvas.rigidbody.Canvas;
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.canvas.Canvas;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -24,7 +25,7 @@ public class Main {
 				}
 
 				LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), false);
-				MainWindow mw = new MainWindow(glCanvas.getCanvas());
+				MainWindow mw = Ctx.window;
 
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
@@ -32,6 +33,7 @@ public class Main {
 					Math.min(800, screenSize.height - 100)
 				);
 
+				mw.setCanvas(glCanvas.getCanvas());
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
 			}

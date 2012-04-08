@@ -1,6 +1,9 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreenObjects;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -12,17 +15,19 @@ import java.util.List;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class ShapeCreationInputProcessor extends InputAdapter {
+public class CreationInputProcessor extends InputAdapter {
 	private final Canvas canvas;
-	boolean touchDown = false;
+	private final RigidBodiesScreen rbScreen;
+	private boolean touchDown = false;
 
-	public ShapeCreationInputProcessor(Canvas canvas) {
+	public CreationInputProcessor(Canvas canvas, RigidBodiesScreen rbScreen) {
 		this.canvas = canvas;
+		this.rbScreen = rbScreen;
 	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDown = canvas.getMode() == Canvas.Modes.CREATION && button == Buttons.LEFT;
+		touchDown = button == Buttons.LEFT;
 		if (!touchDown) return false;
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
@@ -41,12 +46,12 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 		// Add a vertex to the shape or close it
 
 		List<Vector2> vs = lastShape.getVertices();
-		Vector2 nearestPoint = CanvasObjects.nearestPoint;
+		Vector2 nearestPoint = RigidBodiesScreenObjects.nearestPoint;
 
 		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
 			lastShape.close();
 			model.computePolygons();
-			canvas.createBody();
+			rbScreen.createBody();
 		} else {
 			Vector2 p = canvas.alignedScreenToWorld(x, y);
 			vs.add(p);
@@ -70,14 +75,12 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (canvas.getMode() != Canvas.Modes.CREATION) return false;
-
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		// Nearest point computation
 
-		CanvasObjects.nearestPoint = null;
+		RigidBodiesScreenObjects.nearestPoint = null;
 		Vector2 p = canvas.screenToWorld(x, y);
 
 		List<ShapeModel> shapes = model.getShapes();
@@ -85,16 +88,16 @@ public class ShapeCreationInputProcessor extends InputAdapter {
 
 		if (lastShape != null) {
 			List<Vector2> vs = lastShape.getVertices();
-			float zoom = canvas.getCamera().zoom;
+			float zoom = canvas.worldCamera.zoom;
 
 			if (!lastShape.isClosed() && vs.size() >= 3)
 				if (vs.get(0).dst(p) < 0.025f*zoom)
-					CanvasObjects.nearestPoint = vs.get(0);
+					RigidBodiesScreenObjects.nearestPoint = vs.get(0);
 		}
 
 		// Next point assignment
 
-		CanvasObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
+		RigidBodiesScreenObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
 		return false;
 	}
 }

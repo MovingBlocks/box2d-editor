@@ -1,6 +1,9 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreenObjects;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -14,31 +17,33 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class ShapeEditionInputProcessor extends InputAdapter {
+public class EditionInputProcessor extends InputAdapter {
 	private final Canvas canvas;
+	private final RigidBodiesScreen rbScreen;
 	private boolean touchDown = false;
 	private Vector2 draggedPoint;
 
-	public ShapeEditionInputProcessor(Canvas canvas) {
+	public EditionInputProcessor(Canvas canvas, RigidBodiesScreen rbScreen) {
 		this.canvas = canvas;
+		this.rbScreen = rbScreen;
 	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDown = canvas.getMode() == Canvas.Modes.EDITION && button == Buttons.LEFT;
+		touchDown = button == Buttons.LEFT;
 		if (!touchDown) return false;
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
-		draggedPoint = CanvasObjects.nearestPoint;
+		draggedPoint = RigidBodiesScreenObjects.nearestPoint;
 
 		if (draggedPoint == null) {
-			CanvasObjects.selectedPoints.clear();
-			CanvasObjects.mouseSelectionP1 = canvas.screenToWorld(x, y);
+			RigidBodiesScreenObjects.selectedPoints.clear();
+			RigidBodiesScreenObjects.mouseSelectionP1 = canvas.screenToWorld(x, y);
 
-		} else if (!CanvasObjects.selectedPoints.contains(draggedPoint)) {
-			CanvasObjects.selectedPoints.clear();
+		} else if (!RigidBodiesScreenObjects.selectedPoints.contains(draggedPoint)) {
+			RigidBodiesScreenObjects.selectedPoints.clear();
 		}
 
 		return false;
@@ -59,11 +64,11 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (draggedPoint != null) {
 			draggedPoint = null;
 			model.computePolygons();
-			canvas.createBody();
+			rbScreen.createBody();
 		}
 
-		CanvasObjects.mouseSelectionP1 = null;
-		CanvasObjects.mouseSelectionP2 = null;
+		RigidBodiesScreenObjects.mouseSelectionP1 = null;
+		RigidBodiesScreenObjects.mouseSelectionP2 = null;
 		return false;
 	}
 
@@ -77,22 +82,22 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 		if (draggedPoint != null) {
 			Vector2 p = canvas.alignedScreenToWorld(x, y);
 			model.getPolygons().clear();
-			canvas.createBody();
+			rbScreen.createBody();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
 			draggedPoint.add(dx, dy);
 
-			for (int i=0; i<CanvasObjects.selectedPoints.size(); i++) {
-				Vector2 sp = CanvasObjects.selectedPoints.get(i);
+			for (int i=0; i<RigidBodiesScreenObjects.selectedPoints.size(); i++) {
+				Vector2 sp = RigidBodiesScreenObjects.selectedPoints.get(i);
 				if (sp != draggedPoint)
 					sp.add(dx, dy);
 			}
 
 		} else {
-			CanvasObjects.mouseSelectionP2 = canvas.screenToWorld(x, y);
-			CanvasObjects.selectedPoints.clear();
-			CanvasObjects.selectedPoints.addAll(getPointsInSelection());
+			RigidBodiesScreenObjects.mouseSelectionP2 = canvas.screenToWorld(x, y);
+			RigidBodiesScreenObjects.selectedPoints.clear();
+			RigidBodiesScreenObjects.selectedPoints.addAll(getPointsInSelection());
 		}
 
 		return false;
@@ -100,20 +105,18 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		if (canvas.getMode() != Canvas.Modes.EDITION) return false;
-
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
 		// Nearest point computation
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		CanvasObjects.nearestPoint = null;
-		float zoom = canvas.getCamera().zoom;
+		RigidBodiesScreenObjects.nearestPoint = null;
+		float zoom = canvas.worldCamera.zoom;
 
 		for (Vector2 v : getAllPoints())
 			if (v.dst(p) < 0.025f*zoom)
-				CanvasObjects.nearestPoint = v;
+				RigidBodiesScreenObjects.nearestPoint = v;
 
 		return false;
 	}
@@ -122,8 +125,8 @@ public class ShapeEditionInputProcessor extends InputAdapter {
 
 	private List<Vector2> getPointsInSelection() {
 		List<Vector2> points = new ArrayList<Vector2>();
-		Vector2 p1 = CanvasObjects.mouseSelectionP1;
-		Vector2 p2 = CanvasObjects.mouseSelectionP2;
+		Vector2 p1 = RigidBodiesScreenObjects.mouseSelectionP1;
+		Vector2 p2 = RigidBodiesScreenObjects.mouseSelectionP2;
 
 		if (p1 != null && p2 != null) {
 			Rectangle rect = new Rectangle(

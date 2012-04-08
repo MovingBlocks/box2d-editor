@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class TextureHelper {
+public class TextureUtils {
 	private static final int[] potWidths = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 5096};
 
 	// -------------------------------------------------------------------------

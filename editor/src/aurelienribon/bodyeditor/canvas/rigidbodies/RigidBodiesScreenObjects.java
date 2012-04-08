@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.canvas.rigidbody;
+package aurelienribon.bodyeditor.canvas.rigidbodies;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class CanvasObjects {
+public class RigidBodiesScreenObjects {
 	public static final List<Vector2> selectedPoints = new ArrayList<Vector2>();
 
 	public static Vector2 nextPoint;
@@ -27,7 +27,7 @@ public class CanvasObjects {
 
 	public static void removeSelectedPoints() {
 		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
-			for (Vector2 p : CanvasObjects.selectedPoints)
+			for (Vector2 p : RigidBodiesScreenObjects.selectedPoints)
 				shape.getVertices().remove(p);
 	}
 
@@ -40,7 +40,7 @@ public class CanvasObjects {
 				Vector2 p1 = vs.get(i);
 				Vector2 p2 = i != vs.size()-1 ? vs.get(i+1) : vs.get(0);
 
-				if (CanvasObjects.selectedPoints.contains(p1) && CanvasObjects.selectedPoints.contains(p2)) {
+				if (RigidBodiesScreenObjects.selectedPoints.contains(p1) && RigidBodiesScreenObjects.selectedPoints.contains(p2)) {
 					Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
 					vs.add(i+1, p);
 					toAdd.add(p);
@@ -48,6 +48,6 @@ public class CanvasObjects {
 			}
 		}
 
-		CanvasObjects.selectedPoints.addAll(toAdd);
+		RigidBodiesScreenObjects.selectedPoints.addAll(toAdd);
 	}
 }

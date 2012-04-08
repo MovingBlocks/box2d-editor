@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class EarClippingManager {
@@ -25,7 +25,7 @@ public class EarClippingManager {
 	// Content
 	// -------------------------------------------------------------------------
 
-	public enum Polygonizers {EWJORDAN, BAYAZIT}
+	public enum Polygonizer {EWJORDAN, BAYAZIT}
 
 	public Vector2[][] polygonize(Vector2[] points) {
 		Vector2[][] polygons = null;
@@ -62,7 +62,7 @@ public class EarClippingManager {
 				}
 				break;
 		}
-		
+
 		if (polygons != null)
 			polygons = sliceForMax8Vertices(polygons);
 		return polygons;
