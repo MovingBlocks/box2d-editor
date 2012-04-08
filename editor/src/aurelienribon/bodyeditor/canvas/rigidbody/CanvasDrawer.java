@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
@@ -60,7 +60,7 @@ public class CanvasDrawer {
 			drawGrid(camera, Settings.gridGap);
 		}
 
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return;
 
 		List<ShapeModel> shapes = model.getShapes();
@@ -69,7 +69,7 @@ public class CanvasDrawer {
 		Vector2 nearestPoint = CanvasObjects.nearestPoint;
 		Vector2 nextPoint = CanvasObjects.nextPoint;
 		Vector2 mouseSelectionP1 = CanvasObjects.mouseSelectionP1;
-		Vector2 mouseSelectionP2 = CanvasObjects.mouseSelectionP2; 
+		Vector2 mouseSelectionP2 = CanvasObjects.mouseSelectionP2;
 		Vector2 ballThrowP1 = CanvasObjects.ballThrowP1;
 		Vector2 ballThrowP2 = CanvasObjects.ballThrowP2;
 		float zoom = camera.zoom;
@@ -78,7 +78,7 @@ public class CanvasDrawer {
 		if (bodySprite != null) {
 			drawer.drawRect(0, 0, bodySprite.getWidth(), bodySprite.getHeight(), AXIS_COLOR, 1);
 		}
-		
+
 		if (Settings.isPolygonDrawn) {
 			drawPolygons(polygons);
 		}
@@ -193,7 +193,7 @@ public class CanvasDrawer {
 
 	private void drawBallThrowPath(Vector2 p1, Vector2 p2, float zoom) {
 		if (p1 == null || p2 == null) return;
-		
+
 		float w = 0.03f * zoom;
 
 		drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);

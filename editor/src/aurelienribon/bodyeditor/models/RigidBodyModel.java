@@ -24,7 +24,7 @@ public class RigidBodyModel {
 
 	public void setName(String name) {
 		assert name != null;
-		this.name = name.equals("") ? "unamed" : name;
+		this.name = name;
 	}
 
 	public String getName() {
@@ -54,5 +54,11 @@ public class RigidBodyModel {
 				for (Vector2[] poly : polys)
 					polygons.add(new PolygonModel(poly));
 		}
+	}
+
+	public int getVerticesCount() {
+		int cnt = 0;
+		for (ShapeModel sm : shapes) cnt += sm.getVertices().size();
+		return cnt;
 	}
 }

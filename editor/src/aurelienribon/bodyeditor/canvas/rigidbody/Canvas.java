@@ -1,9 +1,10 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.RigidBodiesManager;
 import aurelienribon.bodyeditor.Settings;
-import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.utils.gdx.PrimitiveDrawer;
 import aurelienribon.utils.gdx.ShapeUtils;
 import aurelienribon.utils.gdx.TextureHelper;
@@ -45,7 +46,7 @@ public class Canvas implements ApplicationListener {
 	private static final float PX_PER_METER = 300;
 	private static final Color COLOR_AREAS = new Color(0f, 0f, 0f, 0.7f);
 	public static enum Modes {CREATION, EDITION, TEST}
-	
+
 	private final List<Body> ballsBodies = new ArrayList<Body>();
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final Random rand = new Random();
@@ -73,17 +74,17 @@ public class Canvas implements ApplicationListener {
 	// -------------------------------------------------------------------------
 	// Gdx API
 	// -------------------------------------------------------------------------
-	
+
 	@Override
 	public void create() {
 		pDrawer = new PrimitiveDrawer(new ImmediateModeRenderer10());
 		drawer = new CanvasDrawer(this, pDrawer);
 		sb = new SpriteBatch();
 		font = new BitmapFont();
-		
+
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		
+
 		worldCamera = new OrthographicCamera(2, 2/w/h);
 		worldCamera.position.set(0.5f, 0.5f/w/h, 0);
 		worldCamera.update();
@@ -94,12 +95,12 @@ public class Canvas implements ApplicationListener {
 		backgroundLightTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-light.png"));
 		backgroundDarkTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/transparent-dark.png"));
 		ballTexture = new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/ball.png"));
-		
+
 		backgroundLightTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		backgroundDarkTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		
+
 		TextureAtlas buttonsAtlas = new TextureAtlas(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/pack-buttons"));
-		
+
 		btnCreationSprite = buttonsAtlas.createSprite("btn_creation");
 		btnEditionSprite = buttonsAtlas.createSprite("btn_edition");
 		btnTestSprite = buttonsAtlas.createSprite("btn_test");
@@ -120,9 +121,9 @@ public class Canvas implements ApplicationListener {
 
 		world = new World(new Vector2(0, 0), true);
 
-		ObjectsManager.instance().addChangeListener(new ChangeListener() {
+		Ctx.bodies.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(ObjectsManager.PROP_SELECTION)) {
+				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
 					clearWorld();
 					bodySprite = null;
 
@@ -130,7 +131,7 @@ public class Canvas implements ApplicationListener {
 					worldCamera.position.set(0.5f, 0.5f/ratio, 0);
 					worldCamera.update();
 
-					RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+					RigidBodyModel model = Ctx.bodies.getSelectedModel();
 					if (model == null) return;
 
 					createBody();
@@ -203,7 +204,7 @@ public class Canvas implements ApplicationListener {
 
 		worldCamera.apply(gl);
 		drawer.draw(worldCamera, bodySprite);
-		
+
 		screenCamera.apply(gl);
 		pDrawer.fillRect(0, 0, 220, 60, COLOR_AREAS);
 
@@ -260,11 +261,11 @@ public class Canvas implements ApplicationListener {
 
 	public void setNextMode() {
 		CanvasObjects.nextPoint = null;
-		
+
 		mode = mode == Modes.CREATION
 			? Modes.EDITION : mode == Modes.EDITION
 			? Modes.TEST : Modes.CREATION;
-		
+
 		switch (mode) {
 			case CREATION:
 				btnCreationSprite.setColor(1, 1, 1, 1);
@@ -285,11 +286,11 @@ public class Canvas implements ApplicationListener {
 	}
 
 	public void createBody() {
-		RigidBodyModel model = ObjectsManager.instance().getSelectedRigidBody();
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null || model.getPolygons().isEmpty()) return;
 
 		Body body = world.createBody(new BodyDef());
-		
+
 		for (PolygonModel polygon : model.getPolygons()) {
 			Vector2[] resizedPolygon = new Vector2[polygon.getVertices().size()];
 			for (int i=0; i<polygon.getVertices().size(); i++)

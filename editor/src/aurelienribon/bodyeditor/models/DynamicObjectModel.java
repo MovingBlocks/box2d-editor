@@ -16,7 +16,7 @@ public class DynamicObjectModel {
 
 	public void setName(String name) {
 		assert name != null;
-		this.name = name.equals("") ? "unamed" : name;
+		this.name = name;
 	}
 
 	public String getName() {

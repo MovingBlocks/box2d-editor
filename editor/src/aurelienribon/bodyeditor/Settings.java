@@ -9,7 +9,7 @@ public class Settings {
 	public static boolean isImageDrawn = true;
 	public static boolean isShapeDrawn = true;
 	public static boolean isPolygonDrawn = true;
-	public static boolean isBackgroundLight = false;
+	public static boolean isBackgroundLight = true;
 	public static boolean isSnapToGridEnabled = false;
 	public static boolean isGridShown = false;
 	public static float gridGap = 0.03f;

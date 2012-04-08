@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbody;
 
-import aurelienribon.bodyeditor.ObjectsManager;
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class CanvasObjects {
 	// -------------------------------------------------------------------------
 
 	public static void removeSelectedPoints() {
-		for (ShapeModel shape : ObjectsManager.instance().getSelectedRigidBody().getShapes())
+		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
 			for (Vector2 p : CanvasObjects.selectedPoints)
 				shape.getVertices().remove(p);
 	}
@@ -34,7 +34,7 @@ public class CanvasObjects {
 	public static void insertPointsBetweenSelected() {
 		List<Vector2> toAdd = new ArrayList<Vector2>();
 
-		for (ShapeModel shape : ObjectsManager.instance().getSelectedRigidBody().getShapes()) {
+		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes()) {
 			List<Vector2> vs = shape.getVertices();
 			for (int i=0, n=vs.size(); i<n; i++) {
 				Vector2 p1 = vs.get(i);
