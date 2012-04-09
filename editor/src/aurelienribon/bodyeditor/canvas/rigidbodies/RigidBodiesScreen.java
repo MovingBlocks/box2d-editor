@@ -1,22 +1,19 @@
 package aurelienribon.bodyeditor.canvas.rigidbodies;
 
-import aurelienribon.accessors.SpriteAccessor;
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.RigidBodiesEvents;
 import aurelienribon.bodyeditor.RigidBodiesManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.canvas.Assets;
 import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.LabelArea;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.CreationInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.EditionInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.TestInputProcessor;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.utils.gdx.ShapeUtils;
-import aurelienribon.utils.gdx.SpriteUtils;
 import aurelienribon.utils.gdx.TextureUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.notifications.ObservableList;
@@ -51,7 +48,7 @@ import javax.swing.SwingUtilities;
  */
 public class RigidBodiesScreen {
 	private static final float BG_HEIGHT = 25;
-	private static final Color BG_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 212/255f);
+	private static final Color BG_LBL_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 212/255f);
 	private static final Color BG_BTN_COLOR = new Color(0x2A/255f, 0x6B/255f, 0x56/255f, 212/255f);
 	private static enum Mode {CREATION, EDITION, TEST}
 
@@ -60,21 +57,19 @@ public class RigidBodiesScreen {
 
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final List<Body> ballsBodies = new ArrayList<Body>();
-	private final TweenManager tweenManager = new TweenManager();
 	private final World world = new World(new Vector2(0, 0), true);
 
 	private final Sprite bgInfo = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgModeCreation = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgModeEdition = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgModeTest = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgSetImage = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgInsertVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgRemoveVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite bgClearVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final LabelArea lblModeCreation = new LabelArea(true, 10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", null, BG_LBL_COLOR);
+	private final LabelArea lblModeEdition = new LabelArea(true, 10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", null, BG_LBL_COLOR);
+	private final LabelArea lblModeTest = new LabelArea(true, 10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", null, BG_LBL_COLOR);
+	private final LabelArea lblSetImage = new LabelArea(false, 10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", null, BG_BTN_COLOR);
+	private final LabelArea lblClearVertices = new LabelArea(false, 20+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear all points", null, BG_BTN_COLOR);
+	private final LabelArea lblInsertVertices = new LabelArea(false, 30+BG_HEIGHT*3, 120, BG_HEIGHT, "Insert points", null, BG_BTN_COLOR);
+	private final LabelArea lblRemoveVertices = new LabelArea(false, 40+BG_HEIGHT*4, 120, BG_HEIGHT, "Remove points", null, BG_BTN_COLOR);
 
 	private Mode mode = Mode.CREATION;
 	private Sprite bodySprite;
-	private float w, h, oldW, oldH;
 
 	public final ObservableList<Vector2> selectedPoints = new ObservableList<Vector2>();
 	public Vector2 nextPoint;
@@ -88,9 +83,6 @@ public class RigidBodiesScreen {
 		this.canvas = canvas;
 		this.rbsDrawer = new RigidBodiesScreenDrawer(this, canvas.worldCamera);
 
-		w = oldW = Gdx.graphics.getWidth();
-		h = oldH = Gdx.graphics.getHeight();
-
 		creationInputProcessor = new CreationInputProcessor(canvas, this);
 		editionInputProcessor = new EditionInputProcessor(canvas, this);
 		testInputProcessor = new TestInputProcessor(canvas, this);
@@ -98,14 +90,7 @@ public class RigidBodiesScreen {
 		canvas.input.addProcessor(buttonsInputProcessor);
 		canvas.input.addProcessor(creationInputProcessor);
 
-		setupBgSprite(bgInfo, 0, 0, 120, 60, BG_COLOR);
-		setupBgSprite(bgModeCreation, -80, h-10-BG_HEIGHT, 80, BG_HEIGHT, BG_COLOR);
-		setupBgSprite(bgModeEdition, -80, h-10-BG_HEIGHT*2, 80, BG_HEIGHT, BG_COLOR);
-		setupBgSprite(bgModeTest, -80, h-10-BG_HEIGHT*3, 80, BG_HEIGHT, BG_COLOR);
-		setupBgSprite(bgSetImage, w, h-10-BG_HEIGHT, 120, BG_HEIGHT, BG_BTN_COLOR);
-		setupBgSprite(bgClearVertices, w, h-20-BG_HEIGHT*2, 120, BG_HEIGHT, BG_BTN_COLOR);
-		setupBgSprite(bgRemoveVertices, w, h-30-BG_HEIGHT*3, 120, BG_HEIGHT, BG_BTN_COLOR);
-		setupBgSprite(bgInsertVertices, w, h-40-BG_HEIGHT*4, 120, BG_HEIGHT, BG_BTN_COLOR);
+		setupBgSprite(bgInfo, 0, 0, 120, 60, BG_LBL_COLOR);
 
 		Ctx.bodies.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
@@ -140,27 +125,7 @@ public class RigidBodiesScreen {
 		});
 	}
 
-	public void resize() {
-		w = Gdx.graphics.getWidth();
-		h = Gdx.graphics.getHeight();
-
-		float dw = w - oldW;
-		float dh = h - oldH;
-
-		bgModeCreation.translateY(dh);
-		bgModeEdition.translateY(dh);
-		bgModeTest.translateY(dh);
-		bgSetImage.translate(dw, dh);
-		bgInsertVertices.translate(dw, dh);
-		bgRemoveVertices.translate(dw, dh);
-		bgClearVertices.translate(dw, dh);
-
-		oldW = w;
-		oldH = h;
-	}
-
 	public void render() {
-		tweenManager.update(Gdx.graphics.getDeltaTime());
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		canvas.batch.setProjectionMatrix(canvas.worldCamera.combined);
@@ -181,21 +146,14 @@ public class RigidBodiesScreen {
 		canvas.batch.setProjectionMatrix(canvas.screenCamera.combined);
 		canvas.batch.begin();
 		bgInfo.draw(canvas.batch);
-		bgModeCreation.draw(canvas.batch);
-		bgModeEdition.draw(canvas.batch);
-		bgModeTest.draw(canvas.batch);
-		bgSetImage.draw(canvas.batch);
-		bgInsertVertices.draw(canvas.batch);
-		bgRemoveVertices.draw(canvas.batch);
-		bgClearVertices.draw(canvas.batch);
+		lblModeCreation.draw(canvas.batch, canvas.font);
+		lblModeEdition.draw(canvas.batch, canvas.font);
+		lblModeTest.draw(canvas.batch, canvas.font);
+		lblSetImage.draw(canvas.batch, canvas.font);
+		lblInsertVertices.draw(canvas.batch, canvas.font);
+		lblRemoveVertices.draw(canvas.batch, canvas.font);
+		lblClearVertices.draw(canvas.batch, canvas.font);
 		canvas.font.setColor(Color.WHITE);
-		printBgText(bgModeCreation, "Creation");
-		printBgText(bgModeEdition, "Edition");
-		printBgText(bgModeTest, "Test");
-		printBgText(bgSetImage, "Set bg. image");
-		printBgText(bgInsertVertices, "Insert points");
-		printBgText(bgRemoveVertices, "Remove points");
-		printBgText(bgClearVertices, "Clear all points");
 		canvas.font.draw(canvas.batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / canvas.worldCamera.zoom), 10, 45);
 		canvas.font.draw(canvas.batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
 		canvas.batch.end();
@@ -223,79 +181,74 @@ public class RigidBodiesScreen {
 		sp.setColor(c);
 	}
 
-	private void printBgText(Sprite sp, String txt) {
-		float txtH = canvas.font.getBounds(txt).height;
-		float x = sp.getX() + 10;
-		float y = sp.getY() + sp.getHeight()/2 + txtH/2;
-		canvas.font.draw(canvas.batch, txt, x, y);
-	}
-
 	private void updateButtons() {
-		tweenManager.killTarget(bgSetImage);
-		tweenManager.killTarget(bgInsertVertices);
-		tweenManager.killTarget(bgRemoveVertices);
-		tweenManager.killTarget(bgClearVertices);
-
-		Tween.to(bgSetImage, SpriteAccessor.POS_X, 0.5f).target(w).start(tweenManager);
-		Tween.to(bgInsertVertices, SpriteAccessor.POS_X, 0.5f).target(w).start(tweenManager);
-		Tween.to(bgRemoveVertices, SpriteAccessor.POS_X, 0.5f).target(w).start(tweenManager);
-		Tween.to(bgClearVertices, SpriteAccessor.POS_X, 0.5f).target(w).start(tweenManager);
+		lblSetImage.hide(0);
+		lblInsertVertices.hide(0);
+		lblRemoveVertices.hide(0);
+		lblClearVertices.hide(0);
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 
 		if (model != null) {
-			tweenManager.killTarget(bgSetImage);
-			tweenManager.killTarget(bgClearVertices);
-			Tween.to(bgSetImage, SpriteAccessor.POS_X, 0.5f).target(w-bgSetImage.getWidth()).start(tweenManager);
-			Tween.to(bgClearVertices, SpriteAccessor.POS_X, 0.5f).target(w-bgClearVertices.getWidth()).start(tweenManager);
-
-			if (!selectedPoints.isEmpty()) {
-				tweenManager.killTarget(bgRemoveVertices);
-				Tween.to(bgRemoveVertices, SpriteAccessor.POS_X, 0.5f).target(w-bgRemoveVertices.getWidth()).start(tweenManager);
-			}
-
-			if (selectedPoints.size() > 1) {
-				tweenManager.killTarget(bgInsertVertices);
-				Tween.to(bgInsertVertices, SpriteAccessor.POS_X, 0.5f).target(w-bgInsertVertices.getWidth()).start(tweenManager);
-			}
+			lblSetImage.show(0);
+			lblClearVertices.show(0);
+			if (!selectedPoints.isEmpty()) lblRemoveVertices.show(0);
+			if (isInsertEnabled()) lblInsertVertices.show(0);
 		}
 	}
 
+	private boolean isInsertEnabled() {
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
+		assert model != null;
+
+		if (selectedPoints.size() <= 1) return false;
+
+		for (ShapeModel shape : model.getShapes()) {
+			Vector2 v1 = null;
+			for (Vector2 v2 : shape.getVertices()) {
+				if (v1 != null && selectedPoints.contains(v2)) return true;
+				v1 = selectedPoints.contains(v2) ? v2 : null;
+			}
+			if (v1 != null && selectedPoints.contains(shape.getVertices().get(0))) return true;
+		}
+
+		return false;
+	}
+
 	private void setMode(Mode mode) {
+		this.mode = mode;
+		
 		canvas.input.removeProcessor(creationInputProcessor);
 		canvas.input.removeProcessor(editionInputProcessor);
 		canvas.input.removeProcessor(testInputProcessor);
 
-		tweenManager.killTarget(bgModeCreation);
-		tweenManager.killTarget(bgModeEdition);
-		tweenManager.killTarget(bgModeTest);
+		selectedPoints.clear();
+		nextPoint = null;
+		nearestPoint = null;
 
 		if (mode == null) {
-			Tween.to(bgModeCreation, SpriteAccessor.POS_X, 0.5f).target(-bgModeCreation.getWidth()).start(tweenManager);
-			Tween.to(bgModeEdition, SpriteAccessor.POS_X, 0.5f).target(-bgModeEdition.getWidth()).start(tweenManager);
-			Tween.to(bgModeTest, SpriteAccessor.POS_X, 0.5f).target(-bgModeTest.getWidth()).start(tweenManager);
+			lblModeCreation.hide(0);
+			lblModeEdition.hide(0);
+			lblModeTest.hide(0);
 
 		} else {
-			Tween.to(bgModeCreation, SpriteAccessor.POS_X, 0.5f).target(-bgModeCreation.getWidth()+10).start(tweenManager);
-			Tween.to(bgModeEdition, SpriteAccessor.POS_X, 0.5f).target(-bgModeEdition.getWidth()+10).start(tweenManager);
-			Tween.to(bgModeTest, SpriteAccessor.POS_X, 0.5f).target(-bgModeTest.getWidth()+10).start(tweenManager);
+			lblModeCreation.hide(10);
+			lblModeEdition.hide(10);
+			lblModeTest.hide(10);
 
 			switch (mode) {
 				case CREATION:
-					tweenManager.killTarget(bgModeCreation);
-					Tween.to(bgModeCreation, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+					lblModeCreation.show(0);
 					canvas.input.addProcessor(creationInputProcessor);
 					break;
 
 				case EDITION:
-					tweenManager.killTarget(bgModeEdition);
-					Tween.to(bgModeEdition, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+					lblModeEdition.show(0);
 					canvas.input.addProcessor(editionInputProcessor);
 					break;
 
 				case TEST:
-					tweenManager.killTarget(bgModeTest);
-					Tween.to(bgModeTest, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+					lblModeTest.show(0);
 					canvas.input.addProcessor(testInputProcessor);
 					break;
 			}
@@ -303,6 +256,7 @@ public class RigidBodiesScreen {
 	}
 
 	private void insertPointsBetweenSelected() {
+		if (Ctx.bodies.getSelectedModel() == null) return;
 		List<Vector2> toAdd = new ArrayList<Vector2>();
 
 		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes()) {
@@ -325,6 +279,7 @@ public class RigidBodiesScreen {
 	}
 
 	private void removeSelectedPoints() {
+		if (Ctx.bodies.getSelectedModel() == null) return;
 		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
 			for (Vector2 p : selectedPoints)
 				if (shape.getVertices().contains(p))
@@ -336,6 +291,7 @@ public class RigidBodiesScreen {
 	}
 
 	private void clearPoints() {
+		if (Ctx.bodies.getSelectedModel() == null) return;
 		Ctx.bodies.getSelectedModel().clear();
 		Ctx.bodiesEvents.recreateWorld();
 	}
@@ -420,7 +376,6 @@ public class RigidBodiesScreen {
 	}
 
 	private void resetWorld() {
-		canvas.resetCameras();
 		bodySprite = null;
 		clearWorld();
 
@@ -443,13 +398,11 @@ public class RigidBodiesScreen {
 		@Override
 		public boolean keyDown(int keycode) {
 			if (keycode == Input.Keys.TAB) {
-				nextPoint = null;
-
-				mode = mode == Mode.CREATION
+				Mode m = mode == Mode.CREATION
 					? Mode.EDITION : mode == Mode.EDITION
 					? Mode.TEST : Mode.CREATION;
 
-				setMode(mode);
+				setMode(m);
 			}
 
 			return false;
@@ -461,24 +414,24 @@ public class RigidBodiesScreen {
 		public boolean touchDown(int x, int y, int pointer, int button) {
 			y = Gdx.graphics.getHeight() - y - 1;
 
-			if (SpriteUtils.isOver(bgSetImage, x, y)) {
+			if (lblSetImage.isOver(x, y)) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override public void run() {Ctx.bodiesEvents.selectModelImage();}
 				});
 				return true;
 			}
 
-			if (SpriteUtils.isOver(bgInsertVertices, x, y)) {
+			if (lblInsertVertices.isOver(x, y)) {
 				insertPointsBetweenSelected();
 				return true;
 			}
 
-			if (SpriteUtils.isOver(bgRemoveVertices, x, y)) {
+			if (lblRemoveVertices.isOver(x, y)) {
 				removeSelectedPoints();
 				return true;
 			}
 
-			if (SpriteUtils.isOver(bgClearVertices, x, y)) {
+			if (lblClearVertices.isOver(x, y)) {
 				clearPoints();
 				return true;
 			}
