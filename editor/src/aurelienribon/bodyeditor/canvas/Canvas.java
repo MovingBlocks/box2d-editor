@@ -56,7 +56,6 @@ public class Canvas extends ApplicationAdapter {
 		GL10 gl = Gdx.gl10;
 		gl.glViewport(0, 0, width, height);
 		resetCameras();
-		rigidBodiesScreen.resize();
 	}
 
 	@Override
@@ -84,9 +83,9 @@ public class Canvas extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
-		worldCamera.viewportWidth = 2;
-		worldCamera.viewportHeight = 2*h/w;
-		worldCamera.position.set(0.5f, 0.5f*h/w, 0);
+		worldCamera.viewportWidth = w/400;
+		worldCamera.viewportHeight = w/400*h/w;
+		worldCamera.position.set(0.5f, 0.5f, 0);
 		worldCamera.update();
 
 		screenCamera.viewportWidth = w;
