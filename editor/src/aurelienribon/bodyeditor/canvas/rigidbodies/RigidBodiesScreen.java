@@ -48,36 +48,37 @@ public class RigidBodiesScreen {
 	private static final float PX_PER_METER = 300;
 	private static final float BG_HEIGHT = 25;
 	private static final Color BG_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 212/255f);
+	private static final Color BG_BTN_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 212/255f);
 	public static enum Mode {CREATION, EDITION, TEST}
 
 	private final Canvas canvas;
-	//private final RigidBodiesDrawer rbDrawer = new RigidBodiesDrawer();
+	private final RigidBodiesScreenDrawer rbDrawer;
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final List<Body> ballsBodies = new ArrayList<Body>();
 	private final TweenManager tweenManager = new TweenManager();
 	private final World world = new World(new Vector2(0, 0), true);
-	private final Sprite backgroundInfo = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite backgroundModeCreation = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite backgroundModeEdition = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Sprite backgroundModeTest = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgInfo = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgModeCreation = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgModeEdition = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgModeTest = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgSetImage = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgInsertVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgRemoveVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite bgClearVertices = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
 
 	private Mode mode = Mode.CREATION;
 	private Sprite bodySprite;
 
 	public RigidBodiesScreen(Canvas canvas) {
 		this.canvas = canvas;
+		this.rbDrawer = new RigidBodiesScreenDrawer(canvas.worldCamera);
 
 		creationInputProcessor = new CreationInputProcessor(canvas, this);
 		editionInputProcessor = new EditionInputProcessor(canvas, this);
 		testInputProcessor = new TestInputProcessor(canvas, this);
-		canvas.input.addProcessor(creationInputProcessor);
 		canvas.input.addProcessor(modeInputProcessor);
-
-		float h = Gdx.graphics.getHeight();
-		setupBgSprite(backgroundInfo, 0, 0, 120, 60);
-		setupBgSprite(backgroundModeCreation, 0, h-10-BG_HEIGHT, 120, BG_HEIGHT);
-		setupBgSprite(backgroundModeEdition, -100, h-10-BG_HEIGHT*2, 120, BG_HEIGHT);
-		setupBgSprite(backgroundModeTest, -100, h-10-BG_HEIGHT*3, 120, BG_HEIGHT);
+		canvas.input.addProcessor(buttonsInputProcessor);
+		canvas.input.addProcessor(creationInputProcessor);
 
 		Ctx.bodies.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
@@ -91,6 +92,20 @@ public class RigidBodiesScreen {
 				createBody();
 			}
 		});
+	}
+
+	public void resize() {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+
+		setupBgSprite(bgInfo, 0, 0, 120, 60, BG_COLOR);
+		setupBgSprite(bgModeCreation, 0, h-10-BG_HEIGHT, 80, BG_HEIGHT, BG_COLOR);
+		setupBgSprite(bgModeEdition, -70, h-10-BG_HEIGHT*2, 80, BG_HEIGHT, BG_COLOR);
+		setupBgSprite(bgModeTest, -70, h-10-BG_HEIGHT*3, 80, BG_HEIGHT, BG_COLOR);
+		setupBgSprite(bgSetImage, w-120, h-10-BG_HEIGHT, 120, BG_HEIGHT, BG_BTN_COLOR);
+		setupBgSprite(bgInsertVertices, w-120, h-20-BG_HEIGHT*2, 120, BG_HEIGHT, BG_BTN_COLOR);
+		setupBgSprite(bgRemoveVertices, w-120, h-30-BG_HEIGHT*3, 120, BG_HEIGHT, BG_BTN_COLOR);
+		setupBgSprite(bgClearVertices, w-120, h-40-BG_HEIGHT*4, 120, BG_HEIGHT, BG_BTN_COLOR);
 	}
 
 	public void render() {
@@ -110,22 +125,26 @@ public class RigidBodiesScreen {
 		}
 		canvas.batch.end();
 
-//		worldCamera.apply(gl);
-//		rbDrawer.draw(worldCamera, bodySprite);
-//
-//		screenCamera.apply(gl);
-//		pDrawer.fillRect(0, 0, 220, 60, COLOR_AREAS);
+		rbDrawer.draw(bodySprite);
 
 		canvas.batch.setProjectionMatrix(canvas.screenCamera.combined);
 		canvas.batch.begin();
+		bgInfo.draw(canvas.batch);
+		bgModeCreation.draw(canvas.batch);
+		bgModeEdition.draw(canvas.batch);
+		bgModeTest.draw(canvas.batch);
+		bgSetImage.draw(canvas.batch);
+		bgInsertVertices.draw(canvas.batch);
+		bgRemoveVertices.draw(canvas.batch);
+		bgClearVertices.draw(canvas.batch);
 		canvas.font.setColor(Color.WHITE);
-		backgroundInfo.draw(canvas.batch);
-		backgroundModeCreation.draw(canvas.batch);
-		backgroundModeEdition.draw(canvas.batch);
-		backgroundModeTest.draw(canvas.batch);
-		printBgText(backgroundModeCreation, "Creation");
-		printBgText(backgroundModeEdition, "Edition");
-		printBgText(backgroundModeTest, "Test");
+		printBgText(bgModeCreation, "Creation");
+		printBgText(bgModeEdition, "Edition");
+		printBgText(bgModeTest, "Test");
+		printBgText(bgSetImage, "Set bg. image");
+		printBgText(bgInsertVertices, "Insert points");
+		printBgText(bgRemoveVertices, "Remove points");
+		printBgText(bgClearVertices, "Clear all points");
 		canvas.font.draw(canvas.batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / canvas.worldCamera.zoom), 10, 45);
 		canvas.font.draw(canvas.batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
 		canvas.batch.end();
@@ -191,10 +210,10 @@ public class RigidBodiesScreen {
 	// Internals
 	// -------------------------------------------------------------------------
 
-	private void setupBgSprite(Sprite sp, float x, float y, float w, float h) {
+	private void setupBgSprite(Sprite sp, float x, float y, float w, float h, Color c) {
 		sp.setPosition(x, y);
 		sp.setSize(w, h);
-		sp.setColor(BG_COLOR);
+		sp.setColor(c);
 	}
 
 	private void printBgText(Sprite sp, String txt) {
@@ -255,31 +274,38 @@ public class RigidBodiesScreen {
 				canvas.input.removeProcessor(editionInputProcessor);
 				canvas.input.removeProcessor(testInputProcessor);
 
-				Tween.to(backgroundModeCreation, SpriteAccessor.POS_X, 0.5f).target(-100).start(tweenManager);
-				Tween.to(backgroundModeEdition, SpriteAccessor.POS_X, 0.5f).target(-100).start(tweenManager);
-				Tween.to(backgroundModeTest, SpriteAccessor.POS_X, 0.5f).target(-100).start(tweenManager);
+				Tween.to(bgModeCreation, SpriteAccessor.POS_X, 0.5f).target(-bgModeCreation.getWidth()+10).start(tweenManager);
+				Tween.to(bgModeEdition, SpriteAccessor.POS_X, 0.5f).target(-bgModeEdition.getWidth()+10).start(tweenManager);
+				Tween.to(bgModeTest, SpriteAccessor.POS_X, 0.5f).target(-bgModeTest.getWidth()+10).start(tweenManager);
 
 				switch (mode) {
 					case CREATION:
-						tweenManager.killTarget(backgroundModeCreation);
-						Tween.to(backgroundModeCreation, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+						tweenManager.killTarget(bgModeCreation);
+						Tween.to(bgModeCreation, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
 						canvas.input.addProcessor(creationInputProcessor);
 						break;
 
 					case EDITION:
-						tweenManager.killTarget(backgroundModeEdition);
-						Tween.to(backgroundModeEdition, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+						tweenManager.killTarget(bgModeEdition);
+						Tween.to(bgModeEdition, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
 						canvas.input.addProcessor(editionInputProcessor);
 						break;
 
 					case TEST:
-						tweenManager.killTarget(backgroundModeTest);
-						Tween.to(backgroundModeTest, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
+						tweenManager.killTarget(bgModeTest);
+						Tween.to(bgModeTest, SpriteAccessor.POS_X, 0.5f).target(0).start(tweenManager);
 						canvas.input.addProcessor(testInputProcessor);
 						break;
 				}
 			}
 
+			return false;
+		}
+	};
+
+	private final InputProcessor buttonsInputProcessor = new InputAdapter() {
+		@Override
+		public boolean touchDown(int x, int y, int pointer, int button) {
 			return false;
 		}
 	};
