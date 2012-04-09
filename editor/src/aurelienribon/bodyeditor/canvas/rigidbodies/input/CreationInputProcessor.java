@@ -2,7 +2,6 @@ package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.canvas.Canvas;
-import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreenObjects;
 import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -17,12 +16,12 @@ import java.util.List;
  */
 public class CreationInputProcessor extends InputAdapter {
 	private final Canvas canvas;
-	private final RigidBodiesScreen rbScreen;
+	private final RigidBodiesScreen screen;
 	private boolean touchDown = false;
 
-	public CreationInputProcessor(Canvas canvas, RigidBodiesScreen rbScreen) {
+	public CreationInputProcessor(Canvas canvas, RigidBodiesScreen screen) {
 		this.canvas = canvas;
-		this.rbScreen = rbScreen;
+		this.screen = screen;
 	}
 
 	@Override
@@ -46,12 +45,12 @@ public class CreationInputProcessor extends InputAdapter {
 		// Add a vertex to the shape or close it
 
 		List<Vector2> vs = lastShape.getVertices();
-		Vector2 nearestPoint = RigidBodiesScreenObjects.nearestPoint;
+		Vector2 nearestPoint = screen.nearestPoint;
 
 		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
 			lastShape.close();
 			model.computePolygons();
-			rbScreen.createBody();
+			screen.buildBody();
 		} else {
 			Vector2 p = canvas.alignedScreenToWorld(x, y);
 			vs.add(p);
@@ -80,7 +79,7 @@ public class CreationInputProcessor extends InputAdapter {
 
 		// Nearest point computation
 
-		RigidBodiesScreenObjects.nearestPoint = null;
+		screen.nearestPoint = null;
 		Vector2 p = canvas.screenToWorld(x, y);
 
 		List<ShapeModel> shapes = model.getShapes();
@@ -92,12 +91,12 @@ public class CreationInputProcessor extends InputAdapter {
 
 			if (!lastShape.isClosed() && vs.size() >= 3)
 				if (vs.get(0).dst(p) < 0.025f*zoom)
-					RigidBodiesScreenObjects.nearestPoint = vs.get(0);
+					screen.nearestPoint = vs.get(0);
 		}
 
 		// Next point assignment
 
-		RigidBodiesScreenObjects.nextPoint = canvas.alignedScreenToWorld(x, y);
+		screen.nextPoint = canvas.alignedScreenToWorld(x, y);
 		return false;
 	}
 }

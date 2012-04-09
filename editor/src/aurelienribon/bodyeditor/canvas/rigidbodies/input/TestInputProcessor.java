@@ -2,7 +2,6 @@ package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.canvas.Canvas;
-import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreenObjects;
 import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import com.badlogic.gdx.Input.Buttons;
@@ -14,12 +13,12 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class TestInputProcessor extends InputAdapter {
 	private final Canvas canvas;
-	private final RigidBodiesScreen rbScreen;
+	private final RigidBodiesScreen screen;
 	private boolean touchDown = false;
 
-	public TestInputProcessor(Canvas canvas, RigidBodiesScreen rbScreen) {
+	public TestInputProcessor(Canvas canvas, RigidBodiesScreen screen) {
 		this.canvas = canvas;
-		this.rbScreen = rbScreen;
+		this.screen = screen;
 	}
 
 	@Override
@@ -31,8 +30,8 @@ public class TestInputProcessor extends InputAdapter {
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		RigidBodiesScreenObjects.ballThrowP1 = p;
-		RigidBodiesScreenObjects.ballThrowP2 = p;
+		screen.ballThrowP1 = p;
+		screen.ballThrowP2 = p;
 		return false;
 	}
 
@@ -48,13 +47,13 @@ public class TestInputProcessor extends InputAdapter {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
-		Vector2 p1 = RigidBodiesScreenObjects.ballThrowP1;
-		Vector2 p2 = RigidBodiesScreenObjects.ballThrowP2;
+		Vector2 p1 = screen.ballThrowP1;
+		Vector2 p2 = screen.ballThrowP2;
 		Vector2 delta = new Vector2(p2).sub(p1);
-		rbScreen.fireBall(p1, delta);
+		screen.fireBall(p1, delta.mul(3));
 
-		RigidBodiesScreenObjects.ballThrowP1 = null;
-		RigidBodiesScreenObjects.ballThrowP2 = null;
+		screen.ballThrowP1 = null;
+		screen.ballThrowP2 = null;
 		return false;
 	}
 
@@ -66,7 +65,7 @@ public class TestInputProcessor extends InputAdapter {
 		if (model == null) return false;
 
 		Vector2 p = canvas.screenToWorld(x, y);
-		RigidBodiesScreenObjects.ballThrowP2 = p;
+		screen.ballThrowP2 = p;
 		return false;
 	}
 }

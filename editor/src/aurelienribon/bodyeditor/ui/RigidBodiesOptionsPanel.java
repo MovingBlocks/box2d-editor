@@ -36,7 +36,7 @@ public class RigidBodiesOptionsPanel extends javax.swing.JPanel {
 
 		if (Settings.polygonizer != oldPolygonizer) {
 			Ctx.bodies.getSelectedModel().computePolygons();
-			Ctx.bodiesEvents.fireRecreateWorldRequested();
+			Ctx.bodiesEvents.recreateWorld();
 		}
 	}
 
