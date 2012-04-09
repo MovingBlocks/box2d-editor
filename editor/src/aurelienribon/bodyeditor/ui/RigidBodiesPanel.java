@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.RigidBodiesEvents;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.AutoListModel;
@@ -12,6 +13,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -39,6 +41,12 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		createBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {create();}});
 		renameBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {rename();}});
 		deleteBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {delete();}});
+
+		Ctx.bodiesEvents.addScreenToAppListener(new RigidBodiesEvents.ScreenToAppListener() {
+			@Override public void selectModelImage() {
+				RigidBodiesPanel.this.selectModelImage();
+			}
+		});
     }
 
 	private void create() {
@@ -90,6 +98,17 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 	private void delete() {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		Ctx.bodies.getModels().remove(model);
+	}
+
+	private void selectModelImage() {
+		JFrame frame = SwingHelper.getFrame(this);
+		JFileChooser chooser = new JFileChooser(".");
+		chooser.setDialogTitle("Select the background image for the selected model");
+
+		if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			Ctx.bodies.getSelectedModel().setImagePath(chooser.getSelectedFile().getPath());
+			Ctx.bodiesEvents.modelImageChanged();
+		}
 	}
 
 	// -------------------------------------------------------------------------

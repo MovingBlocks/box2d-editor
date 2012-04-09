@@ -32,6 +32,7 @@ public class RigidBodiesScreenDrawer {
 	private static final Color GRID_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color AXIS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 
+	private final RigidBodiesScreen screen;
 	private final ShapeRenderer drawer = new ShapeRenderer();
 	private final SpriteBatch sb = new SpriteBatch();
 	private final OrthographicCamera camera;
@@ -39,7 +40,8 @@ public class RigidBodiesScreenDrawer {
 	private final Sprite v10Sprite;
 	private final Sprite v01Sprite;
 
-	public RigidBodiesScreenDrawer(OrthographicCamera camera) {
+	public RigidBodiesScreenDrawer(RigidBodiesScreen screen, OrthographicCamera camera) {
+		this.screen = screen;
 		this.camera = camera;
 		v00Sprite = new Sprite(Assets.inst().get("res/data/v00.png", Texture.class));
 		v10Sprite = new Sprite(Assets.inst().get("res/data/v10.png", Texture.class));
@@ -68,13 +70,13 @@ public class RigidBodiesScreenDrawer {
 
 		List<ShapeModel> shapes = model.getShapes();
 		List<PolygonModel> polygons = model.getPolygons();
-		List<Vector2> selectedPoints = RigidBodiesScreenObjects.selectedPoints;
-		Vector2 nearestPoint = RigidBodiesScreenObjects.nearestPoint;
-		Vector2 nextPoint = RigidBodiesScreenObjects.nextPoint;
-		Vector2 mouseSelectionP1 = RigidBodiesScreenObjects.mouseSelectionP1;
-		Vector2 mouseSelectionP2 = RigidBodiesScreenObjects.mouseSelectionP2;
-		Vector2 ballThrowP1 = RigidBodiesScreenObjects.ballThrowP1;
-		Vector2 ballThrowP2 = RigidBodiesScreenObjects.ballThrowP2;
+		List<Vector2> selectedPoints = screen.selectedPoints;
+		Vector2 nearestPoint = screen.nearestPoint;
+		Vector2 nextPoint = screen.nextPoint;
+		Vector2 mouseSelectionP1 = screen.mouseSelectionP1;
+		Vector2 mouseSelectionP2 = screen.mouseSelectionP2;
+		Vector2 ballThrowP1 = screen.ballThrowP1;
+		Vector2 ballThrowP2 = screen.ballThrowP2;
 
 		if (bodySprite != null) {
 			drawBoundingBox(bodySprite.getWidth(), bodySprite.getHeight());
@@ -184,7 +186,7 @@ public class RigidBodiesScreenDrawer {
 				drawer.setColor(SHAPE_COLOR);
 				drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
 			} else {
-				Vector2 nextPoint = RigidBodiesScreenObjects.nextPoint;
+				Vector2 nextPoint = screen.nextPoint;
 				drawer.setColor(SHAPE_LASTLINE_COLOR);
 				if (nextPoint != null) drawer.line(vs.get(vs.size()-1).x, vs.get(vs.size()-1).y, nextPoint.x, nextPoint.y);
 			}
