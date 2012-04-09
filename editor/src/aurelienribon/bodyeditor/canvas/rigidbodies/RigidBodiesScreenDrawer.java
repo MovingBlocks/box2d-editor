@@ -2,11 +2,13 @@ package aurelienribon.bodyeditor.canvas.rigidbodies;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
+import aurelienribon.bodyeditor.canvas.Assets;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -32,14 +34,16 @@ public class RigidBodiesScreenDrawer {
 
 	private final ShapeRenderer drawer = new ShapeRenderer();
 	private final SpriteBatch sb = new SpriteBatch();
+	private final OrthographicCamera camera;
 	private final Sprite v00Sprite;
 	private final Sprite v10Sprite;
 	private final Sprite v01Sprite;
 
-	public RigidBodiesScreenDrawer() {
-		v00Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v00.png")));
-		v10Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v10.png")));
-		v01Sprite = new Sprite(new Texture(Gdx.files.classpath("aurelienribon/bodyeditor/ui/gfx/v01.png")));
+	public RigidBodiesScreenDrawer(OrthographicCamera camera) {
+		this.camera = camera;
+		v00Sprite = new Sprite(Assets.inst().get("res/data/v00.png", Texture.class));
+		v10Sprite = new Sprite(Assets.inst().get("res/data/v10.png", Texture.class));
+		v01Sprite = new Sprite(Assets.inst().get("res/data/v01.png", Texture.class));
 		v00Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		v10Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		v01Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -52,10 +56,12 @@ public class RigidBodiesScreenDrawer {
 	// Public API
 	// -------------------------------------------------------------------------
 
-	public void draw(OrthographicCamera camera, Sprite bodySprite) {
+	public void draw(Sprite bodySprite) {
 		if (Settings.isGridShown) {
-			drawGrid(camera, Settings.gridGap);
+			drawGrid(Settings.gridGap);
 		}
+
+		drawAxis();
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return;
@@ -69,11 +75,9 @@ public class RigidBodiesScreenDrawer {
 		Vector2 mouseSelectionP2 = RigidBodiesScreenObjects.mouseSelectionP2;
 		Vector2 ballThrowP1 = RigidBodiesScreenObjects.ballThrowP1;
 		Vector2 ballThrowP2 = RigidBodiesScreenObjects.ballThrowP2;
-		float zoom = camera.zoom;
 
-		drawAxis(camera);
 		if (bodySprite != null) {
-			drawer.drawRect(0, 0, bodySprite.getWidth(), bodySprite.getHeight(), AXIS_COLOR, 1);
+			drawBoundingBox(bodySprite.getWidth(), bodySprite.getHeight());
 		}
 
 		if (Settings.isPolygonDrawn) {
@@ -82,27 +86,46 @@ public class RigidBodiesScreenDrawer {
 
 		if (Settings.isShapeDrawn) {
 			drawShapes(shapes);
-			drawPoints(shapes, selectedPoints, nearestPoint, nextPoint, zoom);
+			drawPoints(shapes, selectedPoints, nearestPoint, nextPoint);
 		}
 
 		drawMouseSelection(mouseSelectionP1, mouseSelectionP2);
-		drawBallThrowPath(ballThrowP1, ballThrowP2, zoom);
+		drawBallThrowPath(ballThrowP1, ballThrowP2);
 	}
 
 	// -------------------------------------------------------------------------
 	// Internals
 	// -------------------------------------------------------------------------
 
-	private void drawAxis(OrthographicCamera camera) {
+	private void drawBoundingBox(float w, float h) {
+		Gdx.gl10.glLineWidth(1);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+		drawer.setColor(AXIS_COLOR);
+		drawer.rect(0, 0, w, h);
+		drawer.end();
+	}
+
+	private void drawAxis() {
+		Gdx.gl10.glLineWidth(3);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
 		float len = 0.03f * camera.zoom;
 
-		drawer.drawLine(0, 0, 1, 0, AXIS_COLOR, 3);
-		drawer.drawLine(1, 0, 1-len, -len, AXIS_COLOR, 3);
-		drawer.drawLine(1, 0, 1-len, +len, AXIS_COLOR, 3);
-
-		drawer.drawLine(0, 0, 0, 1, AXIS_COLOR, 3);
-		drawer.drawLine(0, 1, -len, 1-len, AXIS_COLOR, 3);
-		drawer.drawLine(0, 1, +len, 1-len, AXIS_COLOR, 3);
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+		drawer.setColor(AXIS_COLOR);
+		drawer.line(0, 0, 1, 0);
+		drawer.line(1, 0, 1-len, -len);
+		drawer.line(1, 0, 1-len, +len);
+		drawer.line(0, 0, 0, 1);
+		drawer.line(0, 1, -len, 1-len);
+		drawer.line(0, 1, +len, 1-len);
+		drawer.end();
 
 		float size = 0.1f * camera.zoom;
 		v00Sprite.setSize(size, size);
@@ -120,7 +143,11 @@ public class RigidBodiesScreenDrawer {
 		sb.end();
 	}
 
-	private void drawGrid(OrthographicCamera camera, float gap) {
+	private void drawGrid(float gap) {
+		Gdx.gl10.glLineWidth(1);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
 		if (gap <= 0) gap = 0.001f;
 		float x = camera.position.x;
 		float y = camera.position.y;
@@ -128,54 +155,100 @@ public class RigidBodiesScreenDrawer {
 		float h = camera.viewportHeight;
 		float z = camera.zoom;
 
-		for (float d=0; d<x+w/2*z; d+=gap) drawer.drawLine(d, y-h/2*z, d, y+h/2*z, GRID_COLOR, 1);
-		for (float d=-gap; d>x-w/2*z; d-=gap) drawer.drawLine(d, y-h/2*z, d, y+h/2*z, GRID_COLOR, 1);
-		for (float d=0; d<y+h/2*z; d+=gap) drawer.drawLine(x-w/2*z, d, x+w/2*z, d, GRID_COLOR, 1);
-		for (float d=-gap; d>y-h/2*z; d-=gap) drawer.drawLine(x-w/2*z, d, x+w/2*z, d, GRID_COLOR, 1);
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+		drawer.setColor(GRID_COLOR);
+		for (float d=0; d<x+w/2*z; d+=gap) drawer.line(d, y-h/2*z, d, y+h/2*z);
+		for (float d=-gap; d>x-w/2*z; d-=gap) drawer.line(d, y-h/2*z, d, y+h/2*z);
+		for (float d=0; d<y+h/2*z; d+=gap) drawer.line(x-w/2*z, d, x+w/2*z, d);
+		for (float d=-gap; d>y-h/2*z; d-=gap) drawer.line(x-w/2*z, d, x+w/2*z, d);
+		drawer.end();
 	}
 
 	private void drawShapes(List<ShapeModel> shapes) {
+		Gdx.gl10.glLineWidth(2);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+
 		for (ShapeModel shape : shapes) {
 			List<Vector2> vs = shape.getVertices();
 			if (vs.isEmpty()) continue;
 
-			for (int i=1; i<vs.size(); i++)
-				drawer.drawLine(vs.get(i), vs.get(i-1), SHAPE_COLOR, 2);
+			drawer.setColor(SHAPE_COLOR);
+			for (int i=1; i<vs.size(); i++) drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i-1).x, vs.get(i-1).y);
 
 			if (shape.isClosed()) {
-				drawer.drawLine(vs.get(0), vs.get(vs.size()-1), SHAPE_COLOR, 2);
+				drawer.setColor(SHAPE_COLOR);
+				drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
 			} else {
 				Vector2 nextPoint = RigidBodiesScreenObjects.nextPoint;
-				if (nextPoint != null) drawer.drawLine(vs.get(vs.size()-1), nextPoint, SHAPE_LASTLINE_COLOR, 2);
+				drawer.setColor(SHAPE_LASTLINE_COLOR);
+				if (nextPoint != null) drawer.line(vs.get(vs.size()-1).x, vs.get(vs.size()-1).y, nextPoint.x, nextPoint.y);
 			}
 		}
+
+		drawer.end();
 	}
 
-	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint, float zoom) {
-		float w = 0.025f * zoom;
+	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint) {
+		Gdx.gl10.glLineWidth(2);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		float w = 0.025f * camera.zoom;
 
 		for (ShapeModel shape : shapes) {
 			for (Vector2 p : shape.getVertices()) {
-				if (p == nearestPoint || selectedPoints.contains(p))
-					drawer.fillRect(p.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR);
-				drawer.drawRect(p.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
+				if (p == nearestPoint || selectedPoints.contains(p)) {
+					drawer.setProjectionMatrix(camera.combined);
+					drawer.begin(ShapeRenderer.ShapeType.FilledRectangle);
+					drawer.setColor(SHAPE_COLOR);
+					drawer.filledRect(p.cpy().sub(w/2, w/2).x, p.cpy().sub(w/2, w/2).y, w, w);
+					drawer.end();
+				} else {
+					drawer.setProjectionMatrix(camera.combined);
+					drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+					drawer.setColor(SHAPE_COLOR);
+					drawer.rect(p.cpy().sub(w/2, w/2).x, p.cpy().sub(w/2, w/2).y, w, w);
+					drawer.end();
+				}
 			}
 		}
 
-		if (nextPoint != null) drawer.drawRect(nextPoint.cpy().sub(w/2, w/2), w, w, SHAPE_COLOR, 2);
-	}
-
-	private void drawPolygons(List<PolygonModel> polygons) {
-		for (PolygonModel polygon : polygons) {
-			List<Vector2> vs = polygon.getVertices();
-			for (int i=1, n=vs.size(); i<n; i++)
-				drawer.drawLine(vs.get(i), vs.get(i-1), POLYGON_COLOR, 2);
-			if (vs.size() > 1)
-				drawer.drawLine(vs.get(0),vs.get(vs.size()-1), POLYGON_COLOR, 2);
+		if (nextPoint != null) {
+			drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+			drawer.setColor(SHAPE_COLOR);
+			drawer.rect(nextPoint.cpy().sub(w/2, w/2).x, nextPoint.cpy().sub(w/2, w/2).y, w, w);
+			drawer.end();
 		}
 	}
 
+	private void drawPolygons(List<PolygonModel> polygons) {
+		Gdx.gl10.glLineWidth(2);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+		drawer.setColor(POLYGON_COLOR);
+
+		for (PolygonModel polygon : polygons) {
+			List<Vector2> vs = polygon.getVertices();
+			for (int i=1, n=vs.size(); i<n; i++) drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i-1).x, vs.get(i-1).y);
+			if (vs.size() > 1) drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
+		}
+
+		drawer.end();
+	}
+
 	private void drawMouseSelection(Vector2 p1, Vector2 p2) {
+		Gdx.gl10.glLineWidth(3);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
 		if (p1 == null || p2 == null) return;
 
 		Rectangle rect = new Rectangle(
@@ -184,16 +257,38 @@ public class RigidBodiesScreenDrawer {
 			Math.abs(p2.x - p1.x),
 			Math.abs(p2.y - p1.y));
 
-		drawer.fillRect(rect.x, rect.y, rect.width, rect.height, MOUSESELECTION_FILL_COLOR);
-		drawer.drawRect(rect.x, rect.y, rect.width, rect.height, MOUSESELECTION_STROKE_COLOR, 3);
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.FilledRectangle);
+		drawer.setColor(MOUSESELECTION_FILL_COLOR);
+		drawer.filledRect(rect.x, rect.y, rect.width, rect.height);
+		drawer.end();
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+		drawer.setColor(MOUSESELECTION_STROKE_COLOR);
+		drawer.rect(rect.x, rect.y, rect.width, rect.height);
+		drawer.end();
 	}
 
-	private void drawBallThrowPath(Vector2 p1, Vector2 p2, float zoom) {
+	private void drawBallThrowPath(Vector2 p1, Vector2 p2) {
+		Gdx.gl10.glLineWidth(3);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
 		if (p1 == null || p2 == null) return;
 
-		float w = 0.03f * zoom;
+		float w = 0.03f * camera.zoom;
 
-		drawer.drawLine(p1, p2, BALLTHROWPATH_COLOR, 3);
-		drawer.fillRect(p2.cpy().sub(w/2, w/2), w, w, BALLTHROWPATH_COLOR);
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+		drawer.setColor(BALLTHROWPATH_COLOR);
+		drawer.line(p1.x, p1.y, p2.x, p2.y);
+		drawer.end();
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.FilledRectangle);
+		drawer.setColor(BALLTHROWPATH_COLOR);
+		drawer.filledRect(p2.cpy().sub(w/2, w/2).x, p2.cpy().sub(w/2, w/2).y, w, w);
+		drawer.end();
 	}
 }
