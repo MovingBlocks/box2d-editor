@@ -205,6 +205,44 @@ public class RigidBodiesScreen {
 		createBall(orig, force);
 	}
 
+	public void insertPointsBetweenSelected() {
+		if (!isInsertEnabled()) return;
+
+		List<Vector2> toAdd = new ArrayList<Vector2>();
+
+		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes()) {
+			List<Vector2> vs = shape.getVertices();
+
+			for (int i=0; i<vs.size(); i++) {
+				Vector2 p1 = vs.get(i);
+				Vector2 p2 = i != vs.size()-1 ? vs.get(i+1) : vs.get(0);
+
+				if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
+					Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+					vs.add(i+1, p);
+					toAdd.add(p);
+				}
+			}
+		}
+
+		selectedPoints.addAll(toAdd);
+		Ctx.bodies.getSelectedModel().computePolygons();
+		Ctx.bodiesEvents.recreateWorld();
+	}
+
+	public void removeSelectedPoints() {
+		if (!isRemoveEnabled()) return;
+
+		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
+			for (Vector2 p : selectedPoints)
+				if (shape.getVertices().contains(p))
+					shape.getVertices().remove(p);
+
+		selectedPoints.clear();
+		Ctx.bodies.getSelectedModel().computePolygons();
+		Ctx.bodiesEvents.recreateWorld();
+	}
+
 	// -------------------------------------------------------------------------
 	// Internals
 	// -------------------------------------------------------------------------
@@ -221,7 +259,7 @@ public class RigidBodiesScreen {
 		if (model != null) {
 			lblSetImage.show(0);
 			lblClearVertices.show(0);
-			if (!selectedPoints.isEmpty()) lblRemoveVertices.show(0); else lblRemoveVertices.hide(0);
+			if (isRemoveEnabled()) lblRemoveVertices.show(0); else lblRemoveVertices.hide(0);
 			if (isInsertEnabled()) lblInsertVertices.show(0); else lblInsertVertices.hide(0);
 
 		} else {
@@ -230,24 +268,6 @@ public class RigidBodiesScreen {
 			lblRemoveVertices.hide(0);
 			lblClearVertices.hide(0);
 		}
-	}
-
-	private boolean isInsertEnabled() {
-		RigidBodyModel model = Ctx.bodies.getSelectedModel();
-		assert model != null;
-
-		if (selectedPoints.size() <= 1) return false;
-
-		for (ShapeModel shape : model.getShapes()) {
-			Vector2 v1 = null;
-			for (Vector2 v2 : shape.getVertices()) {
-				if (v1 != null && selectedPoints.contains(v2)) return true;
-				v1 = selectedPoints.contains(v2) ? v2 : null;
-			}
-			if (v1 != null && selectedPoints.contains(shape.getVertices().get(0))) return true;
-		}
-
-		return false;
 	}
 
 	private void setMode(Mode mode) {
@@ -290,40 +310,27 @@ public class RigidBodiesScreen {
 		}
 	}
 
-	private void insertPointsBetweenSelected() {
-		if (Ctx.bodies.getSelectedModel() == null) return;
-		List<Vector2> toAdd = new ArrayList<Vector2>();
+	private boolean isInsertEnabled() {
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 
-		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes()) {
-			List<Vector2> vs = shape.getVertices();
+		if (model == null) return false;
+		if (selectedPoints.size() <= 1) return false;
 
-			for (int i=0; i<vs.size(); i++) {
-				Vector2 p1 = vs.get(i);
-				Vector2 p2 = i != vs.size()-1 ? vs.get(i+1) : vs.get(0);
-
-				if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
-					Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-					vs.add(i+1, p);
-					toAdd.add(p);
-				}
+		for (ShapeModel shape : model.getShapes()) {
+			Vector2 v1 = null;
+			for (Vector2 v2 : shape.getVertices()) {
+				if (v1 != null && selectedPoints.contains(v2)) return true;
+				v1 = selectedPoints.contains(v2) ? v2 : null;
 			}
+			if (v1 != null && selectedPoints.contains(shape.getVertices().get(0))) return true;
 		}
 
-		selectedPoints.addAll(toAdd);
-		Ctx.bodies.getSelectedModel().computePolygons();
-		Ctx.bodiesEvents.recreateWorld();
+		return false;
 	}
 
-	private void removeSelectedPoints() {
-		if (Ctx.bodies.getSelectedModel() == null) return;
-		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
-			for (Vector2 p : selectedPoints)
-				if (shape.getVertices().contains(p))
-					shape.getVertices().remove(p);
-
-		selectedPoints.clear();
-		Ctx.bodies.getSelectedModel().computePolygons();
-		Ctx.bodiesEvents.recreateWorld();
+	private boolean isRemoveEnabled() {
+		if (Ctx.bodies.getSelectedModel() == null) return false;
+		return !selectedPoints.isEmpty();
 	}
 
 	private void clearPoints() {

@@ -7,6 +7,7 @@ import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -127,6 +128,21 @@ public class EditionInputProcessor extends InputAdapter {
 		for (Vector2 v : getAllPoints())
 			if (v.dst(p) < 0.025f*zoom)
 				screen.nearestPoint = v;
+
+		return false;
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		switch (keycode) {
+			case Keys.ENTER:
+				screen.insertPointsBetweenSelected();
+				break;
+
+			case Keys.BACKSPACE:
+				screen.removeSelectedPoints();
+				break;
+		}
 
 		return false;
 	}
