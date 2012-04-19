@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com
  */
-public class InnerChangeableObject implements Changeable {
+public class ChangeableSupport implements Changeable {
 	private final List<ChangeListener> changeListeners = new ArrayList<ChangeListener>(3);
 
 	@Override

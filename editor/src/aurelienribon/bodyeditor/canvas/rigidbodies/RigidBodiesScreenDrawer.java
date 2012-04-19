@@ -222,7 +222,7 @@ public class RigidBodiesScreenDrawer {
 
 		if (nextPoint != null) {
 			drawer.begin(ShapeRenderer.ShapeType.Rectangle);
-			drawer.setColor(SHAPE_COLOR);
+			drawer.setColor(SHAPE_LASTLINE_COLOR);
 			drawer.rect(nextPoint.cpy().sub(w/2, w/2).x, nextPoint.cpy().sub(w/2, w/2).y, w, w);
 			drawer.end();
 		}

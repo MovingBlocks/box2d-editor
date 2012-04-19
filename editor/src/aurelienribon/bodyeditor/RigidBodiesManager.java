@@ -3,6 +3,7 @@ package aurelienribon.bodyeditor;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.utils.notifications.ChangeableObject;
 import aurelienribon.utils.notifications.ObservableList;
+import java.util.List;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -15,9 +16,8 @@ public class RigidBodiesManager extends ChangeableObject {
 
 	public RigidBodiesManager() {
 		models.addListChangedListener(new ObservableList.ListChangeListener<RigidBodyModel>() {
-			@Override public void elementAdded(Object source, int idx, RigidBodyModel elem) {}
-			@Override public void elementRemoved(Object source, int idx, RigidBodyModel elem) {
-				if (elem == selectedModel) select(null);
+			@Override public void changed(Object source, List<RigidBodyModel> added, List<RigidBodyModel> removed) {
+				if (!models.contains(selectedModel)) select(null);
 			}
 		});
 	}

@@ -94,8 +94,7 @@ public class EditionInputProcessor extends InputAdapter {
 
 		} else {
 			screen.mouseSelectionP2 = canvas.screenToWorld(x, y);
-			screen.selectedPoints.clear();
-			screen.selectedPoints.addAll(getPointsInSelection());
+			screen.selectedPoints.setAll(getPointsInSelection());
 		}
 
 		return false;

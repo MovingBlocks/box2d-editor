@@ -3,6 +3,7 @@ package aurelienribon.bodyeditor;
 import aurelienribon.bodyeditor.models.DynamicObjectModel;
 import aurelienribon.utils.notifications.ChangeableObject;
 import aurelienribon.utils.notifications.ObservableList;
+import java.util.List;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -15,9 +16,8 @@ public class DynamicObjectsManager extends ChangeableObject {
 
 	public DynamicObjectsManager() {
 		models.addListChangedListener(new ObservableList.ListChangeListener<DynamicObjectModel>() {
-			@Override public void elementAdded(Object source, int idx, DynamicObjectModel elem) {}
-			@Override public void elementRemoved(Object source, int idx, DynamicObjectModel elem) {
-				if (elem == selectedModel) select(null);
+			@Override public void changed(Object source, List<DynamicObjectModel> added, List<DynamicObjectModel> removed) {
+				if (!models.contains(selectedModel)) select(null);
 			}
 		});
 	}

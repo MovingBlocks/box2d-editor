@@ -28,10 +28,10 @@
               <Component id="sidePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="renderPanel" max="32767" attributes="0"/>
-                  <Component id="optionsPanel" max="32767" attributes="0"/>
+                  <Component id="renderPanel" pref="543" max="32767" attributes="0"/>
+                  <Component id="optionsPanel" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -89,7 +89,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="29" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="logoWebsiteLbl" min="-2" max="-2" attributes="0"/>
                           <Component id="logoHelpLbl" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -119,15 +119,15 @@
             </Component>
             <Component class="javax.swing.JLabel" name="logoWebsiteLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;p align=&quot;right&quot;&gt; 2011 - Aurelien Ribon&lt;br/&gt; &lt;font color=&quot;#6eccff&quot;&gt;www.aurelienribon.com&lt;/font&gt; &lt;/p&gt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;p align=&quot;right&quot;&gt;2012 - Aur&#xe9;lien Ribon&lt;br/&gt;www.aurelienribon.com&lt;/p&gt;"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="logoHelpLbl">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="11" style="1"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/res/gfx/ic_manual.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;p align=&quot;right&quot;&gt;&#xa;&lt;font color=&quot;#6eccff&quot;&gt;Open help&lt;/font&gt;&#xa;&lt;/p&gt;"/>
+                <Property name="text" type="java.lang.String" value="Manual"/>
               </Properties>
             </Component>
           </SubComponents>

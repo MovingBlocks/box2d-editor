@@ -1,5 +1,6 @@
 package aurelienribon.bodyeditor.ui;
 
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.components.TabPanel;
@@ -11,6 +12,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
 import res.Res;
 
@@ -27,6 +30,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(getContentPane(), ".rootPanel");
 		Style.registerCssClasses(projectPanel, ".titledPanel", "#projectPanel");
 		Style.registerCssClasses(optionsPanel, ".titledPanel", "#optionsPanel");
+		Style.registerCssClasses(logoWebsiteLbl, ".brightlink");
+		Style.registerCssClasses(logoHelpLbl, ".brightlink", ".bold");
 		Style style = new Style(Res.getUrl("css/style.css"));
 		Style.apply(getContentPane(), style);
 
@@ -42,11 +47,10 @@ public class MainWindow extends javax.swing.JFrame {
 			}
 		});
 
-		logoHelpLbl.addMouseListener(new MouseAdapter() {
-			@Override public void mouseClicked(MouseEvent e) {
-				HelpDialog dialog = new HelpDialog(MainWindow.this);
-				dialog.setLocationRelativeTo(MainWindow.this);
-				dialog.setVisible(true);
+		addWindowListener(new WindowAdapter() {
+			@Override public void windowOpened(WindowEvent e) {
+				Ctx.bodies.select(null);
+				Ctx.objects.select(null);
 			}
 		});
     }
@@ -85,10 +89,10 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/title.png"))); // NOI18N
 
-        logoWebsiteLbl.setText("<html> <p align=\"right\"> 2011 - Aurelien Ribon<br/> <font color=\"#6eccff\">www.aurelienribon.com</font> </p>");
+        logoWebsiteLbl.setText("<html><p align=\"right\">2012 - Aurélien Ribon<br/>www.aurelienribon.com</p>");
 
-        logoHelpLbl.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        logoHelpLbl.setText("<html>\n<p align=\"right\">\n<font color=\"#6eccff\">Open help</font>\n</p>");
+        logoHelpLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_manual.png"))); // NOI18N
+        logoHelpLbl.setText("Manual");
 
         javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);
         logoPanel.setLayout(logoPanelLayout);
@@ -96,17 +100,17 @@ public class MainWindow extends javax.swing.JFrame {
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(logoHelpLbl)))
         );
         logoPanelLayout.setVerticalGroup(
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logoHelpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(logoHelpLbl))
             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -142,8 +146,8 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                    .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

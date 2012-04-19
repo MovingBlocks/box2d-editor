@@ -12,7 +12,7 @@ public class RigidBodyModel {
 	private final List<ShapeModel> shapes = new ArrayList<ShapeModel>();
 	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
 	private String name = "unamed";
-	private String imagePath = "";
+	private String imagePath;
 
 	public List<ShapeModel> getShapes() {
 		return shapes;
@@ -32,7 +32,6 @@ public class RigidBodyModel {
 	}
 
 	public void setImagePath(String imagePath) {
-		assert imagePath != null;
 		this.imagePath = imagePath;
 	}
 

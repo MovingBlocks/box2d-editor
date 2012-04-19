@@ -60,6 +60,10 @@ javax-swing-JCheckBox {
 	-swing-foreground: #3D5277;
 }
 
+.headerPanel javax-swing-JButton:disabled {
+	-swing-foreground: #888;
+}
+
 /*******************************************************************************
  * TabPanel
  ******************************************************************************/
@@ -98,4 +102,16 @@ aurelienribon-ui-components-TabPanel .-ar-tab:selected {
 
 .leftPanel {
 	-swing-border: matteborder(0, 0, 0, 1, #000);
+}
+
+.brightlink {
+	-swing-foreground: #FFF;
+}
+
+.brightlink:hover {
+	-swing-foreground: #AAF;
+}
+
+.bold {
+	-swing-font-style: bold;
 }

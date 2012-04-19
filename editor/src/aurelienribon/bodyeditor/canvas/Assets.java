@@ -11,14 +11,26 @@ public class Assets extends AssetManager {
 	public static Assets inst() {return instance;}
 
 	public void load() {
-		load("res/data/transparent-light.png", Texture.class);
-		load("res/data/transparent-dark.png", Texture.class);
-		load("res/data/ball.png", Texture.class);
-		load("res/data/v00.png", Texture.class);
-		load("res/data/v01.png", Texture.class);
-		load("res/data/v10.png", Texture.class);
-		load("res/data/white.png", Texture.class);
+		String[] texturesNearest = new String[] {
+			"res/data/transparent-light.png",
+			"res/data/transparent-dark.png",
+			"res/data/white.png"
+		};
+
+		String[] texturesLinear = new String[] {
+			"res/data/ball.png",
+			"res/data/v00.png",
+			"res/data/v01.png",
+			"res/data/v10.png"
+		};
+
+		for (String tex : texturesNearest) load(tex, Texture.class);
+		for (String tex : texturesLinear) load(tex, Texture.class);
 
 		while (update() == false) {}
+
+		for (String tex : texturesLinear) {
+			get(tex, Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		}
 	}
 }
