@@ -121,7 +121,17 @@ public class ObservableList<T> extends ArrayList<T> {
 		return e;
 	}
 
-	public void setAll(Collection<T> c) {
+	public void replaceBy(T element) {
+		evtList1.clear();
+		evtList2.clear();
+		if (!contains(element)) evtList1.add(element);
+		for (T e : this) if (e != element) evtList2.add(e);
+		super.clear();
+		super.add(element);
+		if (!evtList1.isEmpty() || !evtList2.isEmpty()) fireChanged(evtList1, evtList2);
+	}
+
+	public void replaceBy(Collection<T> c) {
 		evtList1.clear();
 		evtList2.clear();
 		for (T e : c) if (!contains(e)) evtList1.add(e);
