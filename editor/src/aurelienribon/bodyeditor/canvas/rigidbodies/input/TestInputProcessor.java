@@ -37,11 +37,7 @@ public class TestInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!touchDown) {
-			touchDown = false;
-			return false;
-		}
-
+		if (!touchDown) return false;
 		touchDown = false;
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();

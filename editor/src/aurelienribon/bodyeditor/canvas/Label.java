@@ -72,13 +72,14 @@ public class Label {
 	}
 
 	public void hide(float offset) {
-		tweenManager.killTarget(this, Accessor.OFFSET_X);
+		tweenManager.killTarget(this);
 		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(offset-w).start(tweenManager);
+		Tween.to(this, Accessor.ALPHA, 0.3f).target(color.a).start(tweenManager);
 		isTouchOver = false;
 	}
 
 	public void show(float offset) {
-		tweenManager.killTarget(this, Accessor.OFFSET_X);
+		tweenManager.killTarget(this);
 		Tween.to(this, Accessor.OFFSET_X, 0.5f).target(offset).start(tweenManager);
 	}
 

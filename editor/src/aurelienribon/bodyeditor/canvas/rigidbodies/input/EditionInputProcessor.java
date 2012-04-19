@@ -2,6 +2,7 @@ package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.InputHelper;
 import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -38,11 +39,15 @@ public class EditionInputProcessor extends InputAdapter {
 		draggedPoint = screen.nearestPoint;
 
 		if (draggedPoint == null) {
-			screen.selectedPoints.clear();
 			screen.mouseSelectionP1 = canvas.screenToWorld(x, y);
 
-		} else if (!screen.selectedPoints.contains(draggedPoint)) {
-			screen.selectedPoints.clear();
+		} else {
+			if (InputHelper.isCtrlDown()) {
+				if (screen.selectedPoints.contains(draggedPoint)) screen.selectedPoints.remove(draggedPoint);
+				else screen.selectedPoints.add(draggedPoint);
+			} else if (!screen.selectedPoints.contains(draggedPoint)) {
+				screen.selectedPoints.replaceBy(draggedPoint);
+			}
 		}
 
 		return false;
@@ -50,11 +55,7 @@ public class EditionInputProcessor extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!touchDown) {
-			touchDown = false;
-			return false;
-		}
-
+		if (!touchDown) return false;
 		touchDown = false;
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
@@ -64,6 +65,19 @@ public class EditionInputProcessor extends InputAdapter {
 			draggedPoint = null;
 			model.computePolygons();
 			screen.buildBody();
+
+		} else if (screen.mouseSelectionP2 != null) {
+			if (InputHelper.isCtrlDown()) {
+				for (Vector2 p : getPointsInSelection()) {
+					if (screen.selectedPoints.contains(p)) screen.selectedPoints.remove(p);
+					else screen.selectedPoints.add(p);
+				}
+			} else {
+				screen.selectedPoints.replaceBy(getPointsInSelection());
+			}
+
+		} else {
+			screen.selectedPoints.clear();
 		}
 
 		screen.mouseSelectionP1 = null;
@@ -94,7 +108,6 @@ public class EditionInputProcessor extends InputAdapter {
 
 		} else {
 			screen.mouseSelectionP2 = canvas.screenToWorld(x, y);
-			screen.selectedPoints.setAll(getPointsInSelection());
 		}
 
 		return false;
