@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor;
+package aurelienribon.bodyeditor.earclipping;
 
 import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
 import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
@@ -13,21 +13,10 @@ import java.util.List;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class EarClippingManager {
-	// -------------------------------------------------------------------------
-	// Singleton
-	// -------------------------------------------------------------------------
-
-    private static EarClippingManager instance = new EarClippingManager();
-	public static EarClippingManager instance() { return instance; }
-
-	// -------------------------------------------------------------------------
-	// Content
-	// -------------------------------------------------------------------------
-
+public class Clipper {
 	public enum Polygonizer {EWJORDAN, BAYAZIT}
 
-	public Vector2[][] polygonize(Vector2[] points) {
+	public static Vector2[][] polygonize(Polygonizer polygonizer, Vector2[] points) {
 		Vector2[][] polygons = null;
 
 		if (ShapeUtils.isPolygonCCW(points)) {
@@ -36,7 +25,7 @@ public class EarClippingManager {
 			points = vertices.toArray(new Vector2[0]);
 		}
 
-		switch (Settings.polygonizer) {
+		switch (polygonizer) {
 			case EWJORDAN:
 				polygons = EwjordanDecomposer.decompose(points);
 				break;
@@ -45,7 +34,8 @@ public class EarClippingManager {
 				Array<Vector2> tmpPoints = new Array<Vector2>(points.length);
 				tmpPoints.addAll(points);
 
-				Array<Array<Vector2>> tmpPolygons = null;
+				Array<Array<Vector2>> tmpPolygons;
+
 				try {
 					tmpPolygons = BayazitDecomposer.ConvexPartition(tmpPoints);
 				} catch (Exception ex) {
@@ -63,12 +53,11 @@ public class EarClippingManager {
 				break;
 		}
 
-		if (polygons != null)
-			polygons = sliceForMax8Vertices(polygons);
+		if (polygons != null) polygons = sliceForMax8Vertices(polygons);
 		return polygons;
 	}
 
-	private Vector2[][] sliceForMax8Vertices(Vector2[][] polygons) {
+	private static Vector2[][] sliceForMax8Vertices(Vector2[][] polygons) {
 		for (int i = 0; i < polygons.length; i++) {
 			Vector2[] poly = polygons[i];
 			if (poly.length > 8) {

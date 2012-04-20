@@ -6,7 +6,6 @@ import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.AutoListModel;
 import aurelienribon.utils.notifications.ChangeListener;
-import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -14,7 +13,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -50,44 +48,26 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
     }
 
 	private void create() {
-		JFrame frame = SwingHelper.getFrame(this);
-		String name = JOptionPane.showInputDialog(frame, "Name of the new rigid body?");
-
-		if (name != null) {
-			name = name.trim();
-
-			if (name.equals("")) {
-				String msg = "Sorry, you cannot use an empty name.";
-				JOptionPane.showMessageDialog(frame, msg);
-				return;
-			} else if (Ctx.bodies.getModel(name) != null) {
-				String msg = "Sorry, there is already a body with this name.";
-				JOptionPane.showMessageDialog(frame, msg);
-				return;
-			}
-
-			RigidBodyModel model = new RigidBodyModel();
-			model.setName(name);
-			Ctx.bodies.getModels().add(model);
-			Ctx.bodies.select(model);
-		}
+		RigidBodiesCreationDialog dialog = new RigidBodiesCreationDialog(Ctx.window);
+		dialog.setLocationRelativeTo(Ctx.window);
+		dialog.pack();
+		dialog.setVisible(true);
 	}
 
 	private void rename() {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
-		JFrame frame = SwingHelper.getFrame(this);
-		String name = JOptionPane.showInputDialog(frame, "New name of the new rigid body?", model.getName());
+		String name = JOptionPane.showInputDialog(Ctx.window, "New name of the new rigid body?", model.getName());
 
 		if (name != null) {
 			name = name.trim();
 
 			if (name.equals("")) {
 				String msg = "Sorry, you cannot use an empty name.";
-				JOptionPane.showMessageDialog(frame, msg);
+				JOptionPane.showMessageDialog(Ctx.window, msg);
 				return;
 			} else if (Ctx.bodies.getModel(name) != null && Ctx.bodies.getModel(name) != model) {
 				String msg = "Sorry, there is already a body with this name.";
-				JOptionPane.showMessageDialog(frame, msg);
+				JOptionPane.showMessageDialog(Ctx.window, msg);
 				return;
 			}
 
@@ -96,16 +76,16 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 	}
 
 	private void delete() {
-		RigidBodyModel model = Ctx.bodies.getSelectedModel();
-		Ctx.bodies.getModels().remove(model);
+		for (Object model : list.getSelectedValuesList()) {
+			Ctx.bodies.getModels().remove((RigidBodyModel) model);
+		}
 	}
 
 	private void selectModelImage() {
-		JFrame frame = SwingHelper.getFrame(this);
 		JFileChooser chooser = new JFileChooser(".");
 		chooser.setDialogTitle("Select the background image for the selected model");
 
-		if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
 			Ctx.bodies.getSelectedModel().setImagePath(chooser.getSelectedFile().getPath());
 			Ctx.bodiesEvents.modelImageChanged();
 		}
@@ -163,7 +143,11 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		@Override
 		public Component getListCellRendererComponent(JList list, RigidBodyModel value, int index, boolean isSelected, boolean cellHasFocus) {
 			nameLabel.setText(value.getName());
-			infoLabel.setText("Polygons: " + value.getPolygons().size());
+
+			String imgPath = value.getImagePath();
+			if (imgPath != null) infoLabel.setText(imgPath);
+			else infoLabel.setText("No associated image");
+
 			panel.setOpaque(isSelected);
 			return panel;
 		}
@@ -192,7 +176,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
         jToolBar1.setRollover(true);
 
         createBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_add.png"))); // NOI18N
-        createBtn.setText("Create");
+        createBtn.setText("New");
         createBtn.setFocusable(false);
         createBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         createBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -226,8 +210,6 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
         add(headerPanel, java.awt.BorderLayout.NORTH);
 
         jPanel1.setOpaque(false);
-
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         list.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };

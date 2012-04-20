@@ -10,6 +10,11 @@ javax-swing-JScrollPane {
 	-swing-border: null;
 }
 
+javax-swing-JButton {
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 5;
+}
+
 javax-swing-JToolBar,
 javax-swing-JButton,
 javax-swing-JCheckBox {
@@ -62,6 +67,19 @@ javax-swing-JCheckBox {
 
 .headerPanel javax-swing-JButton:disabled {
 	-swing-foreground: #888;
+}
+
+/*******************************************************************************
+ * Config panels
+ ******************************************************************************/
+
+.configPanel aurelienribon-ui-components-PaintedPanel {
+	-swing-opaque: false;
+	-ar-fill: #3FFF;
+}
+
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JLabel {
+	-swing-foreground: #FFF;
 }
 
 /*******************************************************************************
