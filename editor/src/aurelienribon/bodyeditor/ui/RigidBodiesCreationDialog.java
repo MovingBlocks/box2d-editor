@@ -36,6 +36,8 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         initComponents();
 
 		Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
+		Style.registerCssClasses(orLbl1, ".bigLabel");
+		Style.registerCssClasses(orLbl2, ".bigLabel");
 		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
 
 		b1CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createEmpty();}});
@@ -182,22 +184,30 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel4 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         paintedPanel1 = new aurelienribon.ui.components.PaintedPanel();
         b1NameField = new javax.swing.JTextField();
         b1CreateBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        orLbl1 = new javax.swing.JLabel();
         paintedPanel3 = new aurelienribon.ui.components.PaintedPanel();
         b2NameField = new javax.swing.JTextField();
         b2CreateBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        orLbl2 = new javax.swing.JLabel();
         paintedPanel2 = new aurelienribon.ui.components.PaintedPanel();
         b3CreateBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New rigid body");
         setResizable(false);
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/newBody.png"))); // NOI18N
+        getContentPane().add(jLabel4, java.awt.BorderLayout.WEST);
+
+        jPanel1.setOpaque(false);
 
         b1NameField.setText("Name");
 
@@ -234,6 +244,8 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 
         paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {b1CreateBtn, b1NameField});
 
+        orLbl1.setText("- OR -");
+
         b2NameField.setText("Name");
 
         b2CreateBtn.setText("Create body from image");
@@ -267,6 +279,8 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        orLbl2.setText("- OR -");
+
         b3CreateBtn.setText("Create bodies from images");
 
         jLabel2.setText("<html> Creates multiple bodies associated to selected images.<br/>You are still able to change the images later.</html>");
@@ -279,7 +293,7 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
             .addGroup(paintedPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                     .addComponent(b3CreateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -293,35 +307,37 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/newBody.png"))); // NOI18N
-        jLabel4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(paintedPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(paintedPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(paintedPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(paintedPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(orLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(orLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(paintedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(orLbl1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paintedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(orLbl2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paintedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -335,6 +351,9 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel orLbl1;
+    private javax.swing.JLabel orLbl2;
     private aurelienribon.ui.components.PaintedPanel paintedPanel1;
     private aurelienribon.ui.components.PaintedPanel paintedPanel2;
     private aurelienribon.ui.components.PaintedPanel paintedPanel3;

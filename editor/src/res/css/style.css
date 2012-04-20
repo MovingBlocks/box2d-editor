@@ -82,6 +82,11 @@ javax-swing-JCheckBox {
 	-swing-foreground: #FFF;
 }
 
+.configPanel .bigLabel {
+	-swing-foreground: #FFF;
+	-swing-horizontalalignment: center;
+}
+
 /*******************************************************************************
  * TabPanel
  ******************************************************************************/
