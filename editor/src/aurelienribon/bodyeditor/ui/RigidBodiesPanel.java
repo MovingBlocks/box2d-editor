@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,7 +32,8 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
 		Style.registerCssClasses(headerPanel, ".headerPanel");
 
-		list.setModel(new AutoListModel<RigidBodyModel>(Ctx.bodies.getModels()));
+		final AutoListModel<RigidBodyModel> listModel = new AutoListModel<RigidBodyModel>(Ctx.bodies.getModels());
+		list.setModel(listModel);
 		list.addListSelectionListener(listSelectionListener);
 		list.setCellRenderer(listCellRenderer);
 		Ctx.bodies.addChangeListener(listModelChangeListener);
@@ -45,6 +47,12 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 				RigidBodiesPanel.this.selectModelImage();
 			}
 		});
+
+		new Timer(500, new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				listModel.forceRefresh();
+			}
+		}).start();
     }
 
 	private void create() {
