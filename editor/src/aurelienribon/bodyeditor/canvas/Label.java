@@ -20,17 +20,19 @@ public class Label {
 	}
 
 	public static enum Anchor {TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT, BOTTOM_RIGHT}
+	private static enum State {SHOWN, HIDDEN, HIDDEN_SEMI}
 
 	private final TweenManager tweenManager = new TweenManager();
 	private final Anchor anchor;
 	private String text;
 	private Sprite icon;
-	private Callback callback;
+	private TouchCallback callback;
 	private final Sprite bg;
 	private final Color color;
 	private final float y, w, h;
 	private float dx;
 	private boolean isTouchOver = false;
+	private State state = State.HIDDEN;
 
 	public Label(Anchor anchor, float y, float w, float h, String text, Color color) {
 		this.anchor = anchor;
@@ -51,8 +53,10 @@ public class Label {
 	// Callback
 	// -------------------------------------------------------------------------
 
-	public static interface Callback {
-		public void touched(Label source);
+	public static interface TouchCallback {
+		public void touchDown(Label source);
+		public void touchEnter(Label source);
+		public void touchExit(Label source);
 	}
 
 	// -------------------------------------------------------------------------
@@ -67,20 +71,61 @@ public class Label {
 		this.icon = new Sprite(Assets.inst().get(path, Texture.class));
 	}
 
-	public void setCallback(Callback callback) {
+	public void setCallback(TouchCallback callback) {
 		this.callback = callback;
 	}
 
-	public void hide(float offset) {
+	public void hide() {
+		if (state == State.HIDDEN) return;
 		tweenManager.killTarget(this);
-		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(offset-w).start(tweenManager);
+		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(-w).start(tweenManager);
 		Tween.to(this, Accessor.ALPHA, 0.3f).target(color.a).start(tweenManager);
 		isTouchOver = false;
+		state = State.HIDDEN;
 	}
 
-	public void show(float offset) {
+	public void hideSemi() {
+		if (state == State.HIDDEN_SEMI) return;
 		tweenManager.killTarget(this);
-		Tween.to(this, Accessor.OFFSET_X, 0.5f).target(offset).start(tweenManager);
+		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(w/10-w).start(tweenManager);
+		Tween.to(this, Accessor.ALPHA, 0.3f).target(color.a).start(tweenManager);
+		isTouchOver = false;
+		state = State.HIDDEN_SEMI;
+	}
+
+	public void show() {
+		if (state == State.SHOWN) return;
+		tweenManager.killTarget(this);
+		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(0).start(tweenManager);
+		state = State.SHOWN;
+	}
+
+	public void tiltOn() {
+		float tx;
+
+		switch (state) {
+			case SHOWN: tx = w/10; break;
+			case HIDDEN_SEMI: tx = -w+w/10+w/10; break;
+			default: return;
+		}
+
+		tweenManager.killTarget(this);
+		Tween.to(this, Accessor.ALPHA, 0.2f).target(1).start(tweenManager);
+		Tween.to(this, Accessor.OFFSET_X, 0.2f).target(tx).start(tweenManager);
+	}
+
+	public void tiltOff() {
+		float tx;
+
+		switch (state) {
+			case SHOWN: tx = 0; break;
+			case HIDDEN_SEMI: tx = -w+w/10; break;
+			default: return;
+		}
+
+		tweenManager.killTarget(this);
+		Tween.to(this, Accessor.ALPHA, 0.2f).target(color.a).start(tweenManager);
+		Tween.to(this, Accessor.OFFSET_X, 0.2f).target(tx).start(tweenManager);
 	}
 
 	public void draw(SpriteBatch batch, BitmapFont font) {
@@ -107,22 +152,20 @@ public class Label {
 	}
 
 	public boolean touchMoved(float x, float y) {
-		if (isOver(x, y) && !isTouchOver) {
+		if (isOver(x, y) && !isTouchOver && state == State.SHOWN) {
 			isTouchOver = true;
-			tweenManager.killTarget(this);
-			Tween.to(this, Accessor.ALPHA, 0.2f).target(1).start(tweenManager);
-			Tween.to(this, Accessor.OFFSET_X, 0.2f).target(w/10).start(tweenManager);
+			tiltOn();
+			if (callback != null) callback.touchEnter(this);
 		} else if (!isOver(x, y) && isTouchOver) {
 			isTouchOver = false;
-			tweenManager.killTarget(this);
-			Tween.to(this, Accessor.ALPHA, 0.2f).target(color.a).start(tweenManager);
-			Tween.to(this, Accessor.OFFSET_X, 0.2f).target(0).start(tweenManager);
+			tiltOff();
+			if (callback != null) callback.touchExit(this);
 		}
 		return isOver(x, y);
 	}
 
 	public boolean touchDown(float x, float y) {
-		if (isOver(x, y) && callback != null) callback.touched(this);
+		if (isOver(x, y) && callback != null) callback.touchDown(this);
 		return isOver(x, y);
 	}
 

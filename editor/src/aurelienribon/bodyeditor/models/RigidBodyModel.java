@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.models;
 
-import aurelienribon.bodyeditor.EarClippingManager;
+import aurelienribon.bodyeditor.Settings;
+import aurelienribon.bodyeditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class RigidBodyModel {
 		polygons.clear();
 		for (ShapeModel shape : shapes) {
 			Vector2[] vertices = shape.getVertices().toArray(new Vector2[0]);
-			Vector2[][] polys = EarClippingManager.instance().polygonize(vertices);
+			Vector2[][] polys = Clipper.polygonize(Settings.polygonizer, vertices);
 			if (polys != null)
 				for (Vector2[] poly : polys)
 					polygons.add(new PolygonModel(poly));

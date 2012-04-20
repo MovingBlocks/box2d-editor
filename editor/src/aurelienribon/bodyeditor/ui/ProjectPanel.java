@@ -35,7 +35,6 @@ public class ProjectPanel extends javax.swing.JPanel {
     }
 
 	private void newProject() {
-		JFrame frame = SwingHelper.getFrame(this);
 		File dir = Ctx.io.getProjectFile();
 		dir = dir != null ? dir.getParentFile() : new File(".");
 		dir = dir != null ? dir : new File(".");
@@ -45,13 +44,12 @@ public class ProjectPanel extends javax.swing.JPanel {
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
 
-		if (chooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
 			Ctx.io.setProjectFile(chooser.getSelectedFile());
 		}
 	}
 
 	private void loadProject() {
-		JFrame frame = SwingHelper.getFrame(this);
 		File dir = Ctx.io.getProjectFile();
 		dir = dir != null ? dir.getParentFile() : new File(".");
 		dir = dir != null ? dir : new File(".");
@@ -61,7 +59,7 @@ public class ProjectPanel extends javax.swing.JPanel {
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
 
-		if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
 			Ctx.io.setProjectFile(chooser.getSelectedFile());
 
 			try {
@@ -78,25 +76,24 @@ public class ProjectPanel extends javax.swing.JPanel {
 	}
 
 	private void saveProject() {
-		JFrame frame = SwingHelper.getFrame(this);
 		File file = Ctx.io.getProjectFile();
 
 		if (file == null) {
 			String msg = "Please create a new project first.";
-			JOptionPane.showMessageDialog(frame, msg);
+			JOptionPane.showMessageDialog(Ctx.window, msg);
 			return;
 		}
 
 		try {
 			Ctx.io.exportToFile();
-			JOptionPane.showMessageDialog(frame, "Save successfully done.");
+			JOptionPane.showMessageDialog(Ctx.window, "Save successfully done.");
 
 		} catch (IOException ex) {
 			String msg = "Something went wrong while saving.\n\n" + ex.getClass().getSimpleName() + " - " + ex.getMessage();
-			JOptionPane.showMessageDialog(frame, msg);
+			JOptionPane.showMessageDialog(Ctx.window, msg);
 		} catch (JSONException ex) {
 			String msg = "Something went wrong while saving.\n\n" + ex.getClass().getSimpleName() + " - " + ex.getMessage();
-			JOptionPane.showMessageDialog(frame, msg);
+			JOptionPane.showMessageDialog(Ctx.window, msg);
 		}
 	}
 
@@ -120,18 +117,12 @@ public class ProjectPanel extends javax.swing.JPanel {
 
         newBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_new.png"))); // NOI18N
         newBtn.setText("New project");
-        newBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        newBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
         loadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_open.png"))); // NOI18N
         loadBtn.setText("Load project");
-        loadBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        loadBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
         saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_save.png"))); // NOI18N
         saveBtn.setText("Save");
-        saveBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        saveBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
         pathLabel.setEditable(false);
         pathLabel.setHorizontalAlignment(javax.swing.JTextField.TRAILING);

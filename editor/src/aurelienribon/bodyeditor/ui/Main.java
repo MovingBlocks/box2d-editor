@@ -23,7 +23,7 @@ public class Main {
 				} catch (IllegalAccessException ex) {
 				} catch (UnsupportedLookAndFeelException ex) {
 				}
-
+				
 				LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), false);
 				MainWindow mw = Ctx.window;
 

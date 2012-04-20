@@ -32,8 +32,7 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(optionsPanel, ".titledPanel", "#optionsPanel");
 		Style.registerCssClasses(logoWebsiteLbl, ".brightlink");
 		Style.registerCssClasses(logoHelpLbl, ".brightlink", ".bold");
-		Style style = new Style(Res.getUrl("css/style.css"));
-		Style.apply(getContentPane(), style);
+		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
 
 		JPanel p2 = new JPanel(); p2.setBackground(Color.WHITE);
 
