@@ -51,8 +51,8 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 		b2NameField.addKeyListener(updateOnTypeKeyListener);
 		b2NameField.addFocusListener(updateOnSelectFocusListener);
 
-		b1NameField.requestFocusInWindow();
-		b1NameField.selectAll();
+		b2NameField.requestFocusInWindow();
+		b2NameField.selectAll();
 
 		update();
     }
@@ -186,15 +186,15 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 
         jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        paintedPanel1 = new aurelienribon.ui.components.PaintedPanel();
-        b1NameField = new javax.swing.JTextField();
-        b1CreateBtn = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        orLbl1 = new javax.swing.JLabel();
         paintedPanel3 = new aurelienribon.ui.components.PaintedPanel();
         b2NameField = new javax.swing.JTextField();
         b2CreateBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        orLbl1 = new javax.swing.JLabel();
+        paintedPanel1 = new aurelienribon.ui.components.PaintedPanel();
+        b1NameField = new javax.swing.JTextField();
+        b1CreateBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         orLbl2 = new javax.swing.JLabel();
         paintedPanel2 = new aurelienribon.ui.components.PaintedPanel();
         b3CreateBtn = new javax.swing.JButton();
@@ -208,6 +208,41 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         getContentPane().add(jLabel4, java.awt.BorderLayout.WEST);
 
         jPanel1.setOpaque(false);
+
+        b2NameField.setText("Name");
+
+        b2CreateBtn.setText("Create body from image");
+
+        jLabel3.setText("<html> Creates a new body associated to an image.<br/>You are still able to change the image later.</html>");
+        jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout paintedPanel3Layout = new javax.swing.GroupLayout(paintedPanel3);
+        paintedPanel3.setLayout(paintedPanel3Layout);
+        paintedPanel3Layout.setHorizontalGroup(
+            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paintedPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paintedPanel3Layout.createSequentialGroup()
+                        .addComponent(b2NameField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(b2CreateBtn))
+                    .addComponent(jLabel3))
+                .addContainerGap())
+        );
+        paintedPanel3Layout.setVerticalGroup(
+            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paintedPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(b2NameField, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                    .addComponent(b2CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addContainerGap())
+        );
+
+        orLbl1.setText("- OR -");
 
         b1NameField.setText("Name");
 
@@ -243,41 +278,6 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         );
 
         paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {b1CreateBtn, b1NameField});
-
-        orLbl1.setText("- OR -");
-
-        b2NameField.setText("Name");
-
-        b2CreateBtn.setText("Create body from image");
-
-        jLabel3.setText("<html> Creates a new body associated to an image.<br/>You are still able to change the image later.</html>");
-        jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-
-        javax.swing.GroupLayout paintedPanel3Layout = new javax.swing.GroupLayout(paintedPanel3);
-        paintedPanel3.setLayout(paintedPanel3Layout);
-        paintedPanel3Layout.setHorizontalGroup(
-            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paintedPanel3Layout.createSequentialGroup()
-                        .addComponent(b2NameField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b2CreateBtn))
-                    .addComponent(jLabel3))
-                .addContainerGap())
-        );
-        paintedPanel3Layout.setVerticalGroup(
-            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(b2NameField, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                    .addComponent(b2CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addContainerGap())
-        );
 
         orLbl2.setText("- OR -");
 
@@ -316,20 +316,20 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(paintedPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(paintedPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(paintedPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(orLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(orLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
+                    .addComponent(orLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                    .addComponent(paintedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(paintedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(paintedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(orLbl1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paintedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(paintedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(orLbl2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
