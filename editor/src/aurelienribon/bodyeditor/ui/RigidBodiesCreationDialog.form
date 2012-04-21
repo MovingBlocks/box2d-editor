@@ -54,9 +54,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="paintedPanel2" alignment="1" max="32767" attributes="0"/>
                       <Component id="paintedPanel3" alignment="1" max="32767" attributes="0"/>
-                      <Component id="paintedPanel1" alignment="1" max="32767" attributes="0"/>
                       <Component id="orLbl1" alignment="0" max="32767" attributes="0"/>
                       <Component id="orLbl2" alignment="0" pref="331" max="32767" attributes="0"/>
+                      <Component id="paintedPanel1" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -66,11 +66,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="paintedPanel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="paintedPanel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="orLbl1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="paintedPanel3" min="-2" max="-2" attributes="0"/>
+                  <Component id="paintedPanel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="orLbl2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -81,64 +81,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="aurelienribon.ui.components.PaintedPanel" name="paintedPanel1">
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="b1NameField" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="b1CreateBtn" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="jLabel1" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="b1NameField" linkSize="1" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="b1CreateBtn" linkSize="1" alignment="3" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JTextField" name="b1NameField">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Name"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="b1CreateBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Create new empty body"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt; Creates a new empty body with no associated image.&lt;br/&gt;You are still able to associate an image with it later.&lt;/html&gt;"/>
-                <Property name="verticalAlignment" type="int" value="1"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Component class="javax.swing.JLabel" name="orLbl1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="- OR -"/>
-          </Properties>
-        </Component>
         <Container class="aurelienribon.ui.components.PaintedPanel" name="paintedPanel3">
 
           <Layout>
@@ -187,6 +129,64 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;html&gt; Creates a new body associated to an image.&lt;br/&gt;You are still able to change the image later.&lt;/html&gt;"/>
+                <Property name="verticalAlignment" type="int" value="1"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JLabel" name="orLbl1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="- OR -"/>
+          </Properties>
+        </Component>
+        <Container class="aurelienribon.ui.components.PaintedPanel" name="paintedPanel1">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="b1NameField" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="b1CreateBtn" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jLabel1" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="b1NameField" linkSize="1" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                          <Component id="b1CreateBtn" linkSize="1" alignment="3" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JTextField" name="b1NameField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Name"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="b1CreateBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Create new empty body"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; Creates a new empty body with no associated image.&lt;br/&gt;You are still able to associate an image with it later.&lt;/html&gt;"/>
                 <Property name="verticalAlignment" type="int" value="1"/>
               </Properties>
             </Component>

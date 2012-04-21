@@ -3,6 +3,7 @@ package aurelienribon.bodyeditor.ui;
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.RigidBodiesEvents;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
+import aurelienribon.ui.components.ImagePreviewPanel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.AutoListModel;
 import aurelienribon.utils.notifications.ChangeListener;
@@ -10,11 +11,15 @@ import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -142,13 +147,19 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
 	private final ListCellRenderer<RigidBodyModel> listCellRenderer = new ListCellRenderer<RigidBodyModel> () {
 		private final JPanel panel = new JPanel(new BorderLayout());
+		private final JPanel txtPanel = new JPanel(new BorderLayout());
 		private final JLabel nameLabel = new JLabel();
 		private final JLabel infoLabel = new JLabel();
+		private final ImagePreviewPanel imgPanel = new ImagePreviewPanel();
 
 		{
+			txtPanel.setOpaque(false);
+			txtPanel.add(nameLabel, BorderLayout.CENTER);
+			txtPanel.add(infoLabel, BorderLayout.SOUTH);
+
 			panel.setBorder(new EmptyBorder(5, 10, 5, 10));
-			panel.add(nameLabel, BorderLayout.CENTER);
-			panel.add(infoLabel, BorderLayout.SOUTH);
+			panel.add(txtPanel, BorderLayout.CENTER);
+			panel.add(imgPanel, BorderLayout.WEST);
 			panel.setBackground(Color.LIGHT_GRAY);
 			infoLabel.setForeground(new Color(0x555555));
 
@@ -157,6 +168,10 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
 			font = infoLabel.getFont();
 			infoLabel.setFont(new Font(font.getName(), font.getStyle(), 10));
+
+			imgPanel.setPreferredSize(new Dimension(30, 20));
+			imgPanel.setFill(Color.WHITE);
+			imgPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		}
 
 		@Override
@@ -164,8 +179,16 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 			nameLabel.setText(value.getName());
 
 			String imgPath = value.getImagePath();
-			if (imgPath != null) infoLabel.setText(imgPath);
-			else infoLabel.setText("No associated image");
+			if (imgPath != null) {
+				infoLabel.setText(imgPath);
+				txtPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+				imgPanel.setVisible(true);
+				try {imgPanel.setImage(new File(imgPath));} catch (IOException ex) {}
+			} else {
+				infoLabel.setText("No associated image");
+				txtPanel.setBorder(null);
+				imgPanel.setVisible(false);
+			}
 
 			panel.setOpaque(isSelected);
 			return panel;
