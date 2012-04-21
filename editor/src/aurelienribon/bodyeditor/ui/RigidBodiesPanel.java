@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
@@ -49,6 +48,16 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		createBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {create();}});
 		renameBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {rename();}});
 		deleteBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {delete();}});
+
+		createBtn.setEnabled(false);
+		renameBtn.setEnabled(false);
+		deleteBtn.setEnabled(false);
+
+		Ctx.io.addChangeListener(new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				createBtn.setEnabled(Ctx.io.getProjectFile() != null);
+			}
+		});
 
 		Ctx.bodiesEvents.addScreenToAppListener(new RigidBodiesEvents.ScreenToAppListener() {
 			@Override public void selectModelImage() {
@@ -106,7 +115,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 	}
 
 	private void selectModelImage() {
-		JFileChooser chooser = new JFileChooser(".");
+		JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
 		chooser.setDialogTitle("Select the background image for the selected model");
 
 		if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
@@ -183,7 +192,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 				infoLabel.setText(imgPath);
 				txtPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 				imgPanel.setVisible(true);
-				try {imgPanel.setImage(new File(imgPath));} catch (IOException ex) {}
+				try {imgPanel.setImage(Ctx.io.getImageFile(imgPath));} catch (IOException ex) {}
 			} else {
 				infoLabel.setText("No associated image");
 				txtPanel.setBorder(null);

@@ -28,10 +28,10 @@
               <Component id="sidePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="renderPanel" pref="543" max="32767" attributes="0"/>
+                  <Component id="renderPanel" pref="541" max="32767" attributes="0"/>
                   <Component id="optionsPanel" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -89,7 +89,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="29" max="32767" attributes="0"/>
+                      <EmptySpace pref="33" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="logoWebsiteLbl" min="-2" max="-2" attributes="0"/>
                           <Component id="logoHelpLbl" alignment="1" min="-2" max="-2" attributes="0"/>

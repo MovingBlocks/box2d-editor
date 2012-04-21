@@ -13,27 +13,30 @@ import org.json.JSONException;
  */
 public class IoManager extends ChangeableObject {
 	public static final String PROP_PROJECTFILE = "projectFile";
+	public static final String PROP_IMAGESDIR = "imagesDir";
 	private File projectFile;
+	private File imagesDir;
 
-	/**
-	 * Gets the project file.
-	 */
 	public File getProjectFile() {
 		return projectFile;
 	}
 
-	/**
-	 * Sets the project file.
-	 */
 	public void setProjectFile(File projectFile) {
 		this.projectFile = projectFile;
+		this.imagesDir = projectFile.getParentFile();
 		firePropertyChanged(PROP_PROJECTFILE);
+		firePropertyChanged(PROP_IMAGESDIR);
 	}
 
-	/**
-	 * Writes the current configuration to the project file.
-	 * @throws IOException
-	 */
+	public File getImagesDir() {
+		return imagesDir;
+	}
+
+	public void setImagesDir(File imagesDir) {
+		this.imagesDir = imagesDir;
+		firePropertyChanged(PROP_IMAGESDIR);
+	}
+
     public void exportToFile() throws IOException, JSONException {
 		assert projectFile != null;
 
@@ -41,10 +44,6 @@ public class IoManager extends ChangeableObject {
 		FileUtils.writeStringToFile(projectFile, str);
 	}
 
-	/**
-	 * Reads the project file and updates the current configuration.
-	 * @throws IOException
-	 */
 	public void importFromFile() throws IOException, JSONException {
 		assert projectFile != null;
 		assert projectFile.isFile();
@@ -55,14 +54,15 @@ public class IoManager extends ChangeableObject {
 		JsonHelper.deserialize(str);
 	}
 
-	/**
-	 * Computes the given path as relative to the current output file. If no
-	 * output file has been set, return the whole given path.
-	 * @param filepath
-	 * @return
-	 */
-	public String relativize(String filepath) {
-		if (projectFile == null) return filepath;
-		return FilenameHelper.getRelativePath(filepath, projectFile.getPath());
+	public String buildImagePath(File imgFile) {
+		assert imagesDir != null;
+		return FilenameHelper.getRelativePath(imgFile.getPath(), imagesDir.getPath());
+	}
+
+	public File getImageFile(String imgPath) {
+		assert imagesDir != null;
+		if (imgPath == null) return null;
+		File file = new File(imagesDir, imgPath);
+		return file;
 	}
 }

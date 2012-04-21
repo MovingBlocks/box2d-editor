@@ -37,6 +37,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -435,9 +436,10 @@ public class RigidBodiesScreen {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return;
 
-		TextureRegion tex = TextureUtils.getPOTTexture(model.getImagePath());
-		if (tex == null) return;
+		File texFile = Ctx.io.getImageFile(model.getImagePath());
+		if (texFile == null) return;
 
+		TextureRegion tex = TextureUtils.getPOTTexture(texFile.getPath());
 		bodySprite = new Sprite(tex);
 		bodySprite.setPosition(0, 0);
 		bodySprite.setColor(1, 1, 1, 0.5f);
