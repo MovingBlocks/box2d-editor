@@ -6,6 +6,7 @@ import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.math.Vector2;
+import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +19,13 @@ public class JsonHelper {
 	public static String serialize() throws JSONException {
 		JSONStringer json = new JSONStringer();
 		json.object();
+		json.key("imagesRootDir").value(Ctx.io.getImagesDir().getPath());
 		json.key("rigidBodies").array();
 
 		for (RigidBodyModel model : Ctx.bodies.getModels()) {
 			json.object();
 			json.key("name").value(model.getName());
-			json.key("imageRelativePath").value(model.getImagePath());
+			json.key("imagePath").value(model.getImagePath());
 			json.key("polygons").array();
 
 			for (PolygonModel polygon : model.getPolygons()) {
@@ -65,6 +67,9 @@ public class JsonHelper {
 	public static void deserialize(String str) throws JSONException {
 		JSONObject json = new JSONObject(str);
 
+		String imagesDir = json.getString("imagesRootDir");
+		Ctx.io.setImagesDir(new File(imagesDir));
+
 		// rigid bodies
 
 		JSONArray bodiesElem = json.getJSONArray("rigidBodies");
@@ -73,7 +78,7 @@ public class JsonHelper {
 
 			RigidBodyModel model = new RigidBodyModel();
 			model.setName(bodyElem.getString("name"));
-			model.setImagePath(bodyElem.getString("imageRelativePath"));
+			model.setImagePath(bodyElem.getString("imagePath"));
 
 			JSONArray polygonsElem = bodyElem.getJSONArray("polygons");
 			for (int ii=0; ii<polygonsElem.length(); ii++) {

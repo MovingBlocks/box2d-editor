@@ -27,7 +27,6 @@ import res.Res;
  */
 public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 	private BalloonTip tip;
-	private File lastDir;
 
     public RigidBodiesCreationDialog(java.awt.Frame parent) {
         super(parent, true);
@@ -103,20 +102,16 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 	}
 
 	private void createFromImage() {
-		File dir = lastDir != null ? lastDir : new File(".");
-
-		JFileChooser chooser = new JFileChooser(dir);
-		chooser.setDialogTitle("Select the new project file");
+		JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
+		chooser.setDialogTitle("Select the image associated to the new model");
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
 		chooser.setMultiSelectionEnabled(false);
 
 		if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			lastDir = chooser.getSelectedFile().getParentFile();
-
 			RigidBodyModel model = new RigidBodyModel();
 			model.setName(b2NameField.getText());
-			model.setImagePath(chooser.getSelectedFile().getPath());
+			model.setImagePath(Ctx.io.buildImagePath(chooser.getSelectedFile()));
 			Ctx.bodies.getModels().add(model);
 			Ctx.bodies.select(model);
 			dispose();
@@ -124,17 +119,13 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 	}
 
 	private void createFromImages() {
-		File dir = lastDir != null ? lastDir : new File(".");
-
-		JFileChooser chooser = new JFileChooser(dir);
-		chooser.setDialogTitle("Select the new project file");
+		JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
+		chooser.setDialogTitle("Select the images for the new models");
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
 		chooser.setMultiSelectionEnabled(true);
 
 		if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			lastDir = chooser.getSelectedFile().getParentFile();
-
 			for (File file : chooser.getSelectedFiles()) {
 				String name = file.getName();
 				String origName = name;
@@ -145,7 +136,7 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 
 				RigidBodyModel model = new RigidBodyModel();
 				model.setName(name);
-				model.setImagePath(file.getPath());
+				model.setImagePath(Ctx.io.buildImagePath(file));
 				Ctx.bodies.getModels().add(model);
 				Ctx.bodies.select(model);
 			}
