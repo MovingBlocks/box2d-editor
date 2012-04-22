@@ -23,18 +23,22 @@ public class IoManager extends ChangeableObject {
 
 	public void setProjectFile(File projectFile) {
 		this.projectFile = projectFile;
-		this.imagesDir = projectFile.getParentFile();
+		this.imagesDir = null;
 		firePropertyChanged(PROP_PROJECTFILE);
 		firePropertyChanged(PROP_IMAGESDIR);
 	}
 
 	public File getImagesDir() {
-		return imagesDir;
+		return imagesDir != null ? imagesDir : projectFile.getParentFile();
 	}
 
 	public void setImagesDir(File imagesDir) {
 		this.imagesDir = imagesDir;
 		firePropertyChanged(PROP_IMAGESDIR);
+	}
+
+	public boolean isImagesDirSet() {
+		return imagesDir != null;
 	}
 
     public void exportToFile() throws IOException, JSONException {
@@ -55,14 +59,12 @@ public class IoManager extends ChangeableObject {
 	}
 
 	public String buildImagePath(File imgFile) {
-		assert imagesDir != null;
-		return FilenameHelper.getRelativePath(imgFile.getPath(), imagesDir.getPath());
+		return FilenameHelper.getRelativePath(imgFile.getPath(), getImagesDir().getPath());
 	}
 
 	public File getImageFile(String imgPath) {
-		assert imagesDir != null;
 		if (imgPath == null) return null;
-		File file = new File(imagesDir, imgPath);
+		File file = new File(getImagesDir(), imgPath);
 		return file;
 	}
 }
