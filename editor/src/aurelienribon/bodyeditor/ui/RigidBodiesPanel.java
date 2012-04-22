@@ -29,6 +29,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import res.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -119,7 +120,8 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		chooser.setDialogTitle("Select the background image for the selected model");
 
 		if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			Ctx.bodies.getSelectedModel().setImagePath(chooser.getSelectedFile().getPath());
+			String path = Ctx.io.buildImagePath(chooser.getSelectedFile());
+			Ctx.bodies.getSelectedModel().setImagePath(path);
 			Ctx.bodiesEvents.modelImageChanged();
 		}
 	}
@@ -188,11 +190,19 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 			nameLabel.setText(value.getName());
 
 			String imgPath = value.getImagePath();
+
 			if (imgPath != null) {
-				infoLabel.setText(imgPath);
 				txtPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 				imgPanel.setVisible(true);
-				try {imgPanel.setImage(Ctx.io.getImageFile(imgPath));} catch (IOException ex) {}
+
+				if (value.isImagePathValid()) {
+					infoLabel.setText(imgPath);
+					try {imgPanel.setImage(Ctx.io.getImageFile(imgPath));} catch (IOException ex) {}
+				} else {
+					infoLabel.setText("[not found] " + imgPath);
+					try {imgPanel.setImage(Res.getUrl("gfx/unknown.png"));} catch (IOException ex) {}
+				}
+
 			} else {
 				infoLabel.setText("No associated image");
 				txtPanel.setBorder(null);

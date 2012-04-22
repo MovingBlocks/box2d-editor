@@ -436,11 +436,15 @@ public class RigidBodiesScreen {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return;
 
-		File texFile = Ctx.io.getImageFile(model.getImagePath());
-		if (texFile == null) return;
+		if (model.isImagePathValid()) {
+			File texFile = Ctx.io.getImageFile(model.getImagePath());
+			if (texFile == null) return;
+			TextureRegion tex = TextureUtils.getPOTTexture(texFile.getPath());
+			bodySprite = new Sprite(tex);
+		} else {
+			bodySprite = new Sprite(Assets.inst().get("res/data/unknown.png", Texture.class));
+		}
 
-		TextureRegion tex = TextureUtils.getPOTTexture(texFile.getPath());
-		bodySprite = new Sprite(tex);
 		bodySprite.setPosition(0, 0);
 		bodySprite.setColor(1, 1, 1, 0.5f);
 

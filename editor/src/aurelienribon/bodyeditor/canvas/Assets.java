@@ -21,7 +21,8 @@ public class Assets extends AssetManager {
 			"res/data/ball.png",
 			"res/data/v00.png",
 			"res/data/v01.png",
-			"res/data/v10.png"
+			"res/data/v10.png",
+			"res/data/unknown.png"
 		};
 
 		for (String tex : texturesNearest) load(tex, Texture.class);

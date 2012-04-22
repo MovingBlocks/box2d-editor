@@ -71,10 +71,10 @@ public class ProjectPanel extends javax.swing.JPanel {
 			} catch (IOException ex) {
 				String msg = "Something went wrong while loading the selected file.\n\n"
 					+ ex.getClass().getSimpleName() + " - " + ex.getMessage();
-				JOptionPane.showMessageDialog(this, msg);
+				JOptionPane.showMessageDialog(Ctx.window, msg);
 			} catch (JSONException ex) {
 				String msg = "The selected file is either not compatible or corrupted.\nSorry.";
-				JOptionPane.showMessageDialog(this, msg);
+				JOptionPane.showMessageDialog(Ctx.window, msg);
 			}
 		}
 	}

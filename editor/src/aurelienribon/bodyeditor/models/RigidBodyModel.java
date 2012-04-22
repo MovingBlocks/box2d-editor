@@ -1,5 +1,6 @@
 package aurelienribon.bodyeditor.models;
 
+import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.earclipping.Clipper;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +15,7 @@ public class RigidBodyModel {
 	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
 	private String name = "unamed";
 	private String imagePath;
+	private boolean isImagePathValid = false;
 
 	public List<ShapeModel> getShapes() {
 		return shapes;
@@ -34,10 +36,15 @@ public class RigidBodyModel {
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+		this.isImagePathValid = imagePath == null ? true : Ctx.io.getImageFile(imagePath).isFile();
 	}
 
 	public String getImagePath() {
 		return imagePath;
+	}
+
+	public boolean isImagePathValid() {
+		return isImagePathValid;
 	}
 
 	public void clear() {
