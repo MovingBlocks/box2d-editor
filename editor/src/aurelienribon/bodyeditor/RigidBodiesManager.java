@@ -63,10 +63,13 @@ public class RigidBodiesManager extends ChangeableObject {
 			if (model.getImagePath() == null) continue;
 
 			File imageFile = new File(oldImagesDir, model.getImagePath());
-			if (!imageFile.isFile()) continue;
-
-			String newPath = Ctx.io.buildImagePath(imageFile);
-			model.setImagePath(newPath);
+			if (imageFile.isFile()) {
+				String newPath = Ctx.io.buildImagePath(imageFile);
+				model.setImagePath(newPath);
+			} else {
+				model.setImagePath(model.getImagePath());
+				if (model == selectedModel) Ctx.bodiesEvents.modelImageChanged();
+			}
 		}
 
 		oldImagesDir = Ctx.io.getImagesDir();

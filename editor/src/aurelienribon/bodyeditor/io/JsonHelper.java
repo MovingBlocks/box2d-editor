@@ -78,7 +78,9 @@ public class JsonHelper {
 
 			RigidBodyModel model = new RigidBodyModel();
 			model.setName(bodyElem.getString("name"));
-			model.setImagePath(json.isNull(bodyElem.getString("imagePath")) ? null : bodyElem.getString("imagePath"));
+
+			String imgPath = bodyElem.isNull("imagePath") ? null : bodyElem.getString("imagePath");
+			model.setImagePath(imgPath);
 
 			JSONArray polygonsElem = bodyElem.getJSONArray("polygons");
 			for (int ii=0; ii<polygonsElem.length(); ii++) {
