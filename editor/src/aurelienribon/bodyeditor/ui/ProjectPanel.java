@@ -4,6 +4,7 @@ import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.IoManager;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.ChangeListener;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -26,9 +27,12 @@ public class ProjectPanel extends javax.swing.JPanel {
 		loadBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {loadProject();}});
 		saveBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {saveProject();}});
 		imgsBrowseBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {browseImgagesDir();}});
+		imgsLockBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {lockImagesDir();}});
 
+		prjPathField.setForeground(Color.GRAY);
 		saveBtn.setEnabled(false);
 		imgsBrowseBtn.setEnabled(false);
+		imgsLockBtn.setEnabled(false);
 
 		Ctx.io.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
@@ -112,25 +116,28 @@ public class ProjectPanel extends javax.swing.JPanel {
 		}
 	}
 
+	private void lockImagesDir() {
+		Ctx.io.setImagesDir(null);
+	}
+
 	private void projectFileChanged() {
-		if (Ctx.io.getProjectFile() != null) {
-			saveBtn.setEnabled(true);
-			prjPathField.setText(Ctx.io.getProjectFile().getPath());
-		} else {
-			saveBtn.setEnabled(false);
-			prjPathField.setText("<create or load a project>");
-		}
+		saveBtn.setEnabled(true);
+		prjPathField.setText(Ctx.io.getProjectFile().getPath());
+		prjPathField.setForeground(Color.BLACK);
+		imgsBrowseBtn.setEnabled(true);
 
 		Ctx.bodies.getModels().clear();
 	}
 
 	private void imagesDirChanged() {
-		if (Ctx.io.getImagesDir() != null) {
-			imgsBrowseBtn.setEnabled(true);
+		if (Ctx.io.isImagesDirSet()) {
 			imgsPathField.setText(Ctx.io.getImagesDir().getPath());
+			imgsPathField.setForeground(Color.BLACK);
+			imgsLockBtn.setEnabled(true);
 		} else {
-			imgsBrowseBtn.setEnabled(false);
-			imgsPathField.setText("");
+			imgsPathField.setText("<Linked to project directory>");
+			imgsPathField.setForeground(Color.GRAY);
+			imgsLockBtn.setEnabled(false);
 		}
 	}
 
@@ -152,6 +159,7 @@ public class ProjectPanel extends javax.swing.JPanel {
         prjPathField = new javax.swing.JTextField();
         imgsPathField = new javax.swing.JTextField();
         imgsBrowseBtn = new javax.swing.JButton();
+        imgsLockBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -211,6 +219,8 @@ public class ProjectPanel extends javax.swing.JPanel {
 
         imgsBrowseBtn.setText("...");
 
+        imgsLockBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_lock.png"))); // NOI18N
+
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Project file: ");
 
@@ -231,26 +241,31 @@ public class ProjectPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(imgsPathField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(imgsBrowseBtn))
-                    .addComponent(prjPathField, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                        .addComponent(imgsBrowseBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgsLockBtn))
+                    .addComponent(prjPathField, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(prjPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(imgsPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(imgsBrowseBtn)
-                    .addComponent(jLabel2))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imgsLockBtn)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(prjPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(imgsPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(imgsBrowseBtn)
+                            .addComponent(jLabel2))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {imgsBrowseBtn, imgsPathField, jLabel1, jLabel2, prjPathField});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {imgsBrowseBtn, imgsLockBtn, imgsPathField, jLabel1, jLabel2, prjPathField});
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -258,6 +273,7 @@ public class ProjectPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private aurelienribon.ui.components.PaintedPanel headerPanel;
     private javax.swing.JButton imgsBrowseBtn;
+    private javax.swing.JButton imgsLockBtn;
     private javax.swing.JTextField imgsPathField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
