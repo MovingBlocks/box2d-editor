@@ -2,6 +2,7 @@ package aurelienribon.bodyeditor.canvas.rigidbodies.input;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.canvas.Canvas;
+import aurelienribon.bodyeditor.canvas.InputHelper;
 import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
@@ -32,28 +33,32 @@ public class CreationInputProcessor extends InputAdapter {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 
-		// Get the current edited shape
-
 		List<ShapeModel> shapes = model.getShapes();
 		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size()-1);
 
 		if (lastShape == null || lastShape.isClosed()) {
-			lastShape = new ShapeModel();
+			ShapeModel.Type type = InputHelper.isCtrlDown() ? ShapeModel.Type.CIRCLE : ShapeModel.Type.POLYGON;
+			lastShape = new ShapeModel(type);
+			lastShape.getVertices().add(canvas.alignedScreenToWorld(x, y));
 			shapes.add(lastShape);
-		}
 
-		// Add a vertex to the shape or close it
-
-		List<Vector2> vs = lastShape.getVertices();
-		Vector2 nearestPoint = screen.nearestPoint;
-
-		if (vs.size() > 2 && nearestPoint == vs.get(0)) {
-			lastShape.close();
-			model.computePolygons();
-			screen.buildBody();
 		} else {
-			Vector2 p = canvas.alignedScreenToWorld(x, y);
-			vs.add(p);
+			List<Vector2> vs = lastShape.getVertices();
+			Vector2 np = screen.nearestPoint;
+			ShapeModel.Type type = lastShape.getType();
+
+			if (type == ShapeModel.Type.POLYGON && vs.size() >= 3 && np == vs.get(0)) {
+				lastShape.close();
+				model.computePhysics();
+				screen.buildBody();
+			} else if (type == ShapeModel.Type.CIRCLE) {
+				vs.add(canvas.alignedScreenToWorld(x, y));
+				lastShape.close();
+				model.computePhysics();
+				screen.buildBody();
+			} else {
+				vs.add(canvas.alignedScreenToWorld(x, y));
+			}
 		}
 
 		return false;

@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor.io;
 
 import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.models.CircleModel;
 import aurelienribon.bodyeditor.models.DynamicObjectModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
@@ -15,7 +16,7 @@ import org.json.JSONStringer;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com
  */
-public class JsonHelper {
+public class JsonIo {
 	public static String serialize() throws JSONException {
 		JSONStringer json = new JSONStringer();
 		json.object();
@@ -30,19 +31,33 @@ public class JsonHelper {
 
 			for (PolygonModel polygon : model.getPolygons()) {
 				json.array();
-				for (Vector2 vertex : polygon.getVertices())
+				for (Vector2 vertex : polygon.vertices)
 					json.object().key("x").value(vertex.x).key("y").value(vertex.y).endObject();
 				json.endArray();
+			}
+
+			json.endArray();
+			json.key("circles").array();
+
+			for (CircleModel circle : model.getCircles()) {
+				json.object();
+				json.key("cx").value(circle.center.x);
+				json.key("cy").value(circle.center.y);
+				json.key("r").value(circle.radius);
+				json.endObject();
 			}
 
 			json.endArray();
 			json.key("shapes").array();
 
 			for (ShapeModel shape : model.getShapes()) {
-				json.array();
+				json.object();
+				json.key("type").value(shape.getType());
+				json.key("vertices").array();
 				for (Vector2 vertex : shape.getVertices())
 					json.object().key("x").value(vertex.x).key("y").value(vertex.y).endObject();
 				json.endArray();
+				json.endObject();
 			}
 
 			json.endArray();
@@ -84,30 +99,50 @@ public class JsonHelper {
 			model.setImagePath(imgPath);
 
 			JSONArray polygonsElem = bodyElem.getJSONArray("polygons");
+
 			for (int ii=0; ii<polygonsElem.length(); ii++) {
 				PolygonModel polygon = new PolygonModel();
+				model.getPolygons().add(polygon);
+
 				JSONArray verticesElem = polygonsElem.getJSONArray(ii);
 				for (int iii=0; iii<verticesElem.length(); iii++) {
 					JSONObject vertexElem = verticesElem.getJSONObject(iii);
-					polygon.getVertices().add(new Vector2(
+					polygon.vertices.add(new Vector2(
 						(float) vertexElem.getDouble("x"),
 						(float) vertexElem.getDouble("y")));
 				}
-				model.getPolygons().add(polygon);
+			}
+
+			JSONArray circlesElem = bodyElem.getJSONArray("circles");
+
+			for (int ii=0; ii<circlesElem.length(); ii++) {
+				CircleModel circle = new CircleModel();
+				model.getCircles().add(circle);
+
+				JSONObject circleElem = circlesElem.getJSONObject(ii);
+				circle.center.x = (float) circleElem.getDouble("cx");
+				circle.center.y = (float) circleElem.getDouble("cy");
+				circle.radius = (float) circleElem.getDouble("r");
 			}
 
 			JSONArray shapesElem = bodyElem.getJSONArray("shapes");
+
 			for (int ii=0; ii<shapesElem.length(); ii++) {
-				ShapeModel shape = new ShapeModel();
-				JSONArray verticesElem = shapesElem.getJSONArray(ii);
+				JSONObject shapeElem = shapesElem.getJSONObject(ii);
+				ShapeModel.Type type = ShapeModel.Type.valueOf(shapeElem.getString("type"));
+
+				ShapeModel shape = new ShapeModel(type);
+				model.getShapes().add(shape);
+
+				JSONArray verticesElem = shapeElem.getJSONArray("vertices");
 				for (int iii=0; iii<verticesElem.length(); iii++) {
 					JSONObject vertexElem = verticesElem.getJSONObject(iii);
 					shape.getVertices().add(new Vector2(
 						(float) vertexElem.getDouble("x"),
 						(float) vertexElem.getDouble("y")));
 				}
+
 				shape.close();
-				model.getShapes().add(shape);
 			}
 
 			Ctx.bodies.getModels().add(model);

@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.io.JsonHelper;
+import aurelienribon.bodyeditor.io.JsonIo;
 import aurelienribon.utils.io.FilenameHelper;
 import aurelienribon.utils.notifications.ChangeableObject;
 import java.io.File;
@@ -44,7 +44,7 @@ public class IoManager extends ChangeableObject {
     public void exportToFile() throws IOException, JSONException {
 		assert projectFile != null;
 
-		String str = JsonHelper.serialize();
+		String str = JsonIo.serialize();
 		FileUtils.writeStringToFile(projectFile, str);
 	}
 
@@ -55,7 +55,7 @@ public class IoManager extends ChangeableObject {
 		Ctx.bodies.getModels().clear();
 		String str = FileUtils.readFileToString(projectFile);
 
-		JsonHelper.deserialize(str);
+		JsonIo.deserialize(str);
 	}
 
 	public String buildImagePath(File imgFile) {

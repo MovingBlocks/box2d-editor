@@ -13,6 +13,7 @@ import java.util.List;
 public class RigidBodyModel {
 	private final List<ShapeModel> shapes = new ArrayList<ShapeModel>();
 	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
+	private final List<CircleModel> circles = new ArrayList<CircleModel>();
 	private String name = "unamed";
 	private String imagePath;
 	private boolean isImagePathValid = false;
@@ -23,6 +24,10 @@ public class RigidBodyModel {
 
 	public List<PolygonModel> getPolygons() {
 		return polygons;
+	}
+
+	public List<CircleModel> getCircles() {
+		return circles;
 	}
 
 	public void setName(String name) {
@@ -50,16 +55,26 @@ public class RigidBodyModel {
 	public void clear() {
 		shapes.clear();
 		polygons.clear();
+		circles.clear();
 	}
 
-	public void computePolygons() {
+	public void computePhysics() {
 		polygons.clear();
+		circles.clear();
+
 		for (ShapeModel shape : shapes) {
-			Vector2[] vertices = shape.getVertices().toArray(new Vector2[0]);
-			Vector2[][] polys = Clipper.polygonize(Settings.polygonizer, vertices);
-			if (polys != null)
-				for (Vector2[] poly : polys)
-					polygons.add(new PolygonModel(poly));
+			if (!shape.isClosed()) continue;
+
+			if (shape.getType() == ShapeModel.Type.POLYGON) {
+				Vector2[] vertices = shape.getVertices().toArray(new Vector2[0]);
+				Vector2[][] polys = Clipper.polygonize(Settings.polygonizer, vertices);
+				if (polys != null) for (Vector2[] poly : polys) polygons.add(new PolygonModel(poly));
+
+			} if (shape.getType() == ShapeModel.Type.CIRCLE) {
+				Vector2 center = shape.getVertices().get(0);
+				float radius = Math.abs(shape.getVertices().get(1).tmp().sub(center).len());
+				circles.add(new CircleModel(center, radius));
+			}
 		}
 	}
 
