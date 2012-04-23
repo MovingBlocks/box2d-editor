@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class ShapeUtils {
+public class PolygonUtils {
 	public static float getPolygonSignedArea(Vector2[] points) {
 		if (points.length < 3)
 			return 0;

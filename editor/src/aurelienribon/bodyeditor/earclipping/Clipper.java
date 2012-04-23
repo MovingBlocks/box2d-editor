@@ -2,7 +2,7 @@ package aurelienribon.bodyeditor.earclipping;
 
 import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
 import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
-import aurelienribon.utils.gdx.ShapeUtils;
+import aurelienribon.utils.gdx.PolygonUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class Clipper {
 	public static Vector2[][] polygonize(Polygonizer polygonizer, Vector2[] points) {
 		Vector2[][] polygons = null;
 
-		if (ShapeUtils.isPolygonCCW(points)) {
+		if (PolygonUtils.isPolygonCCW(points)) {
 			List<Vector2> vertices = Arrays.asList(points);
 			Collections.reverse(vertices);
 			points = vertices.toArray(new Vector2[0]);

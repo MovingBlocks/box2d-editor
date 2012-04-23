@@ -11,10 +11,11 @@ import aurelienribon.bodyeditor.canvas.Label.Anchor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.CreationInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.EditionInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.TestInputProcessor;
+import aurelienribon.bodyeditor.models.CircleModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
-import aurelienribon.utils.gdx.ShapeUtils;
+import aurelienribon.utils.gdx.PolygonUtils;
 import aurelienribon.utils.gdx.TextureUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.notifications.ObservableList;
@@ -244,6 +245,7 @@ public class RigidBodiesScreen {
 	// -------------------------------------------------------------------------
 
 	public void buildBody() {
+		clearWorld();
 		createBody();
 	}
 
@@ -257,6 +259,8 @@ public class RigidBodiesScreen {
 		List<Vector2> toAdd = new ArrayList<Vector2>();
 
 		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes()) {
+			if (shape.getType() != ShapeModel.Type.POLYGON) continue;
+
 			List<Vector2> vs = shape.getVertices();
 
 			for (int i=0; i<vs.size(); i++) {
@@ -272,20 +276,39 @@ public class RigidBodiesScreen {
 		}
 
 		selectedPoints.addAll(toAdd);
-		Ctx.bodies.getSelectedModel().computePolygons();
+		Ctx.bodies.getSelectedModel().computePhysics();
 		Ctx.bodiesEvents.recreateWorld();
 	}
 
 	public void removeSelectedPoints() {
 		if (!isRemoveEnabled()) return;
 
-		for (ShapeModel shape : Ctx.bodies.getSelectedModel().getShapes())
-			for (Vector2 p : selectedPoints)
-				if (shape.getVertices().contains(p))
-					shape.getVertices().remove(p);
+		List<ShapeModel> shapes = Ctx.bodies.getSelectedModel().getShapes();
+
+		for (int i=shapes.size()-1; i>=0; i--) {
+			ShapeModel shape = Ctx.bodies.getSelectedModel().getShapes().get(i);
+
+			switch (shape.getType()) {
+				case POLYGON:
+					for (Vector2 p : selectedPoints) {
+						if (shape.getVertices().contains(p)) shape.getVertices().remove(p);
+					}
+					if (shape.getVertices().isEmpty()) shapes.remove(i);
+					break;
+
+				case CIRCLE:
+					for (Vector2 p : selectedPoints) {
+						if (shape.getVertices().contains(p)) {
+							shapes.remove(i);
+							break;
+						}
+					}
+					break;
+			}
+		}
 
 		selectedPoints.clear();
-		Ctx.bodies.getSelectedModel().computePolygons();
+		Ctx.bodies.getSelectedModel().computePhysics();
 		Ctx.bodiesEvents.recreateWorld();
 	}
 
@@ -372,6 +395,8 @@ public class RigidBodiesScreen {
 		if (selectedPoints.size() <= 1) return false;
 
 		for (ShapeModel shape : model.getShapes()) {
+			if (shape.getType() != ShapeModel.Type.POLYGON) continue;
+
 			Vector2 v1 = null;
 			for (Vector2 v2 : shape.getVertices()) {
 				if (v1 != null && selectedPoints.contains(v2)) return true;
@@ -404,7 +429,8 @@ public class RigidBodiesScreen {
 
 	private void createBody() {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
-		if (model == null || model.getPolygons().isEmpty()) return;
+		if (model == null) return;
+		if (model.getPolygons().isEmpty() && model.getCircles().isEmpty()) return;
 
 		BodyDef bd = new BodyDef();
 		bd.type = BodyType.StaticBody;
@@ -412,17 +438,32 @@ public class RigidBodiesScreen {
 		Body body = world.createBody(bd);
 
 		for (PolygonModel polygon : model.getPolygons()) {
-			Vector2[] vs = polygon.getVertices().toArray(new Vector2[0]);
+			Vector2[] vs = polygon.vertices.toArray(new Vector2[0]);
 
-			if (ShapeUtils.getPolygonArea(vs) < 0.00001f) continue;
+			if (PolygonUtils.getPolygonArea(vs) < 0.00001f) continue;
 
 			PolygonShape shape = new PolygonShape();
 			shape.set(vs);
 
 			FixtureDef fd = new FixtureDef();
 			fd.density = 1f;
-			fd.friction = 0.8f;
-			fd.restitution = 0.2f;
+			fd.friction = 0.5f;
+			fd.restitution = 1f;
+			fd.shape = shape;
+
+			body.createFixture(fd);
+			shape.dispose();
+		}
+
+		for (CircleModel circle : model.getCircles()) {
+			CircleShape shape = new CircleShape();
+			shape.setPosition(circle.center);
+			shape.setRadius(circle.radius);
+
+			FixtureDef fd = new FixtureDef();
+			fd.density = 1f;
+			fd.friction = 0.5f;
+			fd.restitution = 1f;
 			fd.shape = shape;
 
 			body.createFixture(fd);
@@ -471,7 +512,14 @@ public class RigidBodiesScreen {
 
 		CircleShape shape = new CircleShape();
 		shape.setRadius(radius);
-		b.createFixture(shape, 1f);
+
+		FixtureDef fd = new FixtureDef();
+		fd.density = 1f;
+		fd.friction = 0.5f;
+		fd.restitution = 1f;
+		fd.shape = shape;
+
+		b.createFixture(fd);
 
 		Sprite sp = new Sprite(Assets.inst().get("res/data/ball.png", Texture.class));
 		sp.setSize(radius*2, radius*2);

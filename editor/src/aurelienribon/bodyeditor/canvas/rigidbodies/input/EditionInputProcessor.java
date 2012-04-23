@@ -64,7 +64,7 @@ public class EditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint != null) {
 			draggedPoint = null;
-			model.computePolygons();
+			model.computePhysics();
 			screen.buildBody();
 
 		} else if (screen.mouseSelectionP2 != null) {
@@ -135,13 +135,8 @@ public class EditionInputProcessor extends InputAdapter {
 	@Override
 	public boolean keyDown(int keycode) {
 		switch (keycode) {
-			case Keys.ENTER:
-				screen.insertPointsBetweenSelected();
-				break;
-
-			case Keys.BACKSPACE:
-				screen.removeSelectedPoints();
-				break;
+			case Keys.ENTER: screen.insertPointsBetweenSelected(); break;
+			case Keys.BACKSPACE: screen.removeSelectedPoints(); break;
 		}
 
 		return false;
@@ -159,11 +154,13 @@ public class EditionInputProcessor extends InputAdapter {
 				Math.min(p1.x, p2.x),
 				Math.min(p1.y, p2.y),
 				Math.abs(p2.x - p1.x),
-				Math.abs(p2.y - p1.y));
+				Math.abs(p2.y - p1.y)
+			);
 
-			for (Vector2 p : getAllPoints())
+			for (Vector2 p : getAllPoints()) {
 				if (rect.contains(p.x, p.y))
 					points.add(p);
+			}
 		}
 
 		return Collections.unmodifiableList(points);
@@ -173,8 +170,9 @@ public class EditionInputProcessor extends InputAdapter {
 		List<Vector2> points = new ArrayList<Vector2>();
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 
-		for (ShapeModel shape : model.getShapes())
+		for (ShapeModel shape : model.getShapes()) {
 			points.addAll(shape.getVertices());
+		}
 
 		return Collections.unmodifiableList(points);
 	}

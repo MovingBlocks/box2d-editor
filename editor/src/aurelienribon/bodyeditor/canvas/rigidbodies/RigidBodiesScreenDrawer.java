@@ -173,26 +173,53 @@ public class RigidBodiesScreenDrawer {
 		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		drawer.setProjectionMatrix(camera.combined);
-		drawer.begin(ShapeRenderer.ShapeType.Line);
 
 		for (ShapeModel shape : shapes) {
 			List<Vector2> vs = shape.getVertices();
 			if (vs.isEmpty()) continue;
 
-			drawer.setColor(SHAPE_COLOR);
-			for (int i=1; i<vs.size(); i++) drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i-1).x, vs.get(i-1).y);
+			switch (shape.getType()) {
+				case POLYGON:
+					drawer.begin(ShapeRenderer.ShapeType.Line);
+					drawer.setColor(SHAPE_COLOR);
 
-			if (shape.isClosed()) {
-				drawer.setColor(SHAPE_COLOR);
-				drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
-			} else {
-				Vector2 nextPoint = screen.nextPoint;
-				drawer.setColor(SHAPE_LASTLINE_COLOR);
-				if (nextPoint != null) drawer.line(vs.get(vs.size()-1).x, vs.get(vs.size()-1).y, nextPoint.x, nextPoint.y);
+					for (int i=1; i<vs.size(); i++) drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i-1).x, vs.get(i-1).y);
+
+					if (shape.isClosed()) {
+						drawer.setColor(SHAPE_COLOR);
+						drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
+					} else {
+						Vector2 nextPoint = screen.nextPoint;
+						drawer.setColor(SHAPE_LASTLINE_COLOR);
+						if (nextPoint != null) drawer.line(vs.get(vs.size()-1).x, vs.get(vs.size()-1).y, nextPoint.x, nextPoint.y);
+					}
+
+					drawer.end();
+					break;
+
+				case CIRCLE:
+					if (shape.isClosed()) {
+						Vector2 center = shape.getVertices().get(0);
+						float radius = shape.getVertices().get(1).tmp().sub(center).len();
+						if (radius > 0.0001f) {
+							drawer.setColor(SHAPE_COLOR);
+							drawer.begin(ShapeRenderer.ShapeType.Circle);
+							drawer.circle(center.x, center.y, radius, 20);
+							drawer.end();
+						}
+					} else {
+						Vector2 center = shape.getVertices().get(0);
+						float radius = screen.nextPoint.tmp().sub(center).len();
+						if (radius > 0.0001f) {
+							drawer.setColor(SHAPE_LASTLINE_COLOR);
+							drawer.begin(ShapeRenderer.ShapeType.Circle);
+							drawer.circle(center.x, center.y, radius, 20);
+							drawer.end();
+						}
+					}
+					break;
 			}
 		}
-
-		drawer.end();
 	}
 
 	private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint) {
@@ -238,7 +265,7 @@ public class RigidBodiesScreenDrawer {
 		drawer.setColor(POLYGON_COLOR);
 
 		for (PolygonModel polygon : polygons) {
-			List<Vector2> vs = polygon.getVertices();
+			List<Vector2> vs = polygon.vertices;
 			for (int i=1, n=vs.size(); i<n; i++) drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i-1).x, vs.get(i-1).y);
 			if (vs.size() > 1) drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size()-1).x, vs.get(vs.size()-1).y);
 		}

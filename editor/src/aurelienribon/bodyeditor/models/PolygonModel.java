@@ -9,16 +9,12 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class PolygonModel {
-	private final List<Vector2> vertices = new ArrayList<Vector2>();
+	public final List<Vector2> vertices = new ArrayList<Vector2>();
 
 	public PolygonModel() {
 	}
 
 	public PolygonModel(Vector2[] vertices) {
 		this.vertices.addAll(Arrays.asList(vertices));
-	}
-
-	public List<Vector2> getVertices() {
-		return vertices;
 	}
 }
