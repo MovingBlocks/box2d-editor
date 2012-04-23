@@ -16,7 +16,7 @@ public class RigidBodyModel {
 	private final List<CircleModel> circles = new ArrayList<CircleModel>();
 	private String name = "unamed";
 	private String imagePath;
-	private boolean isImagePathValid = false;
+	private boolean isImagePathValid = true;
 
 	public List<ShapeModel> getShapes() {
 		return shapes;
