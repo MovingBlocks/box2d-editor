@@ -1,7 +1,7 @@
-package aurelienribon.bodyeditor.earclipping;
+package aurelienribon.bodyeditor.maths;
 
-import aurelienribon.bodyeditor.earclipping.bayazit.BayazitDecomposer;
-import aurelienribon.bodyeditor.earclipping.ewjordan.EwjordanDecomposer;
+import aurelienribon.bodyeditor.maths.earclipping.bayazit.BayazitDecomposer;
+import aurelienribon.bodyeditor.maths.earclipping.ewjordan.EwjordanDecomposer;
 import aurelienribon.utils.gdx.PolygonUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;

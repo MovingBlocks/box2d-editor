@@ -37,6 +37,26 @@ public class TextureUtils {
 		return new TextureRegion(texture, 0, 0, origW, origH);
 	}
 
+	public static Pixmap getPOTPixmap(String path) {
+		if (path == null) return null;
+
+		FileHandle file = Gdx.files.absolute(path);
+		if (!file.exists()) return null;
+
+		Pixmap pixmap = new Pixmap(file);
+		int origW = pixmap.getWidth();
+		int origH = pixmap.getHeight();
+		int w = getNearestPOT(origW);
+		int h = getNearestPOT(origH);
+		int len = Math.max(w, h);
+
+		Pixmap potPixmap = new Pixmap(len, len, pixmap.getFormat());
+		potPixmap.drawPixmap(pixmap, 0, 0, 0, 0, origW, origH);
+		pixmap.dispose();
+
+		return potPixmap;
+	}
+
 	// -------------------------------------------------------------------------
 
 	private static int getNearestPOT(int d) {

@@ -1,6 +1,6 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.earclipping.Clipper.Polygonizer;
+import aurelienribon.bodyeditor.maths.Clipper.Polygonizer;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -14,4 +14,8 @@ public class Settings {
 	public static boolean isGridShown = false;
 	public static float gridGap = 0.03f;
 	public static Polygonizer polygonizer = Polygonizer.BAYAZIT;
+	public static float autoTraceHullTolerance = 4f;
+	public static int autoTraceAlphaTolerance = 128;
+	public static boolean autoTraceMultiPartDetection = false;
+	public static boolean autoTraceHoleDetection = false;
 }

@@ -11,15 +11,20 @@ import aurelienribon.bodyeditor.canvas.Label.Anchor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.CreationInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.EditionInputProcessor;
 import aurelienribon.bodyeditor.canvas.rigidbodies.input.TestInputProcessor;
+import aurelienribon.bodyeditor.maths.Tracer;
 import aurelienribon.bodyeditor.models.CircleModel;
 import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
+import aurelienribon.bodyeditor.ui.AutoTraceParamsDialog;
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.utils.gdx.PolygonUtils;
 import aurelienribon.utils.gdx.TextureUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.notifications.ObservableList;
-import aurelienribon.utils.notifications.ObservableList.ListChangeListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -40,10 +45,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 /**
@@ -59,6 +66,7 @@ public class RigidBodiesScreen {
 	private final Canvas canvas;
 	private final RigidBodiesScreenDrawer rbsDrawer;
 	private final Box2DDebugRenderer rdr = new Box2DDebugRenderer();
+	private final TweenManager tweenManager = new TweenManager();
 
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final List<Body> ballsBodies = new ArrayList<Body>();
@@ -70,9 +78,10 @@ public class RigidBodiesScreen {
 	private final Label lblModeTest = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", BG_LBL_COLOR);
 	private final Label lblSetImage = new Label(Anchor.TOP_RIGHT, 10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", BG_BTN_COLOR);
 	private final Label lblClearImage = new Label(Anchor.TOP_RIGHT, 15+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear bg. image", BG_BTN_COLOR);
-	private final Label lblClearVertices = new Label(Anchor.TOP_RIGHT, 20+BG_HEIGHT*4, 120, BG_HEIGHT, "Clear all points", BG_BTN_COLOR);
-	private final Label lblInsertVertices = new Label(Anchor.TOP_RIGHT, 25+BG_HEIGHT*5, 120, BG_HEIGHT, "Insert points", BG_BTN_COLOR);
-	private final Label lblRemoveVertices = new Label(Anchor.TOP_RIGHT, 30+BG_HEIGHT*6, 120, BG_HEIGHT, "Remove points", BG_BTN_COLOR);
+	private final Label lblAutoTrace = new Label(Anchor.TOP_RIGHT, 20+BG_HEIGHT*4, 120, BG_HEIGHT, "Auto-trace", BG_BTN_COLOR);
+	private final Label lblClearVertices = new Label(Anchor.TOP_RIGHT, 25+BG_HEIGHT*5, 120, BG_HEIGHT, "Clear all points", BG_BTN_COLOR);
+	private final Label lblInsertVertices = new Label(Anchor.TOP_RIGHT, 30+BG_HEIGHT*6, 120, BG_HEIGHT, "Insert points", BG_BTN_COLOR);
+	private final Label lblRemoveVertices = new Label(Anchor.TOP_RIGHT, 35+BG_HEIGHT*7, 120, BG_HEIGHT, "Remove points", BG_BTN_COLOR);
 
 	private Mode mode = Mode.CREATION;
 	private Sprite bodySprite;
@@ -100,6 +109,12 @@ public class RigidBodiesScreen {
 
 		initializeEvents();
 		initializeLabels();
+
+		Tween.call(new TweenCallback() {
+			@Override public void onEvent(int type, BaseTween<?> source) {
+				updateButtons();
+			}
+		}).repeat(-1, 0.3f).start(tweenManager);
 	}
 
 	private void initializeEvents() {
@@ -124,11 +139,10 @@ public class RigidBodiesScreen {
 				createBodySprite();
 				lblClearImage.show();
 			}
-		});
 
-		selectedPoints.addListChangedListener(new ListChangeListener<Vector2>() {
-			@Override public void changed(Object source, List<Vector2> added, List<Vector2> removed) {
-				updateButtons();
+			@Override
+			public void autoTrace() {
+				RigidBodiesScreen.this.autoTrace();
 			}
 		});
 	}
@@ -161,9 +175,16 @@ public class RigidBodiesScreen {
 			@Override public void touchEnter(Label source) {}
 			@Override public void touchExit(Label source) {}
 			@Override public void touchDown(Label source) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override public void run() {Ctx.bodiesEvents.selectModelImage();}
-				});
+				SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
+					JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
+					chooser.setDialogTitle("Select the background image for the selected model");
+
+					if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
+						String path = Ctx.io.buildImagePath(chooser.getSelectedFile());
+						Ctx.bodies.getSelectedModel().setImagePath(path);
+						Ctx.bodiesEvents.modelImageChanged();
+					}
+				}});
 			}
 		});
 
@@ -180,6 +201,25 @@ public class RigidBodiesScreen {
 			}
 		});
 
+		lblAutoTrace.setCallback(new Label.TouchCallback() {
+			@Override public void touchEnter(Label source) {}
+			@Override public void touchExit(Label source) {}
+			@Override public void touchDown(Label source) {
+				SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
+					AutoTraceParamsDialog dialog = new AutoTraceParamsDialog(Ctx.window);
+					dialog.setLocationRelativeTo(Ctx.window);
+					dialog.pack();
+					dialog.setVisible(true);
+				}});
+			}
+		});
+
+		lblClearVertices.setCallback(new Label.TouchCallback() {
+			@Override public void touchEnter(Label source) {}
+			@Override public void touchExit(Label source) {}
+			@Override public void touchDown(Label source) {clearPoints();}
+		});
+
 		lblInsertVertices.setCallback(new Label.TouchCallback() {
 			@Override public void touchEnter(Label source) {}
 			@Override public void touchExit(Label source) {}
@@ -191,12 +231,6 @@ public class RigidBodiesScreen {
 			@Override public void touchExit(Label source) {}
 			@Override public void touchDown(Label source) {removeSelectedPoints();}
 		});
-
-		lblClearVertices.setCallback(new Label.TouchCallback() {
-			@Override public void touchEnter(Label source) {}
-			@Override public void touchExit(Label source) {}
-			@Override public void touchDown(Label source) {clearPoints();}
-		});
 	}
 
 	// -------------------------------------------------------------------------
@@ -204,6 +238,7 @@ public class RigidBodiesScreen {
 	// -------------------------------------------------------------------------
 
 	public void render() {
+		tweenManager.update(Gdx.graphics.getDeltaTime());
 		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		canvas.batch.setProjectionMatrix(canvas.worldCamera.combined);
@@ -229,9 +264,10 @@ public class RigidBodiesScreen {
 		lblModeTest.draw(canvas.batch, canvas.font);
 		lblSetImage.draw(canvas.batch, canvas.font);
 		lblClearImage.draw(canvas.batch, canvas.font);
+		lblAutoTrace.draw(canvas.batch, canvas.font);
+		lblClearVertices.draw(canvas.batch, canvas.font);
 		lblInsertVertices.draw(canvas.batch, canvas.font);
 		lblRemoveVertices.draw(canvas.batch, canvas.font);
-		lblClearVertices.draw(canvas.batch, canvas.font);
 		canvas.font.setColor(Color.WHITE);
 		canvas.font.draw(canvas.batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / canvas.worldCamera.zoom), 10, 45);
 		canvas.font.draw(canvas.batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
@@ -327,17 +363,19 @@ public class RigidBodiesScreen {
 
 		if (model != null) {
 			lblSetImage.show();
-			if (model.getImagePath() != null) lblClearImage.show(); else lblClearImage.hide();
-			lblClearVertices.show();
+			if (isImageValid()) lblClearImage.show(); else lblClearImage.hide();
+			if (isImageValid() && model.getShapes().isEmpty()) lblAutoTrace.show(); else lblAutoTrace.hide();
+			if (!model.getShapes().isEmpty()) lblClearVertices.show(); else lblClearVertices.hide();
 			if (isRemoveEnabled()) lblRemoveVertices.show(); else lblRemoveVertices.hide();
 			if (isInsertEnabled()) lblInsertVertices.show(); else lblInsertVertices.hide();
 
 		} else {
 			lblSetImage.hide();
 			lblClearImage.hide();
+			lblAutoTrace.hide();
+			lblClearVertices.hide();
 			lblInsertVertices.hide();
 			lblRemoveVertices.hide();
-			lblClearVertices.hide();
 		}
 	}
 
@@ -411,6 +449,38 @@ public class RigidBodiesScreen {
 	private boolean isRemoveEnabled() {
 		if (Ctx.bodies.getSelectedModel() == null) return false;
 		return !selectedPoints.isEmpty();
+	}
+
+	private boolean isImageValid() {
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
+		if (model == null) return false;
+		if (model.getImagePath() == null || !model.isImagePathValid()) return false;
+		return true;
+	}
+
+	private void autoTrace() {
+		if (!isImageValid()) return;
+
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
+		File file = Ctx.io.getImageFile(model.getImagePath());
+		Vector2[][] polygons = Tracer.trace(file.getPath(),
+			Settings.autoTraceHullTolerance,
+			Settings.autoTraceAlphaTolerance,
+			Settings.autoTraceMultiPartDetection,
+			Settings.autoTraceHoleDetection);
+
+		if (polygons == null) return;
+
+		for (Vector2[] polygon : polygons) {
+			if (polygon.length < 3) continue;
+			ShapeModel shape = new ShapeModel(ShapeModel.Type.POLYGON);
+			shape.getVertices().addAll(Arrays.asList(polygon));
+			shape.close();
+			model.getShapes().add(shape);
+		}
+
+		model.computePhysics();
+		buildBody();
 	}
 
 	private void clearPoints() {
@@ -566,9 +636,10 @@ public class RigidBodiesScreen {
 			if (lblModeTest.touchDown(x, y)) return true;
 			if (lblSetImage.touchDown(x, y)) return true;
 			if (lblClearImage.touchDown(x, y)) return true;
+			if (lblAutoTrace.touchDown(x, y)) return true;
+			if (lblClearVertices.touchDown(x, y)) return true;
 			if (lblInsertVertices.touchDown(x, y)) return true;
 			if (lblRemoveVertices.touchDown(x, y)) return true;
-			if (lblClearVertices.touchDown(x, y)) return true;
 			return false;
 		}
 
@@ -580,9 +651,10 @@ public class RigidBodiesScreen {
 			lblModeTest.touchMoved(x, y);
 			lblSetImage.touchMoved(x, y);
 			lblClearImage.touchMoved(x, y);
+			lblAutoTrace.touchMoved(x, y);
+			lblClearVertices.touchMoved(x, y);
 			lblInsertVertices.touchMoved(x, y);
 			lblRemoveVertices.touchMoved(x, y);
-			lblClearVertices.touchMoved(x, y);
 			return false;
 		}
 	};

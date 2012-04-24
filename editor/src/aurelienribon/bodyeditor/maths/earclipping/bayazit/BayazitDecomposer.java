@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.earclipping.bayazit;
+package aurelienribon.bodyeditor.maths.earclipping.bayazit;
 
 // Taken from BayazitDecomposer.cs (FarseerPhysics.Common.Decomposition.BayazitDecomposer)
 // at http://farseerphysics.codeplex.com

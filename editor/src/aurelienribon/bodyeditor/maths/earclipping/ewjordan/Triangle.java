@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.earclipping.ewjordan;
+package aurelienribon.bodyeditor.maths.earclipping.ewjordan;
 
 /**
  *

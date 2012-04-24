@@ -1,4 +1,4 @@
-package aurelienribon.bodyeditor.earclipping.ewjordan;
+package aurelienribon.bodyeditor.maths.earclipping.ewjordan;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,7 +28,7 @@ public class EwjordanDecomposer {
 			for (int ii = 0; ii < tempPolygons[i].nVertices; ii++)
 				polygons[i][ii] = new Vector2(tempPolygons[i].x[ii], tempPolygons[i].y[ii]);
 		}
-		
+
 		return polygons;
 	}
 
