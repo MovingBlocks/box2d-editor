@@ -17,7 +17,8 @@ javax-swing-JButton {
 
 javax-swing-JToolBar,
 javax-swing-JButton,
-javax-swing-JCheckBox {
+javax-swing-JCheckBox,
+javax-swing-JSlider{
 	-swing-opaque: false;
 }
 
@@ -78,7 +79,8 @@ javax-swing-JCheckBox {
 	-ar-fill: #3FFF;
 }
 
-.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JLabel {
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JLabel,
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JCheckBox {
 	-swing-foreground: #FFF;
 }
 
@@ -137,4 +139,8 @@ aurelienribon-ui-components-TabPanel .-ar-tab:selected {
 
 .bold {
 	-swing-font-style: bold;
+}
+
+.brightcomment {
+	-swing-foreground: #AAA;
 }

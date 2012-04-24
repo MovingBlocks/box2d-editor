@@ -7,7 +7,6 @@ import aurelienribon.ui.components.ImagePreviewPanel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.AutoListModel;
 import aurelienribon.utils.notifications.ChangeListener;
-import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -15,8 +14,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
@@ -25,7 +22,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.Timer;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -59,26 +56,6 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 				createBtn.setEnabled(Ctx.io.getProjectFile() != null);
 			}
 		});
-
-		Ctx.bodiesEvents.addScreenToAppListener(new RigidBodiesEvents.ScreenToAppListener() {
-			@Override public void selectModelImage() {
-				RigidBodiesPanel.this.selectModelImage();
-			}
-		});
-
-		final Timer timer = new Timer(500, new ActionListener() {
-			@Override public void actionPerformed(ActionEvent e) {
-				listModel.forceRefresh();
-			}
-		});
-
-		SwingHelper.addWindowListener(this, new WindowAdapter() {
-			@Override public void windowClosing(WindowEvent e) {
-				timer.stop();
-			}
-		});
-
-		timer.start();
     }
 
 	private void create() {
@@ -112,17 +89,6 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 	private void delete() {
 		for (Object model : list.getSelectedValuesList()) {
 			Ctx.bodies.getModels().remove((RigidBodyModel) model);
-		}
-	}
-
-	private void selectModelImage() {
-		JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
-		chooser.setDialogTitle("Select the background image for the selected model");
-
-		if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			String path = Ctx.io.buildImagePath(chooser.getSelectedFile());
-			Ctx.bodies.getSelectedModel().setImagePath(path);
-			Ctx.bodiesEvents.modelImageChanged();
 		}
 	}
 

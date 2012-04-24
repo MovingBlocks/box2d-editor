@@ -14,20 +14,13 @@ public class RigidBodiesEvents {
 	public static interface AppToScreenListener extends EventListener {
 		public void recreateWorld();
 		public void modelImageChanged();
-	}
-
-	public static interface ScreenToAppListener extends EventListener {
-		public void selectModelImage();
+		public void autoTrace();
 	}
 
 	// -------------------------------------------------------------------------
 
 	public void addAppToScreenListener(AppToScreenListener listener) {
 		listeners.add(AppToScreenListener.class, listener);
-	}
-
-	public void addScreenToAppListener(ScreenToAppListener listener) {
-		listeners.add(ScreenToAppListener.class, listener);
 	}
 
 	// -------------------------------------------------------------------------
@@ -37,13 +30,13 @@ public class RigidBodiesEvents {
 			listener.recreateWorld();
 	}
 
-	public void selectModelImage() {
-		for (ScreenToAppListener listener : listeners.getListeners(ScreenToAppListener.class))
-			listener.selectModelImage();
-	}
-
 	public void modelImageChanged() {
 		for (AppToScreenListener listener : listeners.getListeners(AppToScreenListener.class))
 			listener.modelImageChanged();
+	}
+
+	public void autoTrace() {
+		for (AppToScreenListener listener : listeners.getListeners(AppToScreenListener.class))
+			listener.autoTrace();
 	}
 }

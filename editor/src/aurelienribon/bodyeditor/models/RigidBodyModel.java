@@ -2,7 +2,8 @@ package aurelienribon.bodyeditor.models;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
-import aurelienribon.bodyeditor.earclipping.Clipper;
+import aurelienribon.bodyeditor.maths.Clipper;
+import aurelienribon.utils.notifications.ChangeableObject;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,11 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class RigidBodyModel {
+public class RigidBodyModel extends ChangeableObject {
+	public static final String PROP_NAME = "name";
+	public static final String PROP_IMAGEPATH = "imagePath";
+	public static final String PROP_PHYSICS = "physics";
+
 	private final List<ShapeModel> shapes = new ArrayList<ShapeModel>();
 	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
 	private final List<CircleModel> circles = new ArrayList<CircleModel>();
@@ -33,6 +38,7 @@ public class RigidBodyModel {
 	public void setName(String name) {
 		assert name != null;
 		this.name = name;
+		firePropertyChanged(PROP_NAME);
 	}
 
 	public String getName() {
@@ -42,6 +48,7 @@ public class RigidBodyModel {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 		this.isImagePathValid = imagePath == null ? true : Ctx.io.getImageFile(imagePath).isFile();
+		firePropertyChanged(PROP_IMAGEPATH);
 	}
 
 	public String getImagePath() {
@@ -56,6 +63,7 @@ public class RigidBodyModel {
 		shapes.clear();
 		polygons.clear();
 		circles.clear();
+		firePropertyChanged(PROP_PHYSICS);
 	}
 
 	public void computePhysics() {
@@ -76,11 +84,7 @@ public class RigidBodyModel {
 				circles.add(new CircleModel(center, radius));
 			}
 		}
-	}
 
-	public int getVerticesCount() {
-		int cnt = 0;
-		for (ShapeModel sm : shapes) cnt += sm.getVertices().size();
-		return cnt;
+		firePropertyChanged(PROP_PHYSICS);
 	}
 }
