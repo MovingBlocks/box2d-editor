@@ -42,7 +42,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="renderPanel" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="sidePanel" max="32767" attributes="0"/>
@@ -62,8 +62,8 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="logoPanel" alignment="0" max="32767" attributes="0"/>
-              <Component id="objectsPanel" alignment="0" max="32767" attributes="0"/>
               <Component id="projectPanel" alignment="0" max="32767" attributes="0"/>
+              <Component id="jPanel1" alignment="0" min="-2" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -73,7 +73,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="projectPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="objectsPanel" pref="292" max="32767" attributes="0"/>
+                  <Component id="jPanel1" pref="259" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -87,12 +87,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="33" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="logoWebsiteLbl" min="-2" max="-2" attributes="0"/>
-                          <Component id="logoHelpLbl" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="logoManualLbl" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -101,10 +101,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="logoWebsiteLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="logoHelpLbl" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="logoManualLbl" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabel10" max="32767" attributes="0"/>
+                  <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -122,7 +122,7 @@
                 <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;p align=&quot;right&quot;&gt;2012 - Aur&#xe9;lien Ribon&lt;br/&gt;www.aurelienribon.com&lt;/p&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="logoHelpLbl">
+            <Component class="javax.swing.JLabel" name="logoManualLbl">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/res/gfx/ic_manual.png"/>
@@ -134,8 +134,43 @@
         </Container>
         <Component class="aurelienribon.bodyeditor.ui.ProjectPanel" name="projectPanel">
         </Component>
-        <Component class="aurelienribon.ui.components.TabPanel" name="objectsPanel">
-        </Component>
+        <Container class="javax.swing.JPanel" name="jPanel1">
+          <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+          <SubComponents>
+            <Component class="aurelienribon.ui.components.TabPanel" name="objectsPanel">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                  <BorderConstraints direction="Center"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Container class="javax.swing.JPanel" name="versionPanel">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                  <BorderConstraints direction="South"/>
+                </Constraint>
+              </Constraints>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="versionLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="..."/>
+                  </Properties>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                      <BorderConstraints direction="Center"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+              </SubComponents>
+            </Container>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="renderPanel">

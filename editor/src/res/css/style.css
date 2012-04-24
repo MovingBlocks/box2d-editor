@@ -137,10 +137,29 @@ aurelienribon-ui-components-TabPanel .-ar-tab:selected {
 	-swing-foreground: #AAF;
 }
 
+.darklink {
+	-swing-foreground: #228;
+}
+
+.darklink:hover {
+	-swing-foreground: #003;
+}
+
 .bold {
 	-swing-font-style: bold;
 }
 
 .brightcomment {
 	-swing-foreground: #AAA;
+}
+
+.versionLabel {
+	-swing-foreground: #000;
+	-swing-border: emptyborder(2, 10, 2, 10);
+	-swing-font-size: 10;
+}
+
+.versionPanel {
+	-swing-background: #FFF;
+	-swing-border: matteborder(1, 0, 0, 0, #2A3B57);
 }
