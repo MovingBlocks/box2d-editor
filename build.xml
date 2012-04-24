@@ -4,117 +4,30 @@
 	<!-- Definitions -->
 	<!-- ****************************************************************** -->
 	
-	<!-- version -->
-	<property name="version" value="2.0" />
-
-	<!-- projects properties -->
-	<property name="prj.editor.dir" value="editor" />
-	<property name="prj.editor.filename" value="physics-body-editor" />
-	<property name="prj.libgdx-fixtureatlas.dir" value="libgdx-fixtureatlas" />
-	<property name="prj.libgdx-fixtureatlas.filename" value="libgdx-fixtureatlas" />
-	<property name="prj.libgdx-fixtureatlas-demo.dir" value="libgdx-fixtureatlas-demo" />
-	<property name="prj.libgdx-fixtureatlas-demo.filename" value="libgdx-fixtureatlas-demo" />
+	<property name="version" value="2.9.0" />
+	<property name="name" value="physics-body-editor" />
+	<property name="dist" value="tmp/" />
 
 	<!-- ****************************************************************** -->
 	<!-- Build tasks -->
 	<!-- ****************************************************************** -->
 	
-	<!-- clean -->	
+	<!-- clean -->
 	<target name="clean">
-		<delete includeEmptyDirs="true"><fileset dir="${prj.editor.dir}" includes="*.jar, bin/, build/, dist/"/></delete>
-		<delete includeEmptyDirs="true"><fileset dir="${prj.libgdx-fixtureatlas.dir}" includes="*.jar, bin/, build/, dist/"/></delete>
-		<delete includeEmptyDirs="true"><fileset dir="${prj.libgdx-fixtureatlas-demo.dir}" includes="*.jar, bin/, build/, dist/"/></delete>
-	</target>
-
-	<!-- init -->
-	<target name="init" depends="clean">
-		<mkdir dir="${prj.editor.dir}/bin/" />
-		<mkdir dir="${prj.libgdx-fixtureatlas.dir}/bin/" />
-		<mkdir dir="${prj.libgdx-fixtureatlas-demo.dir}/bin/" />
-	</target>
-
-	<!-- compile -->
-	<target name="compile" depends="init">
-		<javac target="1.6" source="1.6" debug="on" srcdir="${prj.editor.dir}/src/" destdir="${prj.editor.dir}/bin/">
-			<classpath>
-				<fileset file="${prj.editor.dir}/libs/*.jar" />
-			</classpath>
-		</javac>
-		<javac target="1.6" source="1.6" debug="on" srcdir="${prj.libgdx-fixtureatlas.dir}/src/" destdir="${prj.libgdx-fixtureatlas.dir}/bin/">
-			<classpath>
-				<fileset file="${prj.libgdx-fixtureatlas.dir}/libs/*.jar" />
-			</classpath>
-		</javac>
-		<javac target="1.6" source="1.6" debug="on" srcdir="${prj.libgdx-fixtureatlas-demo.dir}/src/" destdir="${prj.libgdx-fixtureatlas-demo.dir}/bin/">
-			<classpath>
-				<pathelement location="${prj.libgdx-fixtureatlas.dir}/bin/" />
-				<fileset file="${prj.libgdx-fixtureatlas-demo.dir}/libs/*.jar" />
-			</classpath>
-		</javac>
-	</target>
-
-	<!-- pre-package -->
-	<target name="pre-package" depends="compile">
-		<copy todir="${prj.editor.dir}/bin/aurelienribon/bodyeditor/ui/gfx">
-			<fileset dir="${prj.editor.dir}/src/aurelienribon/bodyeditor/ui/gfx"/>
-		</copy>
+		<delete dir="${dist}"/>
+		<mkdir dir="${dist}"/>
 	</target>
 	
-	<!-- package -->
-	<target name="package" depends="pre-package">
-		<!-- box2d-editor -->
-		<pathconvert property="prj.editor.classpath" pathsep=" ">
-			<path><fileset dir="${prj.editor.dir}" includes="libs/**/*.jar" /></path>
-			<chainedmapper>
-				<flattenmapper />
-				<globmapper from="*" to="libs/*" />
-			</chainedmapper>
-		</pathconvert>
-		<jar destfile="${prj.editor.dir}/${prj.editor.filename}.jar" basedir="${prj.editor.dir}/bin">
-			<manifest>
-				<attribute name="Main-Class" value="Main"/>
-				<attribute name="Class-Path" value="${prj.editor.classpath}" />
-			</manifest>
-		</jar>
-
-		<!-- libgdx-fixtureatlas -->
-		<jar destfile="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}.jar" basedir="${prj.libgdx-fixtureatlas.dir}/bin" />
-		<jar destfile="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}-sources.jar" basedir="${prj.libgdx-fixtureatlas.dir}/src" />
-
-		<!-- libgdx-fixtureatlas-demo -->
-		<copy file="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}.jar" todir="${prj.libgdx-fixtureatlas-demo.dir}/libs" />
-		<pathconvert property="prj.libgdx-fixtureatlas-demo.classpath" pathsep=" ">
-			<path><fileset dir="${prj.libgdx-fixtureatlas-demo.dir}" includes="libs/**/*.jar" /></path>
-			<chainedmapper>
-				<flattenmapper />
-				<globmapper from="*" to="libs/*" />
-			</chainedmapper>
-		</pathconvert>
-		<delete file="${prj.libgdx-fixtureatlas-demo.dir}/libs/${prj.libgdx-fixtureatlas.filename}.jar"/>
-		<jar destfile="${prj.libgdx-fixtureatlas-demo.dir}/${prj.libgdx-fixtureatlas-demo.filename}.jar" basedir="${prj.libgdx-fixtureatlas-demo.dir}/bin">
-			<manifest>
-				<attribute name="Main-Class" value="Main"/>
-				<attribute name="Class-Path" value="${prj.libgdx-fixtureatlas-demo.classpath}" />
-			</manifest>
-		</jar>
-	</target>
-
-	<!-- zip -->
-	<target name="zip" depends="package">
-		<zip destfile="${prj.editor.filename}-${version}.zip">
-			<fileset dir="${prj.editor.dir}" includes="*.jar, libs/, test-me!/" />
-		</zip>
-		<zip destfile="${prj.libgdx-fixtureatlas.filename}-${version}.zip">
-			<fileset dir="${prj.libgdx-fixtureatlas.dir}" includes="*.jar" />
-		</zip>
-		<zip destfile="${prj.libgdx-fixtureatlas-demo.filename}-${version}.zip">
-			<fileset dir="${prj.libgdx-fixtureatlas-demo.dir}" includes="*.jar, libs/, data/" />
-			<zipfileset file="${prj.libgdx-fixtureatlas.dir}/${prj.libgdx-fixtureatlas.filename}.jar" fullpath="libs/${prj.libgdx-fixtureatlas.filename}.jar"/>
-		</zip>
+	<!-- editor -->
+	<target name="editor">
+		<ant antfile="ant.xml" dir="editor/"/>
+		<copy tofile="${dist}/physics-body-editor.jar" file="editor/physics-body-editor.jar"/>
+		<copy todir="${dist}/test-me!/"><fileset dir="editor/test-me!/"/></copy>
 	</target>
 	
 	<!-- all -->
-	<target name="all" depends="zip">
-		<antcall target="clean"/>
+	<target name="all" depends="clean, editor">
+		<zip destfile="${name}-${version}.zip" basedir="${dist}"/>
 	</target>
+	
 </project>
