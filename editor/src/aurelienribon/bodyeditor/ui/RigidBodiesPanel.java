@@ -1,7 +1,6 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.bodyeditor.RigidBodiesEvents;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.ui.components.ImagePreviewPanel;
 import aurelienribon.ui.css.Style;
@@ -16,13 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.BorderFactory;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -137,7 +134,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 			panel.setBorder(new EmptyBorder(5, 10, 5, 10));
 			panel.add(txtPanel, BorderLayout.CENTER);
 			panel.add(imgPanel, BorderLayout.WEST);
-			panel.setBackground(Color.LIGHT_GRAY);
+			panel.setBackground(new Color(0xBBC8D8));
 			infoLabel.setForeground(new Color(0x555555));
 
 			Font font = nameLabel.getFont();

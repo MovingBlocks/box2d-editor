@@ -1,4 +1,5 @@
 syntax: glob
+tmp/
 *.zip
 
 editor/manifest.mf
@@ -9,6 +10,7 @@ editor/nbproject/*
 editor/bin/*
 editor/.classpath
 editor/.project
+editor/*.jar
 
 libgdx-fixtureatlas/manifest.mf
 libgdx-fixtureatlas/nbbuild.xml
