@@ -6,6 +6,7 @@ import aurelienribon.ui.components.ImagePreviewPanel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.notifications.AutoListModel;
 import aurelienribon.utils.notifications.ChangeListener;
+import aurelienribon.utils.notifications.ObservableList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -14,6 +15,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -43,14 +45,37 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		createBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {create();}});
 		renameBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {rename();}});
 		deleteBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {delete();}});
+		repairBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {repair();}});
 
 		createBtn.setEnabled(false);
 		renameBtn.setEnabled(false);
 		deleteBtn.setEnabled(false);
+		repairBtn.setEnabled(false);
 
 		Ctx.io.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				createBtn.setEnabled(Ctx.io.getProjectFile() != null);
+			}
+		});
+
+		final ChangeListener modelChangeListener = new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				repairBtn.setEnabled(false);
+				for (RigidBodyModel model : Ctx.bodies.getModels()) {
+					if (!model.isImagePathValid()) repairBtn.setEnabled(true);
+				}
+			}
+		};
+
+		Ctx.bodies.getModels().addListChangedListener(new ObservableList.ListChangeListener<RigidBodyModel>() {
+			@Override public void changed(Object source, List<RigidBodyModel> added, List<RigidBodyModel> removed) {
+				repairBtn.setEnabled(false);
+				for (RigidBodyModel model : Ctx.bodies.getModels()) {
+					if (!model.isImagePathValid()) repairBtn.setEnabled(true);
+				}
+
+				for (RigidBodyModel m : added) m.addChangeListener(modelChangeListener);
+				for (RigidBodyModel m : removed) m.removeChangeListener(modelChangeListener);
 			}
 		});
     }
@@ -87,6 +112,12 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 		for (Object model : list.getSelectedValuesList()) {
 			Ctx.bodies.getModels().remove((RigidBodyModel) model);
 		}
+	}
+
+	private void repair() {
+		RepairImagePathsDialog dialog = new RepairImagePathsDialog(Ctx.window);
+		dialog.setLocationRelativeTo(Ctx.window);
+		dialog.setVisible(true);
 	}
 
 	// -------------------------------------------------------------------------
@@ -190,6 +221,8 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
         createBtn = new javax.swing.JButton();
         renameBtn = new javax.swing.JButton();
         deleteBtn = new javax.swing.JButton();
+        jToolBar2 = new javax.swing.JToolBar();
+        repairBtn = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         list = new javax.swing.JList();
@@ -201,6 +234,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
         createBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_add.png"))); // NOI18N
         createBtn.setText("New");
+        createBtn.setToolTipText("Create a new model");
         createBtn.setFocusable(false);
         createBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         createBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -208,6 +242,7 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
         renameBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_edit.png"))); // NOI18N
         renameBtn.setText("Rename");
+        renameBtn.setToolTipText("Change the name of the selected model");
         renameBtn.setFocusable(false);
         renameBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         renameBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -215,20 +250,37 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
 
         deleteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_delete.png"))); // NOI18N
         deleteBtn.setText("Delete");
+        deleteBtn.setToolTipText("Delete the selected model");
         deleteBtn.setFocusable(false);
         deleteBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         deleteBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(deleteBtn);
 
+        jToolBar2.setFloatable(false);
+        jToolBar2.setRollover(true);
+
+        repairBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_wrench.png"))); // NOI18N
+        repairBtn.setToolTipText("Repair all image paths");
+        repairBtn.setFocusable(false);
+        repairBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        repairBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(repairBtn);
+
         javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
         headerPanel.setLayout(headerPanelLayout);
         headerPanelLayout.setHorizontalGroup(
             headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         headerPanelLayout.setVerticalGroup(
             headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         add(headerPanel, java.awt.BorderLayout.NORTH);
@@ -263,7 +315,9 @@ public class RigidBodiesPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JList list;
     private javax.swing.JButton renameBtn;
+    private javax.swing.JButton repairBtn;
     // End of variables declaration//GEN-END:variables
 }

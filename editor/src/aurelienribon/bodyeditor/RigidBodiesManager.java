@@ -1,10 +1,8 @@
 package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.models.RigidBodyModel;
-import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.notifications.ChangeableObject;
 import aurelienribon.utils.notifications.ObservableList;
-import java.io.File;
 import java.util.List;
 
 /**
@@ -15,18 +13,11 @@ public class RigidBodiesManager extends ChangeableObject {
 
 	private final ObservableList<RigidBodyModel> models = new ObservableList<RigidBodyModel>(this);
 	private RigidBodyModel selectedModel;
-	private File oldImagesDir;
 
 	public RigidBodiesManager() {
 		models.addListChangedListener(new ObservableList.ListChangeListener<RigidBodyModel>() {
 			@Override public void changed(Object source, List<RigidBodyModel> added, List<RigidBodyModel> removed) {
 				if (!models.contains(selectedModel)) select(null);
-			}
-		});
-
-		Ctx.io.addChangeListener(new ChangeListener() {
-			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(IoManager.PROP_IMAGESDIR)) updateImagePaths();
 			}
 		});
 	}
@@ -50,28 +41,5 @@ public class RigidBodiesManager extends ChangeableObject {
 		for (RigidBodyModel model : models)
 			if (model.getName().equals(name)) return model;
 		return null;
-	}
-
-	private void updateImagePaths() {
-		if (oldImagesDir == null) {
-			assert models.isEmpty();
-			oldImagesDir = Ctx.io.getImagesDir();
-			return;
-		}
-
-		for (RigidBodyModel model : models) {
-			if (model.getImagePath() == null) continue;
-
-			File imageFile = new File(oldImagesDir, model.getImagePath());
-			if (imageFile.isFile()) {
-				String newPath = Ctx.io.buildImagePath(imageFile);
-				model.setImagePath(newPath);
-			} else {
-				model.setImagePath(model.getImagePath());
-				if (model == selectedModel) Ctx.bodiesEvents.modelImageChanged();
-			}
-		}
-
-		oldImagesDir = Ctx.io.getImagesDir();
 	}
 }
