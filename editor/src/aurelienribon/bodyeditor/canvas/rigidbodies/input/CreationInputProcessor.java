@@ -6,6 +6,7 @@ import aurelienribon.bodyeditor.canvas.InputHelper;
 import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -102,6 +103,20 @@ public class CreationInputProcessor extends InputAdapter {
 		// Next point assignment
 
 		screen.nextPoint = canvas.alignedScreenToWorld(x, y);
+		return false;
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		switch (keycode) {
+			case Input.Keys.ESCAPE:
+				RigidBodyModel model = Ctx.bodies.getSelectedModel();
+				if (model == null) break;
+				if (model.getShapes().isEmpty()) break;
+				if (model.getShapes().get(model.getShapes().size()-1).isClosed()) break;
+				model.getShapes().remove(model.getShapes().size()-1);
+				break;
+		}
 		return false;
 	}
 }

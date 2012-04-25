@@ -73,9 +73,9 @@ public class RigidBodiesScreen {
 	private final World world = new World(new Vector2(0, 0), true);
 
 	private final Sprite bgInfo = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Label lblModeCreation = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", BG_LBL_COLOR);
-	private final Label lblModeEdition = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", BG_LBL_COLOR);
-	private final Label lblModeTest = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", BG_LBL_COLOR);
+	private final Label lblModeCreation = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", BG_BTN_COLOR);
+	private final Label lblModeEdition = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", BG_BTN_COLOR);
+	private final Label lblModeTest = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", BG_BTN_COLOR);
 	private final Label lblSetImage = new Label(Anchor.TOP_RIGHT, 10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", BG_BTN_COLOR);
 	private final Label lblClearImage = new Label(Anchor.TOP_RIGHT, 15+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear bg. image", BG_BTN_COLOR);
 	private final Label lblAutoTrace = new Label(Anchor.TOP_RIGHT, 20+BG_HEIGHT*4, 120, BG_HEIGHT, "Auto-trace", BG_BTN_COLOR);
@@ -83,7 +83,7 @@ public class RigidBodiesScreen {
 	private final Label lblInsertVertices = new Label(Anchor.TOP_RIGHT, 30+BG_HEIGHT*6, 120, BG_HEIGHT, "Insert points", BG_BTN_COLOR);
 	private final Label lblRemoveVertices = new Label(Anchor.TOP_RIGHT, 35+BG_HEIGHT*7, 120, BG_HEIGHT, "Remove points", BG_BTN_COLOR);
 
-	private Mode mode = Mode.CREATION;
+	private Mode mode = null;
 	private Sprite bodySprite;
 
 	public final ObservableList<Vector2> selectedPoints = new ObservableList<Vector2>();
@@ -122,7 +122,7 @@ public class RigidBodiesScreen {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
 					RigidBodyModel model = Ctx.bodies.getSelectedModel();
-					setMode(model != null ? Mode.CREATION : null);
+					setMode(model != null ? mode == null ? Mode.CREATION : mode : null);
 					updateButtons();
 					resetWorld();
 				}
