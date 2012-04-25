@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor.canvas;
 
-import aurelienribon.bodyeditor.canvas.Canvas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 public class PanZoomInputProcessor extends InputAdapter {
 	private final Canvas canvas;
 	private final Vector2 lastTouch = new Vector2();
-	private final int[] zoomLevels = {25, 33, 50, 66, 100, 150, 200, 300, 400, 600, 800, 1000};
+	private final int[] zoomLevels = {5, 10, 16, 25, 33, 50, 66, 100, 150, 200, 300, 400, 600, 800, 1000};
 	private int zoomLevel = 100;
 
 	public PanZoomInputProcessor(Canvas canvas) {
