@@ -43,7 +43,9 @@ public class EditionInputProcessor extends InputAdapter {
 			screen.mouseSelectionP1 = canvas.screenToWorld(x, y);
 
 		} else {
-			if (InputHelper.isCtrlDown()) {
+			if (draggedPoint == model.getOrigin()) {
+				screen.selectedPoints.replaceBy(draggedPoint);
+			} else if (InputHelper.isCtrlDown()) {
 				if (screen.selectedPoints.contains(draggedPoint)) screen.selectedPoints.remove(draggedPoint);
 				else screen.selectedPoints.add(draggedPoint);
 			} else if (!screen.selectedPoints.contains(draggedPoint)) {
@@ -123,11 +125,11 @@ public class EditionInputProcessor extends InputAdapter {
 
 		Vector2 p = canvas.screenToWorld(x, y);
 		screen.nearestPoint = null;
-		float zoom = canvas.worldCamera.zoom;
+		float dist = 0.025f * canvas.worldCamera.zoom;
 
-		for (Vector2 v : getAllPoints())
-			if (v.dst(p) < 0.025f*zoom)
-				screen.nearestPoint = v;
+		for (Vector2 v : getAllPoints()) {
+			if (v.dst(p) < dist) screen.nearestPoint = v;
+		}
 
 		return false;
 	}
@@ -145,6 +147,7 @@ public class EditionInputProcessor extends InputAdapter {
 	// -------------------------------------------------------------------------
 
 	private List<Vector2> getPointsInSelection() {
+		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		List<Vector2> points = new ArrayList<Vector2>();
 		Vector2 p1 = screen.mouseSelectionP1;
 		Vector2 p2 = screen.mouseSelectionP2;
@@ -158,8 +161,8 @@ public class EditionInputProcessor extends InputAdapter {
 			);
 
 			for (Vector2 p : getAllPoints()) {
-				if (rect.contains(p.x, p.y))
-					points.add(p);
+				if (p == model.getOrigin()) continue;
+				if (rect.contains(p.x, p.y)) points.add(p);
 			}
 		}
 
@@ -174,6 +177,7 @@ public class EditionInputProcessor extends InputAdapter {
 			points.addAll(shape.getVertices());
 		}
 
+		points.add(model.getOrigin());
 		return Collections.unmodifiableList(points);
 	}
 }

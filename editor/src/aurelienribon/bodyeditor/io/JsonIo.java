@@ -27,6 +27,7 @@ public class JsonIo {
 			json.object();
 			json.key("name").value(model.getName());
 			json.key("imagePath").value(model.getImagePath());
+			json.key("origin").object().key("x").value(model.getOrigin().x).key("y").value(model.getOrigin().y).endObject();
 			json.key("polygons").array();
 
 			for (PolygonModel polygon : model.getPolygons()) {
@@ -97,6 +98,10 @@ public class JsonIo {
 
 			String imgPath = bodyElem.isNull("imagePath") ? null : bodyElem.getString("imagePath");
 			model.setImagePath(imgPath);
+
+			JSONObject originElem = bodyElem.getJSONObject("origin");
+			model.getOrigin().x = (float) originElem.getDouble("x");
+			model.getOrigin().y = (float) originElem.getDouble("y");
 
 			JSONArray polygonsElem = bodyElem.getJSONArray("polygons");
 
