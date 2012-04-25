@@ -1,4 +1,4 @@
-package aurelienribon.box2deditor;
+package aurelienribon.bodyeditor;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 
