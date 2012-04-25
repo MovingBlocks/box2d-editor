@@ -52,29 +52,27 @@ public class BodyEditorLoader {
 
 	/**
 	 * Creates and applies the fixtures defined in the editor. The name
-	 * parameter is used to retrieve the shape from the loaded binary file.
-	 * Therefore, it _HAS_ to be the exact same name as the one that appeared.
-	 * in the editor.
+	 * parameter is used to retrieve the right fixture from the loaded file.
 	 * <br/><br/>
 	 *
-	 * WARNING: The body reference point is supposed to be the bottom left
-	 * corner. As a result, calling "getPosition()" on the body will return
-	 * its bottom left corner. This is useful to draw a Sprite directly by
-	 * setting its position to the body position.
+	 * The body reference point (the red cross in the tool) is by default
+	 * located at the bottom left corner of the image. This reference point
+	 * will be put right over the BodyDef position point. Therefore, you should
+	 * place this reference point carefully to let you place your body in your
+	 * world easily with its BodyDef.position point. Note that to draw an image
+	 * at the position of your body, you will need to know this reference point
+	 * (see {@link #getOrigin(java.lang.String, float)}.
 	 * <br/><br/>
 	 *
-	 * Also, saved shapes are normalized. Thus, you need to provide the desired
-	 * width and height of your body for them to scale according to your needs.
-	 * <br/><br/>
+	 * Also, saved shapes are normalized. As shown in the tool, the width of
+	 * the image is considered to be always 1 meter. Thus, you need to provide
+	 * a scale factor so the polygons get resized according to your needs (not
+	 * every body is 1 meter large in your game, I guess).
 	 *
-	 * Moreover, you can submit a custom FixtureDef object. Its parameters will
-	 * be applied to every fixture applied to the body by this method.
-	 *
-	 * @param body A box2d Body, previously created.
-	 * @param name The name of the shape you want to load.
-	 * @param width The desired width of the body.
-	 * @param height The desired height of the body.
-	 * @param fd Custom fixture parameters to apply.
+	 * @param body The Box2d body you want to attach the fixture to.
+	 * @param name The name of the fixture you want to load.
+	 * @param fd The fixture parameters to apply to the created body fixture.
+	 * @param scale The desired scale of the body. The default width is 1.
 	 */
 	public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
 		RigidBodyModel rbModel = model.rigidBodies.get(name);
@@ -137,15 +135,24 @@ public class BodyEditorLoader {
 		return vec.set(rbModel.origin).mul(scale);
 	}
 
+	/**
+	 * <b>For advanced users only.</b> Lets you access the internal model of
+	 * this loader and modify it. Be aware that any modification is permanent
+	 * and that you should really know what you are doing.
+	 */
+	public Model getInternalModel() {
+		return model;
+	}
+
 	// -------------------------------------------------------------------------
 	// Json Models
 	// -------------------------------------------------------------------------
 
-	private static class Model {
+	public static class Model {
 		public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
 	}
 
-	private static class RigidBodyModel {
+	public static class RigidBodyModel {
 		public String name;
 		public String imagePath;
 		public final Vector2 origin = new Vector2();
@@ -153,12 +160,12 @@ public class BodyEditorLoader {
 		public final List<CircleModel> circles = new ArrayList<CircleModel>();
 	}
 
-	private static class PolygonModel {
+	public static class PolygonModel {
 		public final List<Vector2> vertices = new ArrayList<Vector2>();
-		public Vector2[] buffer; // used to avoid allocation in attachFixture()
+		private Vector2[] buffer; // used to avoid allocation in attachFixture()
 	}
 
-	private static class CircleModel {
+	public static class CircleModel {
 		public final Vector2 center = new Vector2();
 		public float radius;
 	}
