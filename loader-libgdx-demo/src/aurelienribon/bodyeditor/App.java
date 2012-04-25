@@ -1,4 +1,4 @@
-package aurelienribon.box2deditor;
+package aurelienribon.bodyeditor;
 
 import aurelienribon.bodyeditor.BodyEditorLoader;
 import aurelienribon.tweenengine.BaseTween;
