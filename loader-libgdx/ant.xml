@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="loader-libgdx" default="all" basedir=".">
+
+	<property name="name" value="bodyeditor-loader"/>
+
+	<!-- ****************************************************************** -->
+	<!-- Build tasks -->
+	<!-- ****************************************************************** -->
+
+	<target name="clean">
+		<delete dir="bin/"/>
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="bin/"/>
+		<javac destdir="bin/" srcdir="src/" target="1.6" source="1.6" debug="true" includeAntRuntime="false">
+			<classpath>
+				<pathelement location="bin/" />
+				<fileset file="libs/*.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${name}.jar" basedir="bin/"/>
+		<jar destfile="${name}-sources.jar" basedir="src/"/>
+	</target>
+
+	<!-- ****************************************************************** -->
+	<!-- Main task -->
+	<!-- ****************************************************************** -->
+
+	<target name="all" depends="jar">
+		<antcall target="clean"/>
+	</target>
+	
+</project>
