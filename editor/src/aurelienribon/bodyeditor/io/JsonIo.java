@@ -8,6 +8,7 @@ import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.math.Vector2;
 import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,13 +21,13 @@ public class JsonIo {
 	public static String serialize() throws JSONException {
 		JSONStringer json = new JSONStringer();
 		json.object();
-		json.key("imagesRootDir").value(Ctx.io.isImagesDirSet() ? Ctx.io.getImagesDir().getPath() : null);
+		json.key("imagesRootDir").value(Ctx.io.isImagesDirSet() ? FilenameUtils.normalize(Ctx.io.getImagesDir().getPath(), true) : null);
 		json.key("rigidBodies").array();
 
 		for (RigidBodyModel model : Ctx.bodies.getModels()) {
 			json.object();
 			json.key("name").value(model.getName());
-			json.key("imagePath").value(model.getImagePath());
+			json.key("imagePath").value(FilenameUtils.normalize(model.getImagePath(), true));
 			json.key("origin").object().key("x").value(model.getOrigin().x).key("y").value(model.getOrigin().y).endObject();
 			json.key("polygons").array();
 
@@ -84,7 +85,7 @@ public class JsonIo {
 		JSONObject json = new JSONObject(str);
 
 		if (!json.isNull("imagesRootDir")) {
-			Ctx.io.setImagesDir(new File(json.getString("imagesRootDir")));
+			Ctx.io.setImagesDir(new File(FilenameUtils.normalize(json.getString("imagesRootDir"))));
 		}
 
 		// rigid bodies
@@ -97,7 +98,7 @@ public class JsonIo {
 			model.setName(bodyElem.getString("name"));
 
 			String imgPath = bodyElem.isNull("imagePath") ? null : bodyElem.getString("imagePath");
-			model.setImagePath(imgPath);
+			model.setImagePath(FilenameUtils.normalize(imgPath));
 
 			JSONObject originElem = bodyElem.getJSONObject("origin");
 			model.getOrigin().x = (float) originElem.getDouble("x");

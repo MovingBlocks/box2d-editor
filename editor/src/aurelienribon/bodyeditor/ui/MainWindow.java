@@ -180,7 +180,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/title.png"))); // NOI18N
 
-        logoWebsiteLbl.setText("<html><p align=\"right\">2012 - Aurélien Ribon<br/>www.aurelienribon.com</p>");
+        logoWebsiteLbl.setText("<html><p align=\"right\">2012 - Aurelien Ribon<br/>www.aurelienribon.com</p>");
 
         logoManualLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_manual.png"))); // NOI18N
         logoManualLbl.setText("Manual");
