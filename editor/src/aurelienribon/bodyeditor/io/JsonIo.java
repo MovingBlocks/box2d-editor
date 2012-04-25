@@ -7,7 +7,6 @@ import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.math.Vector2;
-import java.io.File;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +20,6 @@ public class JsonIo {
 	public static String serialize() throws JSONException {
 		JSONStringer json = new JSONStringer();
 		json.object();
-		json.key("imagesRootDir").value(Ctx.io.isImagesDirSet() ? FilenameUtils.normalize(Ctx.io.getImagesDir().getPath(), true) : null);
 		json.key("rigidBodies").array();
 
 		for (RigidBodyModel model : Ctx.bodies.getModels()) {
@@ -83,10 +81,6 @@ public class JsonIo {
 
 	public static void deserialize(String str) throws JSONException {
 		JSONObject json = new JSONObject(str);
-
-		if (!json.isNull("imagesRootDir")) {
-			Ctx.io.setImagesDir(new File(FilenameUtils.normalize(json.getString("imagesRootDir"))));
-		}
 
 		// rigid bodies
 

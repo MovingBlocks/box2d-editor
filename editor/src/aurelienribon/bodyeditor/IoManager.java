@@ -13,32 +13,19 @@ import org.json.JSONException;
  */
 public class IoManager extends ChangeableObject {
 	public static final String PROP_PROJECTFILE = "projectFile";
-	public static final String PROP_IMAGESDIR = "imagesDir";
 	private File projectFile;
-	private File imagesDir;
 
 	public File getProjectFile() {
 		return projectFile;
 	}
 
+	public File getProjectDir() {
+		return projectFile.getParentFile();
+	}
+
 	public void setProjectFile(File projectFile) {
 		this.projectFile = projectFile;
-		this.imagesDir = null;
 		firePropertyChanged(PROP_PROJECTFILE);
-		firePropertyChanged(PROP_IMAGESDIR);
-	}
-
-	public File getImagesDir() {
-		return imagesDir != null ? imagesDir : projectFile.getParentFile();
-	}
-
-	public void setImagesDir(File imagesDir) {
-		this.imagesDir = imagesDir;
-		firePropertyChanged(PROP_IMAGESDIR);
-	}
-
-	public boolean isImagesDirSet() {
-		return imagesDir != null;
 	}
 
     public void exportToFile() throws IOException, JSONException {
@@ -59,12 +46,12 @@ public class IoManager extends ChangeableObject {
 	}
 
 	public String buildImagePath(File imgFile) {
-		return FilenameHelper.getRelativePath(imgFile.getPath(), getImagesDir().getPath());
+		return FilenameHelper.getRelativePath(imgFile.getPath(), projectFile.getParent());
 	}
 
 	public File getImageFile(String imgPath) {
 		if (imgPath == null) return null;
-		File file = new File(getImagesDir(), imgPath);
+		File file = new File(projectFile.getParent(), imgPath);
 		return file;
 	}
 }

@@ -176,7 +176,7 @@ public class RigidBodiesScreen {
 			@Override public void touchExit(Label source) {}
 			@Override public void touchDown(Label source) {
 				SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
-					JFileChooser chooser = new JFileChooser(Ctx.io.getImagesDir());
+					JFileChooser chooser = new JFileChooser(Ctx.io.getProjectDir());
 					chooser.setDialogTitle("Select the background image for the selected model");
 
 					if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
