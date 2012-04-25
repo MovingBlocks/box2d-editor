@@ -4,7 +4,7 @@
 	<!-- Definitions -->
 	<!-- ****************************************************************** -->
 	
-	<property name="version" value="2.9.0" />
+	<property name="version" value="2.9.1" />
 	<property name="name" value="physics-body-editor" />
 	<property name="dist" value="tmp/" />
 

@@ -26,6 +26,7 @@ public class RigidBodiesScreenDrawer {
 	private static final Color SHAPE_COLOR = new Color(0.0f, 0.0f, 0.8f, 1);
 	private static final Color SHAPE_LASTLINE_COLOR = new Color(0.5f, 0.5f, 0.5f, 1);
 	private static final Color POLYGON_COLOR = new Color(0.0f, 0.7f, 0.0f, 1);
+	private static final Color ORIGIN_COLOR = new Color(0.7f, 0.0f, 0.0f, 1);
 	private static final Color MOUSESELECTION_FILL_COLOR = new Color(0.2f, 0.2f, 0.8f, 0.2f);
 	private static final Color MOUSESELECTION_STROKE_COLOR = new Color(0.2f, 0.2f, 0.8f, 0.6f);
 	private static final Color BALLTHROWPATH_COLOR = new Color(0.2f, 0.2f, 0.2f, 1);
@@ -66,33 +67,25 @@ public class RigidBodiesScreenDrawer {
 		drawAxis();
 
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
-		if (model == null) return;
 
-		List<ShapeModel> shapes = model.getShapes();
-		List<PolygonModel> polygons = model.getPolygons();
-		List<Vector2> selectedPoints = screen.selectedPoints;
-		Vector2 nearestPoint = screen.nearestPoint;
-		Vector2 nextPoint = screen.nextPoint;
-		Vector2 mouseSelectionP1 = screen.mouseSelectionP1;
-		Vector2 mouseSelectionP2 = screen.mouseSelectionP2;
-		Vector2 ballThrowP1 = screen.ballThrowP1;
-		Vector2 ballThrowP2 = screen.ballThrowP2;
+		if (model != null) {
+			if (bodySprite != null) {
+				drawBoundingBox(bodySprite.getWidth(), bodySprite.getHeight());
+			}
 
-		if (bodySprite != null) {
-			drawBoundingBox(bodySprite.getWidth(), bodySprite.getHeight());
+			if (Settings.isPolygonDrawn) {
+				drawPolygons(model.getPolygons());
+			}
+
+			if (Settings.isShapeDrawn) {
+				drawShapes(model.getShapes());
+				drawPoints(model.getShapes(), screen.selectedPoints, screen.nearestPoint, screen.nextPoint);
+				drawOrigin(model.getOrigin(), screen.nearestPoint);
+			}
 		}
 
-		if (Settings.isPolygonDrawn) {
-			drawPolygons(polygons);
-		}
-
-		if (Settings.isShapeDrawn) {
-			drawShapes(shapes);
-			drawPoints(shapes, selectedPoints, nearestPoint, nextPoint);
-		}
-
-		drawMouseSelection(mouseSelectionP1, mouseSelectionP2);
-		drawBallThrowPath(ballThrowP1, ballThrowP2);
+		drawMouseSelection(screen.mouseSelectionP1, screen.mouseSelectionP2);
+		drawBallThrowPath(screen.ballThrowP1, screen.ballThrowP2);
 	}
 
 	// -------------------------------------------------------------------------
@@ -271,6 +264,36 @@ public class RigidBodiesScreenDrawer {
 		}
 
 		drawer.end();
+	}
+
+	private void drawOrigin(Vector2 o, Vector2 nearestPoint) {
+		Gdx.gl10.glLineWidth(2);
+		Gdx.gl10.glEnable(GL10.GL_BLEND);
+		Gdx.gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		float len = 0.03f * camera.zoom;
+		float radius = 0.02f * camera.zoom;
+
+		drawer.setProjectionMatrix(camera.combined);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
+		drawer.setColor(ORIGIN_COLOR);
+		drawer.line(o.x-len, o.y, o.x+len, o.y);
+		drawer.line(o.x, o.y-len, o.x, o.y+len);
+		drawer.end();
+
+		if (nearestPoint != o) {
+			drawer.setProjectionMatrix(camera.combined);
+			drawer.begin(ShapeRenderer.ShapeType.Circle);
+			drawer.setColor(ORIGIN_COLOR);
+			drawer.circle(o.x, o.y, radius, 20);
+			drawer.end();
+		} else {
+			drawer.setProjectionMatrix(camera.combined);
+			drawer.begin(ShapeRenderer.ShapeType.FilledCircle);
+			drawer.setColor(ORIGIN_COLOR);
+			drawer.filledCircle(o.x, o.y, radius, 20);
+			drawer.end();
+		}
 	}
 
 	private void drawMouseSelection(Vector2 p1, Vector2 p2) {

@@ -86,7 +86,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void checkUpdates() {
-		final String version = "2.9.0";
+		final String version = "2.9.1";
 		versionLabel.setText("v" + version + " (checking for updates)");
 		versionLabel.setIcon(Res.getImage("gfx/ic_loading.gif"));
 
@@ -112,7 +112,7 @@ public class MainWindow extends javax.swing.JFrame {
 			}
 		};
 
-		Timer timer = new Timer(2000, new ActionListener() {
+		Timer timer = new Timer(1000, new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				HttpUtils.downloadAsync(url, stream, callback);
 			}
