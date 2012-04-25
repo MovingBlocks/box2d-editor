@@ -15,6 +15,11 @@ javax-swing-JButton {
 	-swing-margin: 2 5;
 }
 
+javax-swing-JToolBar javax-swing-JButton {
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 1;
+}
+
 javax-swing-JToolBar,
 javax-swing-JButton,
 javax-swing-JCheckBox,
