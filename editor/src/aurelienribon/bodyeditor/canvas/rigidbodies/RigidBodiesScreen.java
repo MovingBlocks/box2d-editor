@@ -560,8 +560,7 @@ public class RigidBodiesScreen {
 		bodySprite.setColor(1, 1, 1, 0.5f);
 
 		float spRatio = bodySprite.getWidth() / bodySprite.getHeight();
-		if (spRatio >= 1) bodySprite.setSize(1, 1/spRatio);
-		else bodySprite.setSize(spRatio, 1);
+		bodySprite.setSize(1, 1/spRatio);
 	}
 
 	private void createBall(Vector2 orig, Vector2 force) {

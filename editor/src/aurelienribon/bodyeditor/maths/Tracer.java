@@ -51,9 +51,9 @@ public class Tracer {
 			polygons[i] = new Vector2[outline.size];
 			for (int ii=0; ii<outline.size; ii++) {
 				polygons[i][ii] = outline.get(ii);
-				polygons[i][ii].x /= tw/th >= 1 ? tw : th;
-				polygons[i][ii].y /= tw/th >= 1 ? tw : th;
-				polygons[i][ii].y = tw/th >= 1 ? 1*th/tw - polygons[i][ii].y : 1 - polygons[i][ii].y;
+				polygons[i][ii].x /= tw;
+				polygons[i][ii].y /= tw;
+				polygons[i][ii].y = 1*th/tw - polygons[i][ii].y;
 			}
 		}
 
