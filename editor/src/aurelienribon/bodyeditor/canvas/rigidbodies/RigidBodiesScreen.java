@@ -118,6 +118,8 @@ public class RigidBodiesScreen {
 
 				for (Vector2 v : added) {
 					ShapeModel shape = ShapeUtils.getShape(model, v);
+					if (shape == null) continue;
+
 					if (shape.getType() == ShapeModel.Type.CIRCLE) {
 						List<Vector2> vs = shape.getVertices();
 						if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
