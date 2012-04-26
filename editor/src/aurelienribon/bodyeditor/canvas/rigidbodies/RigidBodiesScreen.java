@@ -17,6 +17,7 @@ import aurelienribon.bodyeditor.models.PolygonModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.bodyeditor.models.ShapeModel;
 import aurelienribon.bodyeditor.ui.AutoTraceParamsDialog;
+import aurelienribon.bodyeditor.utils.ShapeUtils;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -109,6 +110,23 @@ public class RigidBodiesScreen {
 
 		initializeEvents();
 		initializeLabels();
+
+		selectedPoints.addListChangedListener(new ObservableList.ListChangeListener<Vector2>() {
+			@Override public void changed(Object source, List<Vector2> added, List<Vector2> removed) {
+				RigidBodyModel model = Ctx.bodies.getSelectedModel();
+				if (model == null) return;
+
+				for (Vector2 v : added) {
+					ShapeModel shape = ShapeUtils.getShape(model, v);
+					if (shape.getType() == ShapeModel.Type.CIRCLE) {
+						List<Vector2> vs = shape.getVertices();
+						if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
+							selectedPoints.add(vs.get(1));
+						}
+					}
+				}
+			}
+		});
 
 		Tween.call(new TweenCallback() {
 			@Override public void onEvent(int type, BaseTween<?> source) {

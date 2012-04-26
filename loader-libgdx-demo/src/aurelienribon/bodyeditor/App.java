@@ -1,6 +1,5 @@
 package aurelienribon.bodyeditor;
 
-import aurelienribon.bodyeditor.BodyEditorLoader;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -21,7 +20,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -35,7 +33,7 @@ public class App extends ApplicationAdapter {
 	// -------------------------------------------------------------------------
 
 	private static final float VIEWPORT_WIDTH = 10;
-	private static final float VIAL_WIDTH = 8;
+	private static final float BOTTLE_WIDTH = 8;
 	private static final float BALL_RADIUS = 0.15f;
 	private static final int MAX_BALLS = 200;
 
@@ -45,13 +43,13 @@ public class App extends ApplicationAdapter {
 
 	// Models
 	private World world;
-	private Body vialModel;
-	private Vector2 vialModelOrigin;
+	private Body bottleModel;
+	private Vector2 bottleModelOrigin;
 	private Body[] ballModels;
 
 	// Render
-	private Texture vialTexture;
-	private Sprite vialSprite;
+	private Texture bottleTexture;
+	private Sprite bottleSprite;
 	private Texture ballTexture;
 	private Sprite[] ballSprites;
 	private Texture whiteTexture;
@@ -72,7 +70,7 @@ public class App extends ApplicationAdapter {
 
 		world = new World(new Vector2(0, -10), true);
 		createGround();
-		createVial(); // <-- this method uses the BodyEditorLoader class
+		createBottle(); // <-- this method uses the BodyEditorLoader class
 		createBalls();
 
 		// Render initialization
@@ -123,7 +121,7 @@ public class App extends ApplicationAdapter {
 		shape.dispose();
 	}
 
-	private void createVial() {
+	private void createBottle() {
 		// 0. Create a loader for the file saved from the editor.
 		BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/test.json"));
 
@@ -138,11 +136,11 @@ public class App extends ApplicationAdapter {
 		fd.restitution = 0.3f;
 
 		// 3. Create a Body, as usual.
-		vialModel = world.createBody(bd);
+		bottleModel = world.createBody(bd);
 
 		// 4. Create the body fixture automatically by using the loader.
-		loader.attachFixture(vialModel, "test01", fd, VIAL_WIDTH);
-		vialModelOrigin = loader.getOrigin("test01", VIAL_WIDTH).cpy();
+		loader.attachFixture(bottleModel, "test01", fd, BOTTLE_WIDTH);
+		bottleModelOrigin = loader.getOrigin("test01", BOTTLE_WIDTH).cpy();
 	}
 
 	private void createBalls() {
@@ -168,11 +166,11 @@ public class App extends ApplicationAdapter {
 	}
 
 	private void createSprites() {
-		vialTexture = new Texture(Gdx.files.internal("data/gfx/vial.png"));
-		vialTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		bottleTexture = new Texture(Gdx.files.internal("data/gfx/bottle.png"));
+		bottleTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		vialSprite = new Sprite(vialTexture);
-		vialSprite.setSize(VIAL_WIDTH, VIAL_WIDTH*vialSprite.getHeight()/vialSprite.getWidth());
+		bottleSprite = new Sprite(bottleTexture);
+		bottleSprite.setSize(BOTTLE_WIDTH, BOTTLE_WIDTH*bottleSprite.getHeight()/bottleSprite.getWidth());
 
 		ballTexture = new Texture(Gdx.files.internal("data/gfx/ball.png"));
 		ballTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -194,7 +192,7 @@ public class App extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
-		vialTexture.dispose();
+		bottleTexture.dispose();
 		ballTexture.dispose();
 		batch.dispose();
 		font.dispose();
@@ -210,10 +208,10 @@ public class App extends ApplicationAdapter {
 		tweenManager.update(1/60f);
 		world.step(1/60f, 10, 10);
 
-		Vector2 vialPos = vialModel.getPosition().sub(vialModelOrigin);
-		vialSprite.setPosition(vialPos.x, vialPos.y);
-		vialSprite.setOrigin(vialModelOrigin.x, vialModelOrigin.y);
-		vialSprite.setRotation(vialModel.getAngle() * MathUtils.radiansToDegrees);
+		Vector2 bottlePos = bottleModel.getPosition().sub(bottleModelOrigin);
+		bottleSprite.setPosition(bottlePos.x, bottlePos.y);
+		bottleSprite.setOrigin(bottleModelOrigin.x, bottleModelOrigin.y);
+		bottleSprite.setRotation(bottleModel.getAngle() * MathUtils.radiansToDegrees);
 
 		for (int i=0; i<MAX_BALLS; i++) {
 			Vector2 ballPos = ballModels[i].getPosition();
@@ -229,7 +227,7 @@ public class App extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		groundSprite.draw(batch);
-		vialSprite.draw(batch);
+		bottleSprite.draw(batch);
 		for (int i=0; i<MAX_BALLS; i++) ballSprites[i].draw(batch);
 		batch.end();
 
@@ -244,9 +242,9 @@ public class App extends ApplicationAdapter {
 	// -------------------------------------------------------------------------
 
 	private void restart() {
-		vialModel.setTransform(0, 3, 0.2f);
-		vialModel.setLinearVelocity(0, 0);
-		vialModel.setAngularVelocity(0);
+		bottleModel.setTransform(0, 3, 0.2f);
+		bottleModel.setLinearVelocity(0, 0);
+		bottleModel.setAngularVelocity(0);
 
 		Vector2 vec = new Vector2();
 
