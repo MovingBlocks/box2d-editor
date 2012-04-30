@@ -1,7 +1,6 @@
 package aurelienribon.bodyeditor.canvas.rigidbodies;
 
 import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.bodyeditor.RigidBodiesEvents;
 import aurelienribon.bodyeditor.RigidBodiesManager;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.bodyeditor.canvas.Assets;
@@ -108,27 +107,10 @@ public class RigidBodiesScreen {
 
 		setupBgSprite(bgInfo, 0, 0, 120, 60, BG_LBL_COLOR);
 
+		initializeModelsListener();
 		initializeEvents();
-		initializeLabels();
-
-		selectedPoints.addListChangedListener(new ObservableList.ListChangeListener<Vector2>() {
-			@Override public void changed(Object source, List<Vector2> added, List<Vector2> removed) {
-				RigidBodyModel model = Ctx.bodies.getSelectedModel();
-				if (model == null) return;
-
-				for (Vector2 v : added) {
-					ShapeModel shape = ShapeUtils.getShape(model, v);
-					if (shape == null) continue;
-
-					if (shape.getType() == ShapeModel.Type.CIRCLE) {
-						List<Vector2> vs = shape.getVertices();
-						if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
-							selectedPoints.add(vs.get(1));
-						}
-					}
-				}
-			}
-		});
+		initializeModelLabels();
+		initializeOtherLabels();
 
 		Tween.call(new TweenCallback() {
 			@Override public void onEvent(int type, BaseTween<?> source) {
@@ -137,37 +119,71 @@ public class RigidBodiesScreen {
 		}).repeat(-1, 0.3f).start(tweenManager);
 	}
 
-	private void initializeEvents() {
-		Ctx.bodies.addChangeListener(new ChangeListener() {
+	// -------------------------------------------------------------------------
+	// Init
+	// -------------------------------------------------------------------------
+
+	private void initializeModelsListener() {
+		final ChangeListener selectedModelChangeListener = new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
-					RigidBodyModel model = Ctx.bodies.getSelectedModel();
-					setMode(model != null ? mode == null ? Mode.CREATION : mode : null);
-					updateButtons();
-					resetWorld();
+				if (propertyName.equals(RigidBodyModel.PROP_IMAGEPATH)) {
+					createBodySprite();
+					lblClearImage.show();
+				} else if (propertyName.equals(RigidBodyModel.PROP_PHYSICS)) {
+					clearWorld();
+					createBody();
 				}
 			}
-		});
+		};
 
-		Ctx.bodiesEvents.addAppToScreenListener(new RigidBodiesEvents.AppToScreenListener() {
-			@Override public void recreateWorld() {
-				clearWorld();
-				createBody();
-			}
-
-			@Override public void modelImageChanged() {
-				createBodySprite();
-				lblClearImage.show();
-			}
-
-			@Override
-			public void autoTrace() {
-				RigidBodiesScreen.this.autoTrace();
+		Ctx.bodies.addChangeListener(new ChangeListener() {
+			private RigidBodyModel oldModel;
+			@Override public void propertyChanged(Object source, String propertyName) {
+				if (!propertyName.equals(RigidBodiesManager.PROP_SELECTION)) return;
+				RigidBodyModel model = Ctx.bodies.getSelectedModel();
+				if (model != null) model.addChangeListener(selectedModelChangeListener);
+				if (oldModel != null) oldModel.removeChangeListener(selectedModelChangeListener);
+				oldModel = model;
 			}
 		});
 	}
 
-	private void initializeLabels() {
+	private void initializeEvents() {
+		Ctx.bodies.addChangeListener(new ChangeListener() {
+			@Override public void propertyChanged(Object source, String propertyName) {
+				if (!propertyName.equals(RigidBodiesManager.PROP_SELECTION)) return;
+				RigidBodyModel model = Ctx.bodies.getSelectedModel();
+				setMode(model != null ? mode == null ? Mode.CREATION : mode : null);
+				updateButtons();
+				resetWorld();
+			}
+		});
+
+		selectedPoints.addListChangedListener(new ObservableList.ListChangeListener<Vector2>() {
+			@Override public void changed(Object source, List<Vector2> added, List<Vector2> removed) {
+				RigidBodyModel model = Ctx.bodies.getSelectedModel();
+				if (model == null) return;
+
+				List<Vector2> toAdd = new ArrayList<Vector2>();
+
+				for (Vector2 v : added) {
+					ShapeModel shape = ShapeUtils.getShape(model, v);
+					if (shape == null) continue;
+
+					if (shape.getType() == ShapeModel.Type.CIRCLE) {
+						List<Vector2> vs = shape.getVertices();
+						if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
+							toAdd.add(vs.get(1));
+						}
+					}
+				}
+
+				selectedPoints.addAll(toAdd);
+			}
+		});
+	}
+
+	private void initializeModelLabels() {
 		Label.TouchCallback modeLblCallback = new Label.TouchCallback() {
 			@Override public void touchDown(Label source) {
 				setNextMode();
@@ -190,7 +206,9 @@ public class RigidBodiesScreen {
 		lblModeCreation.setCallback(modeLblCallback);
 		lblModeEdition.setCallback(modeLblCallback);
 		lblModeTest.setCallback(modeLblCallback);
+	}
 
+	private void initializeOtherLabels() {
 		lblSetImage.setCallback(new Label.TouchCallback() {
 			@Override public void touchEnter(Label source) {}
 			@Override public void touchExit(Label source) {}
@@ -202,7 +220,6 @@ public class RigidBodiesScreen {
 					if (chooser.showOpenDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
 						String path = Ctx.io.buildImagePath(chooser.getSelectedFile());
 						Ctx.bodies.getSelectedModel().setImagePath(path);
-						Ctx.bodiesEvents.modelImageChanged();
 					}
 				}});
 			}
@@ -228,8 +245,7 @@ public class RigidBodiesScreen {
 				SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
 					AutoTraceParamsDialog dialog = new AutoTraceParamsDialog(Ctx.window);
 					dialog.setLocationRelativeTo(Ctx.window);
-					dialog.pack();
-					dialog.setVisible(true);
+					if (dialog.prompt()) autoTrace();
 				}});
 			}
 		});
@@ -333,7 +349,6 @@ public class RigidBodiesScreen {
 
 		selectedPoints.addAll(toAdd);
 		Ctx.bodies.getSelectedModel().computePhysics();
-		Ctx.bodiesEvents.recreateWorld();
 	}
 
 	public void removeSelectedPoints() {
@@ -365,7 +380,6 @@ public class RigidBodiesScreen {
 
 		selectedPoints.clear();
 		Ctx.bodies.getSelectedModel().computePhysics();
-		Ctx.bodiesEvents.recreateWorld();
 	}
 
 	// -------------------------------------------------------------------------
@@ -507,7 +521,6 @@ public class RigidBodiesScreen {
 		if (Ctx.bodies.getSelectedModel() == null) return;
 		selectedPoints.clear();
 		Ctx.bodies.getSelectedModel().clear();
-		Ctx.bodiesEvents.recreateWorld();
 	}
 
 	private void clearWorld() {

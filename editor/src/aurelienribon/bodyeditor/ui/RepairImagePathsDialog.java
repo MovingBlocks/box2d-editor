@@ -77,8 +77,6 @@ public class RepairImagePathsDialog extends javax.swing.JDialog {
 			path = newCommonpath + path.substring(commonPath.length());
 			model.setImagePath(new File(path, name).getPath());
 		}
-		
-		Ctx.bodiesEvents.modelImageChanged();
 	}
 
 	// -------------------------------------------------------------------------

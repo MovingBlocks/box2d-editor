@@ -160,16 +160,19 @@ public class ObservableList<T> extends ArrayList<T> {
 	}
 
 	private void fireElementsAdded(List<T> elems) {
+		if (elems.isEmpty()) return;
 		for (ListChangeListener<T> listener : listeners.getListeners(ListChangeListener.class))
 			listener.changed(source != null ? source : this, elems, new ArrayList<T>());
 	}
 
 	private void fireElementsRemoved(List<T> elems) {
+		if (elems.isEmpty()) return;
 		for (ListChangeListener<T> listener : listeners.getListeners(ListChangeListener.class))
 			listener.changed(source != null ? source : this, new ArrayList<T>(), elems);
 	}
 
 	private void fireChanged(List<T> added, List<T> removed) {
+		if (added.isEmpty() && removed.isEmpty()) return;
 		for (ListChangeListener<T> listener : listeners.getListeners(ListChangeListener.class))
 			listener.changed(source != null ? source : this, added, removed);
 	}

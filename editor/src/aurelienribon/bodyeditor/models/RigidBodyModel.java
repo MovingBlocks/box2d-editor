@@ -70,6 +70,12 @@ public class RigidBodyModel extends ChangeableObject {
 		firePropertyChanged(PROP_PHYSICS);
 	}
 
+	public void clearPhysics() {
+		polygons.clear();
+		circles.clear();
+		firePropertyChanged(PROP_PHYSICS);
+	}
+
 	public void computePhysics() {
 		polygons.clear();
 		circles.clear();
