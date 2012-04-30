@@ -44,7 +44,7 @@ public class EditionInputProcessor extends InputAdapter {
 
 		} else {
 			if (draggedPoint == model.getOrigin()) {
-				screen.selectedPoints.replaceBy(draggedPoint);
+				screen.selectedPoints.clear();
 			} else if (InputHelper.isCtrlDown()) {
 				if (screen.selectedPoints.contains(draggedPoint)) screen.selectedPoints.remove(draggedPoint);
 				else screen.selectedPoints.add(draggedPoint);
