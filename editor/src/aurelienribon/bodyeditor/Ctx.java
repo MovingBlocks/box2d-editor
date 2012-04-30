@@ -8,7 +8,6 @@ import aurelienribon.bodyeditor.ui.MainWindow;
 public class Ctx {
 	public static final IoManager io = new IoManager();
 	public static final RigidBodiesManager bodies = new RigidBodiesManager();
-	public static final RigidBodiesEvents bodiesEvents = new RigidBodiesEvents();
 	public static final DynamicObjectsManager objects = new DynamicObjectsManager();
 	public static final MainWindow window = new MainWindow();
 }

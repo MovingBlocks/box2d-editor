@@ -12,6 +12,8 @@ import res.Res;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class AutoTraceParamsDialog extends javax.swing.JDialog {
+	private boolean result = false;
+
     public AutoTraceParamsDialog(javax.swing.JFrame parent) {
         super(parent, true);
 
@@ -33,8 +35,8 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
 				Settings.autoTraceAlphaTolerance = alphaToleranceSlider.getValue();
 				Settings.autoTraceMultiPartDetection = multiPartDetectionChk.isSelected();
 				Settings.autoTraceHoleDetection = holeDetectionChk.isSelected();
-				Ctx.bodiesEvents.autoTrace();
 				dispose();
+				result = true;
 			}
 		});
 
@@ -44,6 +46,12 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
 			}
 		});
     }
+
+	public boolean prompt() {
+		setVisible(true);
+		dispose();
+		return result;
+	}
 
 	// -------------------------------------------------------------------------
 	// Generated stuff

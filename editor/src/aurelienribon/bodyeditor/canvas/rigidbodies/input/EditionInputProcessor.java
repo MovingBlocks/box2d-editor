@@ -97,8 +97,7 @@ public class EditionInputProcessor extends InputAdapter {
 
 		if (draggedPoint != null) {
 			Vector2 p = canvas.alignedScreenToWorld(x, y);
-			model.getPolygons().clear();
-			Ctx.bodiesEvents.recreateWorld();
+			model.clearPhysics();
 
 			float dx = p.x - draggedPoint.x;
 			float dy = p.y - draggedPoint.y;
