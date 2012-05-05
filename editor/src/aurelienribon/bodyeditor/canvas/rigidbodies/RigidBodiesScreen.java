@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
@@ -59,32 +58,31 @@ import javax.swing.SwingUtilities;
  */
 public class RigidBodiesScreen {
 	private static final float BG_HEIGHT = 25;
-	private static final Color BG_LBL_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f);
 	private static final Color BG_BTN_COLOR = new Color(0x2A/255f, 0x6B/255f, 0x56/255f, 180/255f);
-	private static enum Mode {CREATION, EDITION, TEST}
 
 	private final Canvas canvas;
 	private final RigidBodiesScreenDrawer rbsDrawer;
-	private final Box2DDebugRenderer rdr = new Box2DDebugRenderer();
+	private final Box2DDebugRenderer debugRdr = new Box2DDebugRenderer();
 	private final TweenManager tweenManager = new TweenManager();
+	private float timeAcc = 0;
 
 	private final List<Sprite> ballsSprites = new ArrayList<Sprite>();
 	private final List<Body> ballsBodies = new ArrayList<Body>();
 	private final World world = new World(new Vector2(0, 0), true);
-
-	private final Sprite bgInfo = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
-	private final Label lblModeCreation = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", BG_BTN_COLOR);
-	private final Label lblModeEdition = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", BG_BTN_COLOR);
-	private final Label lblModeTest = new Label(Anchor.TOP_LEFT, 10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", BG_BTN_COLOR);
-	private final Label lblSetImage = new Label(Anchor.TOP_RIGHT, 10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", BG_BTN_COLOR);
-	private final Label lblClearImage = new Label(Anchor.TOP_RIGHT, 15+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear bg. image", BG_BTN_COLOR);
-	private final Label lblAutoTrace = new Label(Anchor.TOP_RIGHT, 20+BG_HEIGHT*4, 120, BG_HEIGHT, "Auto-trace", BG_BTN_COLOR);
-	private final Label lblClearVertices = new Label(Anchor.TOP_RIGHT, 25+BG_HEIGHT*5, 120, BG_HEIGHT, "Clear all points", BG_BTN_COLOR);
-	private final Label lblInsertVertices = new Label(Anchor.TOP_RIGHT, 30+BG_HEIGHT*6, 120, BG_HEIGHT, "Insert points", BG_BTN_COLOR);
-	private final Label lblRemoveVertices = new Label(Anchor.TOP_RIGHT, 35+BG_HEIGHT*7, 120, BG_HEIGHT, "Remove points", BG_BTN_COLOR);
-
-	private Mode mode = null;
 	private Sprite bodySprite;
+
+	private final Label lblModeCreation;
+	private final Label lblModeEdition;
+	private final Label lblModeTest;
+	private final Label lblSetImage;
+	private final Label lblClearImage;
+	private final Label lblAutoTrace;
+	private final Label lblClearVertices;
+	private final Label lblInsertVertices;
+	private final Label lblRemoveVertices;
+
+	private static enum Mode {CREATION, EDITION, TEST}
+	private Mode mode = null;
 
 	public final ObservableList<Vector2> selectedPoints = new ObservableList<Vector2>();
 	public Vector2 nextPoint;
@@ -105,12 +103,31 @@ public class RigidBodiesScreen {
 		canvas.input.addProcessor(buttonsInputProcessor);
 		canvas.input.addProcessor(creationInputProcessor);
 
-		setupBgSprite(bgInfo, 0, 0, 120, 60, BG_LBL_COLOR);
+		lblModeCreation = new Label(10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
+		lblModeEdition = new Label(10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
+		lblModeTest = new Label(10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
 
-		initializeModelsListener();
-		initializeEvents();
-		initializeModelLabels();
-		initializeOtherLabels();
+		lblSetImage = new Label(10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblClearImage = new Label(15+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear bg. image", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblAutoTrace = new Label(20+BG_HEIGHT*4, 120, BG_HEIGHT, "Auto-trace", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblClearVertices = new Label(25+BG_HEIGHT*5, 120, BG_HEIGHT, "Clear all points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblInsertVertices = new Label(30+BG_HEIGHT*6, 120, BG_HEIGHT, "Insert points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblRemoveVertices = new Label(35+BG_HEIGHT*7, 120, BG_HEIGHT, "Remove points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+
+		canvas.registerLabel(lblModeCreation);
+		canvas.registerLabel(lblModeEdition);
+		canvas.registerLabel(lblModeTest);
+		canvas.registerLabel(lblSetImage);
+		canvas.registerLabel(lblClearImage);
+		canvas.registerLabel(lblAutoTrace);
+		canvas.registerLabel(lblClearVertices);
+		canvas.registerLabel(lblInsertVertices);
+		canvas.registerLabel(lblRemoveVertices);
+
+		initializeModelChangeListener();
+		initializeSelectedPointsEvents();
+		initializeModeLabelsCallbacks();
+		initializeOtherLabelsCallbacks();
 
 		Tween.call(new TweenCallback() {
 			@Override public void onEvent(int type, BaseTween<?> source) {
@@ -123,7 +140,7 @@ public class RigidBodiesScreen {
 	// Init
 	// -------------------------------------------------------------------------
 
-	private void initializeModelsListener() {
+	private void initializeModelChangeListener() {
 		final ChangeListener selectedModelChangeListener = new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(RigidBodyModel.PROP_IMAGEPATH)) {
@@ -138,27 +155,24 @@ public class RigidBodiesScreen {
 
 		Ctx.bodies.addChangeListener(new ChangeListener() {
 			private RigidBodyModel oldModel;
+
 			@Override public void propertyChanged(Object source, String propertyName) {
-				if (!propertyName.equals(RigidBodiesManager.PROP_SELECTION)) return;
-				RigidBodyModel model = Ctx.bodies.getSelectedModel();
-				if (model != null) model.addChangeListener(selectedModelChangeListener);
-				if (oldModel != null) oldModel.removeChangeListener(selectedModelChangeListener);
-				oldModel = model;
+				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
+					RigidBodyModel model = Ctx.bodies.getSelectedModel();
+
+					setMode(model != null ? mode == null ? Mode.CREATION : mode : null);
+					updateButtons();
+					resetWorld();
+
+					if (model != null) model.addChangeListener(selectedModelChangeListener);
+					if (oldModel != null) oldModel.removeChangeListener(selectedModelChangeListener);
+					oldModel = model;
+				}
 			}
 		});
 	}
 
-	private void initializeEvents() {
-		Ctx.bodies.addChangeListener(new ChangeListener() {
-			@Override public void propertyChanged(Object source, String propertyName) {
-				if (!propertyName.equals(RigidBodiesManager.PROP_SELECTION)) return;
-				RigidBodyModel model = Ctx.bodies.getSelectedModel();
-				setMode(model != null ? mode == null ? Mode.CREATION : mode : null);
-				updateButtons();
-				resetWorld();
-			}
-		});
-
+	private void initializeSelectedPointsEvents() {
 		selectedPoints.addListChangedListener(new ObservableList.ListChangeListener<Vector2>() {
 			@Override public void changed(Object source, List<Vector2> added, List<Vector2> removed) {
 				RigidBodyModel model = Ctx.bodies.getSelectedModel();
@@ -183,7 +197,7 @@ public class RigidBodiesScreen {
 		});
 	}
 
-	private void initializeModelLabels() {
+	private void initializeModeLabelsCallbacks() {
 		Label.TouchCallback modeLblCallback = new Label.TouchCallback() {
 			@Override public void touchDown(Label source) {
 				setNextMode();
@@ -208,7 +222,7 @@ public class RigidBodiesScreen {
 		lblModeTest.setCallback(modeLblCallback);
 	}
 
-	private void initializeOtherLabels() {
+	private void initializeOtherLabelsCallbacks() {
 		lblSetImage.setCallback(new Label.TouchCallback() {
 			@Override public void touchEnter(Label source) {}
 			@Override public void touchExit(Label source) {}
@@ -274,8 +288,13 @@ public class RigidBodiesScreen {
 	// -------------------------------------------------------------------------
 
 	public void render() {
+		while (timeAcc < Gdx.graphics.getDeltaTime()) {
+			timeAcc += 1f/60;
+			world.step(1f/60, 10, 10);
+		}
+
+		timeAcc -= Gdx.graphics.getDeltaTime();
 		tweenManager.update(Gdx.graphics.getDeltaTime());
-		world.step(Gdx.graphics.getDeltaTime(), 10, 10);
 
 		canvas.batch.setProjectionMatrix(canvas.worldCamera.combined);
 		canvas.batch.begin();
@@ -292,24 +311,9 @@ public class RigidBodiesScreen {
 
 		rbsDrawer.draw(bodySprite);
 
-		canvas.batch.setProjectionMatrix(canvas.screenCamera.combined);
-		canvas.batch.begin();
-		bgInfo.draw(canvas.batch);
-		lblModeCreation.draw(canvas.batch, canvas.font);
-		lblModeEdition.draw(canvas.batch, canvas.font);
-		lblModeTest.draw(canvas.batch, canvas.font);
-		lblSetImage.draw(canvas.batch, canvas.font);
-		lblClearImage.draw(canvas.batch, canvas.font);
-		lblAutoTrace.draw(canvas.batch, canvas.font);
-		lblClearVertices.draw(canvas.batch, canvas.font);
-		lblInsertVertices.draw(canvas.batch, canvas.font);
-		lblRemoveVertices.draw(canvas.batch, canvas.font);
-		canvas.font.setColor(Color.WHITE);
-		canvas.font.draw(canvas.batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / canvas.worldCamera.zoom), 10, 45);
-		canvas.font.draw(canvas.batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
-		canvas.batch.end();
-
-		if (Settings.isPhysicsDebugEnabled) rdr.render(world, canvas.worldCamera.combined);
+		if (Settings.isPhysicsDebugEnabled) {
+			debugRdr.render(world, canvas.worldCamera.combined);
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -385,12 +389,6 @@ public class RigidBodiesScreen {
 	// -------------------------------------------------------------------------
 	// Internals
 	// -------------------------------------------------------------------------
-
-	private void setupBgSprite(Sprite sp, float x, float y, float w, float h, Color c) {
-		sp.setPosition(x, y);
-		sp.setSize(w, h);
-		sp.setColor(c);
-	}
 
 	private void updateButtons() {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
