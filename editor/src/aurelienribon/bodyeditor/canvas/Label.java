@@ -22,25 +22,28 @@ public class Label {
 	public static enum Anchor {TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT, BOTTOM_RIGHT}
 	private static enum State {SHOWN, HIDDEN, HIDDEN_SEMI}
 
-	private final TweenManager tweenManager = new TweenManager();
-	private final Anchor anchor;
 	private String text;
 	private Sprite icon;
 	private TouchCallback callback;
-	private final Sprite bg;
+	private final BitmapFont font;
 	private final Color color;
+	private final Anchor anchor;
+
+	private final TweenManager tweenManager = new TweenManager();
+	private final Sprite bg;
 	private final float y, w, h;
 	private float dx;
 	private boolean isTouchOver = false;
 	private State state = State.HIDDEN;
 
-	public Label(Anchor anchor, float y, float w, float h, String text, Color color) {
-		this.anchor = anchor;
+	public Label(float y, float w, float h, String text, BitmapFont font, Color color, Anchor anchor) {
 		this.y = y;
 		this.w = w;
 		this.h = h;
 		this.text = text;
+		this.font = font;
 		this.color = color;
+		this.anchor = anchor;
 
 		this.bg = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
 		bg.setSize(w*11/10, h);
@@ -128,7 +131,7 @@ public class Label {
 		Tween.to(this, Accessor.OFFSET_X, 0.2f).target(tx).start(tweenManager);
 	}
 
-	public void draw(SpriteBatch batch, BitmapFont font) {
+	public void draw(SpriteBatch batch) {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 
 		float sw = Gdx.graphics.getWidth();
