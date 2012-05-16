@@ -36,4 +36,10 @@ public class DynamicObjectsManager extends ChangeableObject {
 		selectedModel = model;
 		firePropertyChanged(PROP_SELECTION);
 	}
+
+	public DynamicObjectModel getModel(String name) {
+		for (DynamicObjectModel model : models)
+			if (model.getName().equals(name)) return model;
+		return null;
+	}
 }
