@@ -4,7 +4,7 @@
 	<!-- Definitions -->
 	<!-- ****************************************************************** -->
 	
-	<property name="version" value="2.9.1" />
+	<property name="version" value="2.9.2" />
 	<property name="dist" value="tmp" />
 	<property name="dist.loaders" value="tmp/loaders" />
 
