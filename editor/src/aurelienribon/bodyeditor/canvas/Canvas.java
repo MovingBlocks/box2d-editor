@@ -20,43 +20,42 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Canvas extends ApplicationAdapter {
-	public static final Color BG_LBL_COLOR = new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f);
-
 	public OrthographicCamera worldCamera;
 	public OrthographicCamera screenCamera;
 	public SpriteBatch batch;
 	public BitmapFont font;
+	public CanvasDrawer drawer;
 	public InputMultiplexer input;
 
-	private static enum Mode {BODIES, OBJECTS}
+	public static enum Mode {BODIES, OBJECTS}
 	private Mode mode = Mode.BODIES;
 
 	private RigidBodiesScreen rigidBodiesScreen;
 	private DynamicObjectsScreen dynamicObjectsScreen;
 
-	private final List<Label> labels = new ArrayList<Label>();
 	private Sprite infoLabel;
 	private Texture backgroundTexture;
 
 	@Override
 	public void create() {
-		Assets.inst().load();
+		Assets.inst().initialize();
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-
-		batch = new SpriteBatch();
-		font = new BitmapFont();
 
 		worldCamera = new OrthographicCamera();
 		screenCamera = new OrthographicCamera();
 		resetCameras();
+
+		batch = new SpriteBatch();
+		font = new BitmapFont();
+		drawer = new CanvasDrawer(batch, worldCamera);
 
 		backgroundTexture = Assets.inst().get("res/data/transparent-light.png", Texture.class);
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -64,7 +63,7 @@ public class Canvas extends ApplicationAdapter {
 		infoLabel = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
 		infoLabel.setPosition(0, 0);
 		infoLabel.setSize(120, 60);
-		infoLabel.setColor(BG_LBL_COLOR);
+		infoLabel.setColor(new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f));
 
 		input = new InputMultiplexer();
 		input.addProcessor(new PanZoomInputProcessor(this));
@@ -84,7 +83,11 @@ public class Canvas extends ApplicationAdapter {
 		Ctx.bodies.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
-					if (Ctx.bodies.getSelectedModel() != null) mode = Mode.BODIES;
+					if (Ctx.bodies.getSelectedModel() != null) {
+						Mode oldMode = mode;
+						mode = Mode.BODIES;
+						if (mode != oldMode) fireModeChanged(mode);
+					}
 				}
 			}
 		});
@@ -92,7 +95,11 @@ public class Canvas extends ApplicationAdapter {
 		Ctx.objects.addChangeListener(new ChangeListener() {
 			@Override public void propertyChanged(Object source, String propertyName) {
 				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
-					if (Ctx.objects.getSelectedModel() != null) mode = Mode.OBJECTS;
+					if (Ctx.objects.getSelectedModel() != null) {
+						Mode oldMode = mode;
+						mode = Mode.OBJECTS;
+						if (mode != oldMode) fireModeChanged(mode);
+					}
 				}
 			}
 		});
@@ -120,14 +127,11 @@ public class Canvas extends ApplicationAdapter {
 		batch.enableBlending();
 		batch.end();
 
-		switch (mode) {
-			case BODIES: rigidBodiesScreen.render(); break;
-			case OBJECTS: dynamicObjectsScreen.render(); break;
-		}
+		rigidBodiesScreen.render();
+		dynamicObjectsScreen.render();
 
 		batch.setProjectionMatrix(screenCamera.combined);
 		batch.begin();
-		for (Label lbl : labels) lbl.draw(batch);
 		infoLabel.draw(batch);
 		font.setColor(Color.WHITE);
 		font.draw(batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 10, 45);
@@ -162,8 +166,22 @@ public class Canvas extends ApplicationAdapter {
 		return p;
 	}
 
-	public void registerLabel(Label label) {
-		labels.add(label);
+	// -------------------------------------------------------------------------
+	// Events
+	// -------------------------------------------------------------------------
+
+	private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+
+	public static interface Listener {
+		public void modeChanged(Mode mode);
+	}
+
+	public void addListener(Listener listener) {
+		listeners.add(listener);
+	}
+
+	private void fireModeChanged(Mode mode) {
+		for (Listener listener : listeners) listener.modeChanged(mode);
 	}
 
 	// -------------------------------------------------------------------------

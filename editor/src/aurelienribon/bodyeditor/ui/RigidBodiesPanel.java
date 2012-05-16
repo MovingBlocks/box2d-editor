@@ -2,7 +2,6 @@ package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.DynamicObjectsManager;
-import aurelienribon.bodyeditor.models.DynamicObjectModel;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.ui.components.ImagePreviewPanel;
 import aurelienribon.ui.css.Style;

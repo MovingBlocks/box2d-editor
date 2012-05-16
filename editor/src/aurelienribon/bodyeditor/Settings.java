@@ -11,6 +11,7 @@ public class Settings {
 	public static boolean isPolygonDrawn = true;
 	public static boolean isPhysicsDebugEnabled = false;
 	public static boolean isSnapToGridEnabled = false;
+	public static boolean isAxisShown = true;
 	public static boolean isGridShown = false;
 	public static float gridGap = 0.03f;
 	public static Polygonizer polygonizer = Polygonizer.BAYAZIT;

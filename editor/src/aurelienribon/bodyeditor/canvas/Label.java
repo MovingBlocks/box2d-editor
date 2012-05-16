@@ -32,7 +32,7 @@ public class Label {
 	private final TweenManager tweenManager = new TweenManager();
 	private final Sprite bg;
 	private final float y, w, h;
-	private float dx;
+	private float offsetX;
 	private boolean isTouchOver = false;
 	private State state = State.HIDDEN;
 
@@ -49,7 +49,7 @@ public class Label {
 		bg.setSize(w*11/10, h);
 		bg.setColor(color);
 
-		dx = -w;
+		offsetX = -w;
 	}
 
 	// -------------------------------------------------------------------------
@@ -100,6 +100,7 @@ public class Label {
 		if (state == State.SHOWN) return;
 		tweenManager.killTarget(this);
 		Tween.to(this, Accessor.OFFSET_X, 0.3f).target(0).start(tweenManager);
+		Tween.to(this, Accessor.ALPHA, 0.3f).target(color.a).start(tweenManager);
 		state = State.SHOWN;
 	}
 
@@ -136,7 +137,7 @@ public class Label {
 
 		float sw = Gdx.graphics.getWidth();
 		float sh = Gdx.graphics.getHeight();
-		float x = isAnchorLeft() ? dx : sw-w-dx;
+		float x = isAnchorLeft() ? offsetX : sw-w-offsetX;
 		float bgX = isAnchorLeft() ? x - w/10 : x;
 		float textH = font.getBounds(text).height;
 
@@ -154,7 +155,8 @@ public class Label {
 		}
 	}
 
-	public boolean touchMoved(float x, float y) {
+	public boolean touchMoved(int x, int y) {
+		y = Gdx.graphics.getHeight() - y - 1;
 		if (isOver(x, y) && !isTouchOver && state == State.SHOWN) {
 			isTouchOver = true;
 			tiltOn();
@@ -167,7 +169,8 @@ public class Label {
 		return isOver(x, y);
 	}
 
-	public boolean touchDown(float x, float y) {
+	public boolean touchDown(int x, int y) {
+		y = Gdx.graphics.getHeight() - y - 1;
 		if (isOver(x, y) && callback != null) callback.touchDown(this);
 		return isOver(x, y);
 	}
@@ -195,7 +198,7 @@ public class Label {
 		@Override
 		public int getValues(Label target, int tweenType, float[] returnValues) {
 			switch (tweenType) {
-				case OFFSET_X: returnValues[0] = target.dx; return 1;
+				case OFFSET_X: returnValues[0] = target.offsetX; return 1;
 				case ALPHA: returnValues[0] = target.bg.getColor().a; return 1;
 				default: assert false; return -1;
 			}
@@ -204,7 +207,7 @@ public class Label {
 		@Override
 		public void setValues(Label target, int tweenType, float[] newValues) {
 			switch (tweenType) {
-				case OFFSET_X: target.dx = newValues[0]; break;
+				case OFFSET_X: target.offsetX = newValues[0]; break;
 				case ALPHA:
 					Color c = target.bg.getColor();
 					target.bg.setColor(c.r, c.g, c.b, newValues[0]);
