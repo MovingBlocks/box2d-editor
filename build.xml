@@ -1,0 +1,47 @@
+<project name="box2d-editor" default="all" basedir=".">
+
+	<!-- ****************************************************************** -->
+	<!-- Definitions -->
+	<!-- ****************************************************************** -->
+	
+	<property name="version" value="2.9.1" />
+	<property name="dist" value="tmp" />
+	<property name="dist.loaders" value="tmp/loaders" />
+
+	<!-- ****************************************************************** -->
+	<!-- Build tasks -->
+	<!-- ****************************************************************** -->
+	
+	<!-- clean -->
+	<target name="clean">
+		<delete dir="${dist}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+	
+	<!-- editor -->
+	<target name="editor">
+		<ant antfile="ant.xml" dir="editor/"/>
+		<copy todir="${dist}/" file="editor/physics-body-editor.jar"/>
+		<copy todir="${dist}/test-me!/"><fileset dir="editor/test-me!/"/></copy>
+	</target>
+	
+	<!-- loader-libgdx -->
+	<target name="loader-libgdx">
+		<ant antfile="ant.xml" dir="loader-libgdx/"/>
+		<copy todir="${dist.loaders}/libgdx/"><fileset dir="loader-libgdx/" includes="*.jar"/></copy>
+	</target>
+	
+	<!-- loader-libgdx-demo -->
+	<target name="loader-libgdx-demo" depends="loader-libgdx">
+		<copy todir="loader-libgdx-demo/libs/" file="${dist.loaders}/libgdx/bodyeditor-loader.jar"/>
+		<ant antfile="ant.xml" dir="loader-libgdx-demo/"/>
+		<delete file="loader-libgdx-demo/libs/bodyeditor-loader.jar"/>
+		<zip destfile="bodyeditor-libgdx-demo-${version}.zip" basedir="loader-libgdx-demo/" includes="*.jar, data/, src/"/>
+	</target>
+	
+	<!-- all -->
+	<target name="all" depends="clean, editor, loader-libgdx, loader-libgdx-demo">
+		<zip destfile="physics-body-editor-${version}.zip" basedir="${dist}"/>
+	</target>
+	
+</project>
