@@ -22,7 +22,6 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.utils.gdx.PolygonUtils;
-import aurelienribon.utils.gdx.TextureUtils;
 import aurelienribon.utils.notifications.ChangeListener;
 import aurelienribon.utils.notifications.ObservableList;
 import com.badlogic.gdx.Gdx;
@@ -53,15 +52,11 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 /**
- *
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class RigidBodiesScreen {
-	private static final float BG_HEIGHT = 25;
-	private static final Color BG_BTN_COLOR = new Color(0x2A/255f, 0x6B/255f, 0x56/255f, 180/255f);
-
 	private final Canvas canvas;
-	private final RigidBodiesScreenDrawer rbsDrawer;
+	private final RigidBodiesScreenDrawer drawer;
 	private final Box2DDebugRenderer debugRdr = new Box2DDebugRenderer();
 	private final TweenManager tweenManager = new TweenManager();
 	private float timeAcc = 0;
@@ -71,6 +66,11 @@ public class RigidBodiesScreen {
 	private final World world = new World(new Vector2(0, 0), true);
 	private Sprite bodySprite;
 
+	private final InputProcessor creationInputProcessor;
+	private final InputProcessor editionInputProcessor;
+	private final InputProcessor testInputProcessor;
+
+	private final List<Label> labels = new ArrayList<Label>();
 	private final Label lblModeCreation;
 	private final Label lblModeEdition;
 	private final Label lblModeTest;
@@ -94,7 +94,7 @@ public class RigidBodiesScreen {
 
 	public RigidBodiesScreen(Canvas canvas) {
 		this.canvas = canvas;
-		this.rbsDrawer = new RigidBodiesScreenDrawer(this, canvas.worldCamera);
+		this.drawer = new RigidBodiesScreenDrawer(canvas.worldCamera);
 
 		creationInputProcessor = new CreationInputProcessor(canvas, this);
 		editionInputProcessor = new EditionInputProcessor(canvas, this);
@@ -103,38 +103,75 @@ public class RigidBodiesScreen {
 		canvas.input.addProcessor(buttonsInputProcessor);
 		canvas.input.addProcessor(creationInputProcessor);
 
-		lblModeCreation = new Label(10+BG_HEIGHT, 80, BG_HEIGHT, "Creation", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
-		lblModeEdition = new Label(10+BG_HEIGHT*2, 80, BG_HEIGHT, "Edition", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
-		lblModeTest = new Label(10+BG_HEIGHT*3, 80, BG_HEIGHT, "Test", canvas.font, BG_BTN_COLOR, Anchor.TOP_LEFT);
+		int lblH = 25;
+		Color lblC = new Color(0x2A/255f, 0x6B/255f, 0x56/255f, 180/255f);
 
-		lblSetImage = new Label(10+BG_HEIGHT, 120, BG_HEIGHT, "Set bg. image", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
-		lblClearImage = new Label(15+BG_HEIGHT*2, 120, BG_HEIGHT, "Clear bg. image", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
-		lblAutoTrace = new Label(20+BG_HEIGHT*4, 120, BG_HEIGHT, "Auto-trace", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
-		lblClearVertices = new Label(25+BG_HEIGHT*5, 120, BG_HEIGHT, "Clear all points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
-		lblInsertVertices = new Label(30+BG_HEIGHT*6, 120, BG_HEIGHT, "Insert points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
-		lblRemoveVertices = new Label(35+BG_HEIGHT*7, 120, BG_HEIGHT, "Remove points", canvas.font, BG_BTN_COLOR, Anchor.TOP_RIGHT);
+		lblModeCreation = new Label(10+lblH, 80, lblH, "Creation", canvas.font, lblC, Anchor.TOP_LEFT);
+		lblModeEdition = new Label(10+lblH*2, 80, lblH, "Edition", canvas.font, lblC, Anchor.TOP_LEFT);
+		lblModeTest = new Label(10+lblH*3, 80, lblH, "Test", canvas.font, lblC, Anchor.TOP_LEFT);
 
-		canvas.registerLabel(lblModeCreation);
-		canvas.registerLabel(lblModeEdition);
-		canvas.registerLabel(lblModeTest);
-		canvas.registerLabel(lblSetImage);
-		canvas.registerLabel(lblClearImage);
-		canvas.registerLabel(lblAutoTrace);
-		canvas.registerLabel(lblClearVertices);
-		canvas.registerLabel(lblInsertVertices);
-		canvas.registerLabel(lblRemoveVertices);
+		lblSetImage = new Label(10+lblH, 120, lblH, "Set bg. image", canvas.font, lblC, Anchor.TOP_RIGHT);
+		lblClearImage = new Label(15+lblH*2, 120, lblH, "Clear bg. image", canvas.font, lblC, Anchor.TOP_RIGHT);
+		lblAutoTrace = new Label(20+lblH*4, 120, lblH, "Auto-trace", canvas.font, lblC, Anchor.TOP_RIGHT);
+		lblClearVertices = new Label(25+lblH*5, 120, lblH, "Clear all points", canvas.font, lblC, Anchor.TOP_RIGHT);
+		lblInsertVertices = new Label(30+lblH*6, 120, lblH, "Insert points", canvas.font, lblC, Anchor.TOP_RIGHT);
+		lblRemoveVertices = new Label(35+lblH*7, 120, lblH, "Remove points", canvas.font, lblC, Anchor.TOP_RIGHT);
+
+		labels.add(lblModeCreation);
+		labels.add(lblModeEdition);
+		labels.add(lblModeTest);
+		labels.add(lblSetImage);
+		labels.add(lblClearImage);
+		labels.add(lblAutoTrace);
+		labels.add(lblClearVertices);
+		labels.add(lblInsertVertices);
+		labels.add(lblRemoveVertices);
 
 		initializeModelChangeListener();
 		initializeSelectedPointsEvents();
 		initializeModeLabelsCallbacks();
 		initializeOtherLabelsCallbacks();
 
-		Tween.call(new TweenCallback() {
+		final Tween reloadTimer = Tween.call(new TweenCallback() {
 			@Override public void onEvent(int type, BaseTween<?> source) {
 				updateButtons();
 			}
 		}).repeat(-1, 0.3f).start(tweenManager);
+
+		canvas.addListener(new Canvas.Listener() {
+			@Override public void modeChanged(Canvas.Mode mode) {
+				if (mode == Canvas.Mode.BODIES) reloadTimer.resume();
+				else reloadTimer.pause();
+			}
+		});
 	}
+
+	private final InputProcessor modeInputProcessor = new InputAdapter() {
+		@Override
+		public boolean keyDown(int keycode) {
+			if (Ctx.bodies.getSelectedModel() != null) {
+				if (keycode == Input.Keys.TAB) setNextMode();
+			}
+
+			return false;
+		}
+	};
+
+	private final InputProcessor buttonsInputProcessor = new InputAdapter() {
+		@Override
+		public boolean touchDown(int x, int y, int pointer, int button) {
+			if (button == Input.Buttons.LEFT) {
+				for (Label label : labels) if (label.touchDown(x, y)) return true;
+			}
+			return false;
+		}
+
+		@Override
+		public boolean touchMoved(int x, int y) {
+			for (Label label : labels) label.touchMoved(x, y);
+			return false;
+		}
+	};
 
 	// -------------------------------------------------------------------------
 	// Init
@@ -296,6 +333,9 @@ public class RigidBodiesScreen {
 		timeAcc -= Gdx.graphics.getDeltaTime();
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 
+		canvas.drawer.drawBoundingBox(bodySprite);
+		canvas.drawer.drawAxis();
+
 		canvas.batch.setProjectionMatrix(canvas.worldCamera.combined);
 		canvas.batch.begin();
 		if (bodySprite != null && Settings.isImageDrawn) bodySprite.draw(canvas.batch);
@@ -309,11 +349,19 @@ public class RigidBodiesScreen {
 		}
 		canvas.batch.end();
 
-		rbsDrawer.draw(bodySprite);
+		canvas.drawer.drawModel(Ctx.bodies.getSelectedModel(), selectedPoints, nextPoint, nearestPoint);
+		canvas.drawer.drawGrid();
+		canvas.drawer.drawMouseSelection(mouseSelectionP1, mouseSelectionP2);
+		drawer.drawBallThrowPath(ballThrowP1, ballThrowP2);
 
 		if (Settings.isPhysicsDebugEnabled) {
 			debugRdr.render(world, canvas.worldCamera.combined);
 		}
+
+		canvas.batch.setProjectionMatrix(canvas.screenCamera.combined);
+		canvas.batch.begin();
+		for (Label lbl : labels) lbl.draw(canvas.batch);
+		canvas.batch.end();
 	}
 
 	// -------------------------------------------------------------------------
@@ -578,15 +626,10 @@ public class RigidBodiesScreen {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return;
 
-		if (model.isImagePathValid()) {
-			File texFile = Ctx.io.getImageFile(model.getImagePath());
-			if (texFile == null) return;
-			TextureRegion tex = TextureUtils.getPOTTexture(texFile.getPath());
-			bodySprite = new Sprite(tex);
-		} else {
-			bodySprite = new Sprite(Assets.inst().get("res/data/unknown.png", Texture.class));
-		}
+		TextureRegion region = Assets.inst().getRegion(model);
+		if (region == null) return;
 
+		bodySprite = new Sprite(region);
 		bodySprite.setPosition(0, 0);
 		bodySprite.setColor(1, 1, 1, 0.5f);
 
@@ -637,55 +680,4 @@ public class RigidBodiesScreen {
 		createBody();
 		createBodySprite();
 	}
-
-	// -------------------------------------------------------------------------
-	// Inputs
-	// -------------------------------------------------------------------------
-
-	private final InputProcessor creationInputProcessor;
-	private final InputProcessor editionInputProcessor;
-	private final InputProcessor testInputProcessor;
-
-	private final InputProcessor modeInputProcessor = new InputAdapter() {
-		@Override
-		public boolean keyDown(int keycode) {
-			if (Ctx.bodies.getSelectedModel() != null) {
-				if (keycode == Input.Keys.TAB) setNextMode();
-			}
-
-			return false;
-		}
-	};
-
-	private final InputProcessor buttonsInputProcessor = new InputAdapter() {
-		@Override
-		public boolean touchDown(int x, int y, int pointer, int button) {
-			y = Gdx.graphics.getHeight() - y - 1;
-			if (lblModeCreation.touchDown(x, y)) return true;
-			if (lblModeEdition.touchDown(x, y)) return true;
-			if (lblModeTest.touchDown(x, y)) return true;
-			if (lblSetImage.touchDown(x, y)) return true;
-			if (lblClearImage.touchDown(x, y)) return true;
-			if (lblAutoTrace.touchDown(x, y)) return true;
-			if (lblClearVertices.touchDown(x, y)) return true;
-			if (lblInsertVertices.touchDown(x, y)) return true;
-			if (lblRemoveVertices.touchDown(x, y)) return true;
-			return false;
-		}
-
-		@Override
-		public boolean touchMoved(int x, int y) {
-			y = Gdx.graphics.getHeight() - y - 1;
-			lblModeCreation.touchMoved(x, y);
-			lblModeEdition.touchMoved(x, y);
-			lblModeTest.touchMoved(x, y);
-			lblSetImage.touchMoved(x, y);
-			lblClearImage.touchMoved(x, y);
-			lblAutoTrace.touchMoved(x, y);
-			lblClearVertices.touchMoved(x, y);
-			lblInsertVertices.touchMoved(x, y);
-			lblRemoveVertices.touchMoved(x, y);
-			return false;
-		}
-	};
 }
