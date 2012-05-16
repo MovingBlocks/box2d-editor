@@ -25,7 +25,7 @@ public class JsonIo {
 		for (RigidBodyModel model : Ctx.bodies.getModels()) {
 			json.object();
 			json.key("name").value(model.getName());
-			json.key("imagePath").value(FilenameUtils.normalize(model.getImagePath(), true));
+			json.key("imagePath").value(FilenameUtils.separatorsToUnix(model.getImagePath()));
 			json.key("origin").object().key("x").value(model.getOrigin().x).key("y").value(model.getOrigin().y).endObject();
 			json.key("polygons").array();
 
@@ -92,7 +92,7 @@ public class JsonIo {
 			model.setName(bodyElem.getString("name"));
 
 			String imgPath = bodyElem.isNull("imagePath") ? null : bodyElem.getString("imagePath");
-			model.setImagePath(FilenameUtils.normalize(imgPath));
+			model.setImagePath(FilenameUtils.separatorsToSystem(imgPath));
 
 			JSONObject originElem = bodyElem.getJSONObject("origin");
 			model.getOrigin().x = (float) originElem.getDouble("x");
