@@ -86,7 +86,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void checkUpdates() {
-		final String version = "2.9.1";
+		final String version = "2.9.2";
 		versionLabel.setText("v" + version + " (checking for updates)");
 		versionLabel.setIcon(Res.getImage("gfx/ic_loading.gif"));
 
@@ -128,7 +128,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		MouseListener mouseListener = new MouseAdapter() {
 			@Override public void mousePressed(MouseEvent e) {
-				SwingHelper.browse(MainWindow.this, "http://www.aurelienribon.com/blog/projects/physics-body-editor/");
+				SwingHelper.browse(MainWindow.this, "http://code.google.com/p/box2d-editor/downloads/list");
 			}
 		};
 
