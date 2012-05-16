@@ -9,7 +9,6 @@ import aurelienribon.ui.css.swing.SwingStyle;
 import aurelienribon.utils.io.HttpUtils;
 import aurelienribon.utils.ui.SwingHelper;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 import res.Res;
 
@@ -49,13 +46,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(versionLabel, ".versionLabel");
 		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
 
-		JLabel commingSoonLabel = new JLabel(Res.getImage("gfx/comingSoon.png"));
-		JPanel dummyPanel = new JPanel(new BorderLayout());
-		dummyPanel.setBackground(Color.WHITE);
-		dummyPanel.add(commingSoonLabel, BorderLayout.CENTER);
-
 		objectsPanel.getModel().add(new RigidBodiesPanel(), "Rigid bodies", null, false);
-		objectsPanel.getModel().add(dummyPanel, "Dynamic objects", null, false);
+		objectsPanel.getModel().add(new DynamicObjectsPanel(), "Dynamic objects", null, false);
 		objectsPanel.setHeaderLayout(TabPanel.LAYOUT_GRID);
 
 		logoWebsiteLbl.addMouseListener(new MouseAdapter() {
@@ -191,7 +183,7 @@ public class MainWindow extends javax.swing.JFrame {
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logoWebsiteLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logoManualLbl)))
