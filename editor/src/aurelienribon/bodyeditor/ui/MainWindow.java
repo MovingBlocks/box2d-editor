@@ -92,12 +92,10 @@ public class MainWindow extends javax.swing.JFrame {
 		final HttpUtils.Callback callback = new HttpUtils.Callback() {
 			@Override public void canceled() {}
 			@Override public void updated(int length, int totalLength) {}
-
 			@Override public void completed() {
 				try {testUpdate(version, stream.toString("UTF-8"));}
 				catch (UnsupportedEncodingException ex) {throw new RuntimeException(ex);}
 			}
-
 			@Override public void error(IOException ex) {
 				versionLabel.setText("v" + version + " (connection error)");
 				versionLabel.setIcon(Res.getImage("gfx/ic_error.png"));
