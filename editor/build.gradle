@@ -20,11 +20,10 @@ dependencies {
 }
 
 sourceSets {
-    main {
-        java.srcDirs = ["src"]
-    }
-    res {
-        resources.srcDirs = ["res"]
+	main {
+        java.srcDirs = ["src/main/java"]
+		resources.srcDirs = ["src/main/resources"]
+		output.resourcesDir 'build/classes'
     }
 }
 
@@ -51,4 +50,14 @@ task run(type: JavaExec) {
     standardInput = System.in
     workingDir = project(':editor').projectDir
     ignoreExitValue = true
+}
+
+idea {
+    module {
+        // Change around the output a bit
+        inheritOutputDirs = false
+        outputDir = file('build/classes')
+        testOutputDir = file('build/testClasses')
+        downloadSources = true
+    }
 }

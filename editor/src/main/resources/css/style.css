@@ -1,0 +1,170 @@
+/*******************************************************************************
+ * General
+ ******************************************************************************/
+
+.rootPanel {
+	-ar-fill: texture(url("/res/gfx/bg.png"));
+}
+
+javax-swing-JScrollPane {
+	-swing-border: null;
+}
+
+javax-swing-JButton {
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 5;
+}
+
+javax-swing-JToolBar javax-swing-JButton {
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 1;
+}
+
+javax-swing-JToolBar,
+javax-swing-JButton,
+javax-swing-JCheckBox,
+javax-swing-JSlider{
+	-swing-opaque: false;
+}
+
+/*******************************************************************************
+ * Groups
+ ******************************************************************************/
+
+.titledPanel {
+	-swing-background: #FFF;
+	-swing-border: arui-groupborder(noarg);
+	-ar-border-stroke: null;
+	-ar-border-thickness: 0;
+	-ar-border-header-stroke: null;
+	-ar-border-header-thickness: 0;
+	-ar-border-header-fill: lineargradient(0, 0, 0, 1, 0, #4D6082, 1, #3D5277);
+	-ar-border-margin: 3 6;
+	-ar-border-foreground: #FFF;
+}
+
+#projectPanel {
+	-ar-border-title: "Project configuration";
+}
+
+#optionsPanel {
+	-ar-border-title: "Options";
+}
+
+/*******************************************************************************
+ * Headers
+ ******************************************************************************/
+
+.headerPanel {
+	-swing-background: #BBC8D8;
+}
+
+.headerPanel javax-swing-JLabel {
+	-swing-font-size: 10;
+	-swing-border: emptyborder(2, 5, 2, 5);
+	-swing-foreground: #3D5277;
+	-swing-verticalalignment: top;
+}
+
+.headerPanel javax-swing-JButton {
+	-swing-font-size: 10;
+	-swing-foreground: #3D5277;
+}
+
+.headerPanel javax-swing-JButton:disabled {
+	-swing-foreground: #888;
+}
+
+/*******************************************************************************
+ * Config panels
+ ******************************************************************************/
+
+.configPanel aurelienribon-ui-components-PaintedPanel {
+	-swing-opaque: false;
+	-ar-fill: #3FFF;
+}
+
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JLabel,
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JCheckBox {
+	-swing-foreground: #FFF;
+}
+
+.configPanel .bigLabel {
+	-swing-foreground: #FFF;
+	-swing-horizontalalignment: center;
+}
+
+/*******************************************************************************
+ * TabPanel
+ ******************************************************************************/
+
+aurelienribon-ui-components-TabPanel {
+	-swing-background: #BBC8D8;
+}
+
+aurelienribon-ui-components-TabPanel .-ar-tabcontent {
+	-swing-background: #FFF;
+}
+
+aurelienribon-ui-components-TabPanel .-ar-header {
+	-ar-stroke: null;
+}
+
+aurelienribon-ui-components-TabPanel .-ar-tab {
+	-swing-foreground: #FFF;
+	-ar-stroke: null;
+	-ar-fill: null;
+}
+
+aurelienribon-ui-components-TabPanel .-ar-tab:hover {
+	-ar-stroke: #9BA7B7;
+	-ar-fill: lineargradient(0, 0, 0, 1, 0, #6F7776, 1, #4F5F74);
+}
+
+aurelienribon-ui-components-TabPanel .-ar-tab:selected {
+	-ar-stroke: null;
+	-ar-fill: lineargradient(0, 0, 0, 1, 0, #4D6082, 1, #3D5277);
+}
+
+/*******************************************************************************
+ * Misc
+ ******************************************************************************/
+
+.leftPanel {
+	-swing-border: matteborder(0, 0, 0, 1, #000);
+}
+
+.brightlink {
+	-swing-foreground: #FFF;
+}
+
+.brightlink:hover {
+	-swing-foreground: #AAF;
+}
+
+.darklink {
+	-swing-foreground: #228;
+}
+
+.darklink:hover {
+	-swing-foreground: #003;
+}
+
+.bold {
+	-swing-font-style: bold;
+}
+
+.brightcomment {
+	-swing-foreground: #AAA;
+}
+
+.versionLabel {
+	-swing-foreground: #000;
+	-swing-border: emptyborder(2, 10, 2, 10);
+	-swing-font-size: 10;
+}
+
+.versionPanel {
+	-swing-background: #FFF;
+	-swing-border: matteborder(1, 0, 0, 0, #2A3B57);
+}
