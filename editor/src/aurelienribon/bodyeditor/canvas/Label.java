@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -28,6 +29,7 @@ public class Label {
 	private final BitmapFont font;
 	private final Color color;
 	private final Anchor anchor;
+    private GlyphLayout layout = new GlyphLayout();
 
 	private final TweenManager tweenManager = new TweenManager();
 	private final Sprite bg;
@@ -139,7 +141,10 @@ public class Label {
 		float sh = Gdx.graphics.getHeight();
 		float x = isAnchorLeft() ? offsetX : sw-w-offsetX;
 		float bgX = isAnchorLeft() ? x - w/10 : x;
-		float textH = font.getBounds(text).height;
+
+        layout.setText(font, text);
+        float width = layout.width;// contains the width of the current set text
+        float textH = layout.height; // contains the height of the current set text
 
 		bg.setPosition(bgX, sh - y);
 		bg.draw(batch);

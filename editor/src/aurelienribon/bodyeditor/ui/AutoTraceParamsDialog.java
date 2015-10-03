@@ -1,12 +1,11 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import res.Res;
+import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/

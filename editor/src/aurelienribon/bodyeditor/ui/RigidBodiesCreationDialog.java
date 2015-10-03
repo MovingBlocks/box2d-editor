@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import net.java.balloontip.BalloonTip;
-import res.Res;
+import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/

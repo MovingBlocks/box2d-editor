@@ -31,7 +31,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import res.Res;
+import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/

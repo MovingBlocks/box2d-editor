@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import org.apache.commons.io.FilenameUtils;
-import res.Res;
+import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/

@@ -1,4 +1,4 @@
-package res;
+package aurelienribon;
 
 import java.io.InputStream;
 import java.net.URL;

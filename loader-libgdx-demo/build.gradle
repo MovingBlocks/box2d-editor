@@ -1,0 +1,36 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+
+    compile files('./libs/tween-engine-api.jar')
+
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ["src"]
+    }
+    res {
+        resources.srcDirs = ["res"]
+    }
+}
+
+jar {
+    archiveName = "loader-libgdx-demo.jar"
+
+//    doFirst {
+//        copy {
+//            from 'src/SolAppListener.gwt.xml'
+//            into 'build/classes/main'
+//        }
+//    }
+}
+
+eclipse.project {
+    name = appName + "-loader-libgdx-demo"
+}

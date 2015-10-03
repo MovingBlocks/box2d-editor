@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Timer;
-import res.Res;
+import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
