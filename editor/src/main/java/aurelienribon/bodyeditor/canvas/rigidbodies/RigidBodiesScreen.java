@@ -667,7 +667,7 @@ public class RigidBodiesScreen {
 
 		b.createFixture(fd);
 
-		Sprite sp = new Sprite(Assets.inst().get("res/data/ball.png", Texture.class));
+		Sprite sp = new Sprite(Assets.inst().get("data/ball.png", Texture.class));
 		sp.setSize(radius*2, radius*2);
 		sp.setOrigin(sp.getWidth()/2, sp.getHeight()/2);
 		ballsSprites.add(sp);

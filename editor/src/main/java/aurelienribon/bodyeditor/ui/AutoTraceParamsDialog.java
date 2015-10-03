@@ -159,7 +159,7 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
         commentLabel.setText("<html>\nOnly check multi-part detection or hole detection if your image needs it.<br/>\nRemember that auto-trace is less precise than manually placed points.");
         commentLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/autoTrace.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/autoTrace.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

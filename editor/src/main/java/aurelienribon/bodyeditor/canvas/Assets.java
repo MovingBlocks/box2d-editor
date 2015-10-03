@@ -24,17 +24,17 @@ public class Assets extends AssetManager {
 
 	public void initialize() {
 		String[] texturesNearest = new String[] {
-			"res/data/transparent-light.png",
-			"res/data/transparent-dark.png",
-			"res/data/white.png"
+			"data/transparent-light.png",
+			"data/transparent-dark.png",
+			"data/white.png"
 		};
 
 		String[] texturesLinear = new String[] {
-			"res/data/ball.png",
-			"res/data/v00.png",
-			"res/data/v01.png",
-			"res/data/v10.png",
-			"res/data/unknown.png"
+			"data/ball.png",
+			"data/v00.png",
+			"data/v01.png",
+			"data/v10.png",
+			"data/unknown.png"
 		};
 
 		for (String tex : texturesNearest) load(tex, Texture.class);
@@ -46,7 +46,7 @@ public class Assets extends AssetManager {
 			get(tex, Texture.class).setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		}
 
-		unknownRegion = new TextureRegion(get("res/data/unknown.png", Texture.class));
+		unknownRegion = new TextureRegion(get("data/unknown.png", Texture.class));
 
 		Ctx.bodies.getModels().addListChangedListener(new ObservableList.ListChangeListener<RigidBodyModel>() {
 			@Override public void changed(Object source, List<RigidBodyModel> added, List<RigidBodyModel> removed) {

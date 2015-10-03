@@ -23,7 +23,7 @@ public class BodiesListItem {
 	private final Color bgColor;
 
 	private final TweenManager tweenManager = new TweenManager();
-	private final Sprite background = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite background = new Sprite(Assets.inst().get("data/white.png", Texture.class));
 	private final Sprite image;
 	private String text = "";
 	private boolean isTouchOver = false;

@@ -272,7 +272,7 @@ public class DynamicObjectsPanel extends javax.swing.JPanel {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        createBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_add.png"))); // NOI18N
+        createBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_add.png"))); // NOI18N
         createBtn.setText("New");
         createBtn.setToolTipText("Create a new model");
         createBtn.setFocusable(false);
@@ -280,7 +280,7 @@ public class DynamicObjectsPanel extends javax.swing.JPanel {
         createBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(createBtn);
 
-        renameBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_edit.png"))); // NOI18N
+        renameBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_edit.png"))); // NOI18N
         renameBtn.setText("Rename");
         renameBtn.setToolTipText("Change the name of the selected model");
         renameBtn.setFocusable(false);
@@ -288,21 +288,21 @@ public class DynamicObjectsPanel extends javax.swing.JPanel {
         renameBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(renameBtn);
 
-        deleteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_delete.png"))); // NOI18N
+        deleteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_delete.png"))); // NOI18N
         deleteBtn.setToolTipText("Delete the selected models");
         deleteBtn.setFocusable(false);
         deleteBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         deleteBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(deleteBtn);
 
-        upBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_up.png"))); // NOI18N
+        upBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_up.png"))); // NOI18N
         upBtn.setToolTipText("Move the selected models up");
         upBtn.setFocusable(false);
         upBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(upBtn);
 
-        downBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_down.png"))); // NOI18N
+        downBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_down.png"))); // NOI18N
         downBtn.setToolTipText("Move the selected models down");
         downBtn.setFocusable(false);
         downBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

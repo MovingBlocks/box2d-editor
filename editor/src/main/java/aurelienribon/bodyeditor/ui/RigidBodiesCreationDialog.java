@@ -37,7 +37,7 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
 		Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
 		Style.registerCssClasses(orLbl1, ".bigLabel");
 		Style.registerCssClasses(orLbl2, ".bigLabel");
-		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		Style.apply(getContentPane(), new Style(Res.getUrl("/css/style.css")));
 
 		b1CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createEmpty();}});
 		b2CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createFromImage();}});
@@ -195,7 +195,7 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         setTitle("New rigid body");
         setResizable(false);
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/newBody.png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/newBody.png"))); // NOI18N
         getContentPane().add(jLabel4, java.awt.BorderLayout.WEST);
 
         jPanel1.setOpaque(false);

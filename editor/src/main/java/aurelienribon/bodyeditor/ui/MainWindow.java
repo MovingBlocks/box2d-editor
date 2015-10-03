@@ -44,7 +44,7 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(logoManualLbl, ".brightlink", ".bold");
 		Style.registerCssClasses(versionPanel, ".versionPanel");
 		Style.registerCssClasses(versionLabel, ".versionLabel");
-		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		Style.apply(getContentPane(), new Style(Res.getUrl("/css/style.css")));
 
 		objectsPanel.getModel().add(new RigidBodiesPanel(), "Rigid bodies", null, false);
 		objectsPanel.getModel().add(new DynamicObjectsPanel(), "Dynamic objects", null, false);
@@ -80,7 +80,7 @@ public class MainWindow extends javax.swing.JFrame {
 	private void checkUpdates() {
 		final String version = "2.9.2";
 		versionLabel.setText("v" + version + " (checking for updates)");
-		versionLabel.setIcon(Res.getImage("gfx/ic_loading.gif"));
+		versionLabel.setIcon(Res.getImage("/gfx/ic_loading.gif"));
 
 		URL tmpUrl;
 		try {tmpUrl = new URL("http://www.aurelienribon.com/physics-body-editor/versions.txt");}
@@ -124,7 +124,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 		if (versionIdx == 0) {
 			versionLabel.setText("v" + version + " (latest version)");
-			versionLabel.setIcon(Res.getImage("gfx/ic_ok.png"));
+			versionLabel.setIcon(Res.getImage("/gfx/ic_ok.png"));
 		} else if (versionIdx > 0) {
 			versionLabel.setText("v" + version + " (new version available: v" + versions.get(0) + ")");
 			versionLabel.setIcon(Res.getImage("gfx/ic_warning.png"));
@@ -168,11 +168,11 @@ public class MainWindow extends javax.swing.JFrame {
         logoPanel.setOpaque(false);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/title.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/title.png"))); // NOI18N
 
         logoWebsiteLbl.setText("<html><p align=\"right\">2012 - Aurelien Ribon<br/>www.aurelienribon.com</p>");
 
-        logoManualLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_manual.png"))); // NOI18N
+        logoManualLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/ic_manual.png"))); // NOI18N
         logoManualLbl.setText("Manual");
 
         javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);

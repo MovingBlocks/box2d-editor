@@ -55,7 +55,7 @@
             <Component class="javax.swing.JButton" name="createBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_add.png"/>
+                  <Image iconType="3" name="/gfx/ic_add.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="New"/>
                 <Property name="toolTipText" type="java.lang.String" value="Create a new model"/>
@@ -67,7 +67,7 @@
             <Component class="javax.swing.JButton" name="renameBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_edit.png"/>
+                  <Image iconType="3" name="/gfx/ic_edit.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Rename"/>
                 <Property name="toolTipText" type="java.lang.String" value="Change the name of the selected model"/>
@@ -79,7 +79,7 @@
             <Component class="javax.swing.JButton" name="deleteBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_delete.png"/>
+                  <Image iconType="3" name="/gfx/ic_delete.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Delete the selected models"/>
                 <Property name="focusable" type="boolean" value="false"/>
@@ -90,7 +90,7 @@
             <Component class="javax.swing.JButton" name="upBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_up.png"/>
+                  <Image iconType="3" name="/gfx/ic_up.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Move the selected models up"/>
                 <Property name="focusable" type="boolean" value="false"/>
@@ -101,7 +101,7 @@
             <Component class="javax.swing.JButton" name="downBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_down.png"/>
+                  <Image iconType="3" name="/gfx/ic_down.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Move the selected models down"/>
                 <Property name="focusable" type="boolean" value="false"/>
@@ -122,7 +122,7 @@
             <Component class="javax.swing.JButton" name="repairBtn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_wrench.png"/>
+                  <Image iconType="3" name="/gfx/ic_wrench.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Repair all image paths"/>
                 <Property name="focusable" type="boolean" value="false"/>

@@ -41,9 +41,9 @@ public class CanvasDrawer {
 		this.batch = batch;
 		this.camera = camera;
 
-		v00Sprite = new Sprite(Assets.inst().get("res/data/v00.png", Texture.class));
-		v10Sprite = new Sprite(Assets.inst().get("res/data/v10.png", Texture.class));
-		v01Sprite = new Sprite(Assets.inst().get("res/data/v01.png", Texture.class));
+		v00Sprite = new Sprite(Assets.inst().get("data/v00.png", Texture.class));
+		v10Sprite = new Sprite(Assets.inst().get("data/v10.png", Texture.class));
+		v01Sprite = new Sprite(Assets.inst().get("data/v01.png", Texture.class));
 		v00Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		v10Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		v01Sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

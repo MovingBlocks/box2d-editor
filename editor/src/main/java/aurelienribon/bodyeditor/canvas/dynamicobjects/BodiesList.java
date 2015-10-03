@@ -25,7 +25,7 @@ import java.util.List;
 public class BodiesList {
 	private final Canvas canvas;
 	private final List<BodiesListItem> items = new ArrayList<BodiesListItem>();
-	private final Sprite background = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+	private final Sprite background = new Sprite(Assets.inst().get("data/white.png", Texture.class));
 	private final MutableFloat offsetX = new MutableFloat(0);
 
 	private final TweenManager tweenManager = new TweenManager();

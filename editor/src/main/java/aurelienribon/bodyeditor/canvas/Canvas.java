@@ -56,10 +56,10 @@ public class Canvas extends ApplicationAdapter {
 		font = new BitmapFont();
 		drawer = new CanvasDrawer(batch, worldCamera);
 
-		backgroundTexture = Assets.inst().get("res/data/transparent-light.png", Texture.class);
+		backgroundTexture = Assets.inst().get("data/transparent-light.png", Texture.class);
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-		infoLabel = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+		infoLabel = new Sprite(Assets.inst().get("data/white.png", Texture.class));
 		infoLabel.setPosition(0, 0);
 		infoLabel.setSize(120, 60);
 		infoLabel.setColor(new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f));

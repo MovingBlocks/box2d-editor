@@ -113,7 +113,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/title.png"/>
+                  <Image iconType="3" name="/gfx/title.png"/>
                 </Property>
               </Properties>
             </Component>
@@ -125,7 +125,7 @@
             <Component class="javax.swing.JLabel" name="logoManualLbl">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/res/gfx/ic_manual.png"/>
+                  <Image iconType="3" name="/gfx/ic_manual.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Manual"/>
               </Properties>

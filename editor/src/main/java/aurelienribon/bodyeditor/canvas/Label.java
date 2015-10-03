@@ -47,7 +47,7 @@ public class Label {
 		this.color = color;
 		this.anchor = anchor;
 
-		this.bg = new Sprite(Assets.inst().get("res/data/white.png", Texture.class));
+		this.bg = new Sprite(Assets.inst().get("data/white.png", Texture.class));
 		bg.setSize(w*11/10, h);
 		bg.setColor(color);
 
