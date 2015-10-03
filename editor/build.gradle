@@ -2,7 +2,7 @@ apply plugin: "java"
 
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
+project.ext.mainClassName = "aurelienribon.bodyeditor.ui.Main"
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
@@ -41,4 +41,14 @@ jar {
 
 eclipse.project {
     name = appName + "-editor"
+}
+
+task run(type: JavaExec) {
+    dependsOn classes
+
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project(':editor').projectDir
+    ignoreExitValue = true
 }
