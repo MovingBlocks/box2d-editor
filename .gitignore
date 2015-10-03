@@ -1,2 +1,96 @@
-tmp/
+## General
+hs_err_pid*
+.gradle
+
+## Ignored sub-projects with nested Git roots
+android
+gwt
+
+## GWT
+war/
+html/war/gwt_bree/
+html/gwt-unitCache/
+.apt_generated/
+html/war/WEB-INF/deploy/
+html/war/WEB-INF/classes/
+.gwt/
+gwt-unitCache/
+www-test/
+.gwt-tmp/
+
+## Intellij
 .idea/
+*.ipr
+*.iws
+*.iml
+out/
+
+# This prop file contains a sdk.dir meant to point to your local Android SDK
+local.properties
+
+## Eclipse
+.classpath
+.project
+.metadata
+**/bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+
+## NetBeans
+**/nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+## OS Specific
+.DS_Store
+Icon
+ehthumbs.db
+Thumbs.db
+
+tmp/
+*.zip
+.idea/
+.gradle/
+gradle/
+
+editor/manifest.mf
+editor/nbbuild.xml
+editor/build/*
+editor/dist/*
+editor/nbproject/*
+editor/bin/*
+editor/.classpath
+editor/.project
+editor/*.jar
+
+loader-libgdx/manifest.mf
+loader-libgdx/nbbuild.xml
+loader-libgdx/build/*
+loader-libgdx/dist/*
+loader-libgdx/nbproject/*
+loader-libgdx/bin/*
+loader-libgdx/.classpath
+loader-libgdx/.project
+loader-libgdx/*.jar
+
+loader-libgdx-demo/manifest.mf
+loader-libgdx-demo/nbbuild.xml
+loader-libgdx-demo/build/*
+loader-libgdx-demo/dist/*
+loader-libgdx-demo/nbproject/*
+loader-libgdx-demo/bin/*
+loader-libgdx-demo/.classpath
+loader-libgdx-demo/.project
+loader-libgdx-demo/*.jar
