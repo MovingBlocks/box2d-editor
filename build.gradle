@@ -2,14 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        // Git plugin for Gradle
-        classpath 'org.ajoberstar:gradle-git:0.6.3'
-    }
 }
-
-// Git plugin details at https://github.com/ajoberstar/gradle-git
-import org.ajoberstar.gradle.git.tasks.*
 
 allprojects {
     apply plugin: "eclipse"
@@ -41,51 +34,3 @@ tasks.eclipse.doLast {
 cleanIdea.doLast {
     new File('box2d-editor.iws').delete()
 }
-
-//task (fetchAndroid, type: GitClone) {
-//    description = 'Git clones the Android facade source from GitHub'
-//
-//    // Repo name is the dynamic part of the task name
-//    def repo = 'DestSolAndroid'
-//
-//    // Default GitHub account to use. Supply with -PgithubAccount="TargetAccountName" or via gradle.properties
-//    def githubHome = 'MovingBlocks'
-//
-//    def destination = file('android')
-//
-//    // Don't clone this repo if we already have a directory by that name (also determines Gradle UP-TO-DATE)
-//    enabled = !destination.exists()
-//    //println "fetchAndroid requested for $repo from Github under $githubHome - exists already? " + !enabled
-//
-//    // Do the actual clone if we don't have the directory already
-//    if (enabled) {
-//        uri = "https://github.com/$githubHome/" + repo + ".git"
-//        //println "Fetching $repo from $uri"
-//        destinationPath = destination
-//        bare = false
-//    }
-//}
-
-//task (fetchGwt, type: GitClone) {
-//    description = 'Git clones the GWT facade source from GitHub'
-//
-//    // Repo name is the dynamic part of the task name
-//    def repo = 'DestSolGwt'
-//
-//    // Default GitHub account to use. Supply with -PgithubAccount="TargetAccountName" or via gradle.properties
-//    def githubHome = 'MovingBlocks'
-//
-//    def destination = file('gwt')
-//
-//    // Don't clone this repo if we already have a directory by that name (also determines Gradle UP-TO-DATE)
-//    enabled = !destination.exists()
-//    //println "fetchGwt requested for $repo from Github under $githubHome - exists already? " + !enabled
-//
-//    // Do the actual clone if we don't have the directory already
-//    if (enabled) {
-//        uri = "https://github.com/$githubHome/" + repo + ".git"
-//        //println "Fetching $repo from $uri"
-//        destinationPath = destination
-//        bare = false
-//    }
-//}
