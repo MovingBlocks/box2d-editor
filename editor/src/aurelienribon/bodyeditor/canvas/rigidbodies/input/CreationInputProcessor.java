@@ -74,12 +74,12 @@ public class CreationInputProcessor extends InputAdapter {
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
 		if (!touchDown) return false;
-		touchMoved(x, y);
+		mouseMoved(x, y);
 		return false;
 	}
 
-	@Override
-	public boolean touchMoved(int x, int y) {
+	@Override // possibly mouseMoved?
+	public boolean mouseMoved(int x, int y) {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 

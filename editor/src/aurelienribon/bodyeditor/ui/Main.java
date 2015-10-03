@@ -27,7 +27,7 @@ public class Main {
 				} catch (UnsupportedLookAndFeelException ex) {
 				}
 
-				LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), false);
+				LwjglCanvas glCanvas = new LwjglCanvas(new Canvas());
 				MainWindow mw = Ctx.window;
 
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

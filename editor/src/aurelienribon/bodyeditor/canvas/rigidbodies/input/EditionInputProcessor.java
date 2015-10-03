@@ -116,7 +116,7 @@ public class EditionInputProcessor extends InputAdapter {
 	}
 
 	@Override
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		if (model == null) return false;
 

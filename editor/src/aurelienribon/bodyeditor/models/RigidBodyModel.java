@@ -90,7 +90,7 @@ public class RigidBodyModel extends ChangeableObject {
 
 			} if (shape.getType() == ShapeModel.Type.CIRCLE) {
 				Vector2 center = shape.getVertices().get(0);
-				float radius = Math.abs(shape.getVertices().get(1).tmp().sub(center).len());
+				float radius = Math.abs(shape.getVertices().get(1).cpy().sub(center).len());
 				circles.add(new CircleModel(center, radius));
 			}
 		}

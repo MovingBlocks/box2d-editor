@@ -6,6 +6,7 @@ import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -46,7 +47,7 @@ public class TestInputProcessor extends InputAdapter {
 		Vector2 p1 = screen.ballThrowP1;
 		Vector2 p2 = screen.ballThrowP2;
 		Vector2 delta = new Vector2(p2).sub(p1);
-		screen.fireBall(p1, delta.mul(3));
+		screen.fireBall(p1, delta.mul(new Matrix3(new float[]{3f,3f,3f})));//TODO possible bug
 
 		screen.ballThrowP1 = null;
 		screen.ballThrowP2 = null;

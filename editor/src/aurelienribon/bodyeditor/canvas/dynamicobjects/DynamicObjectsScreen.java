@@ -41,7 +41,7 @@ public class DynamicObjectsScreen {
 	}
 
 	private final InputProcessor bodiesListInputProcessor = new InputAdapter() {
-		@Override
+		//@Override
 		public boolean touchMoved(int x, int y) {
 			bodiesList.touchMoved(x, y);
 			return false;

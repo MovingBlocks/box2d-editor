@@ -127,7 +127,7 @@ public class CanvasDrawer {
 		Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
 		Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
 
-		drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
 		drawer.setColor(AXIS_COLOR);
 		drawer.rect(0, 0, w, h);
 		drawer.end();
@@ -217,18 +217,19 @@ public class CanvasDrawer {
 				case CIRCLE:
 					if (shape.isClosed()) {
 						Vector2 center = shape.getVertices().get(0);
-						float radius = shape.getVertices().get(1).tmp().sub(center).len();
+						float radius = shape.getVertices().get(1).cpy().sub(center).len();
 						if (radius > 0.0001f) {
-							drawer.begin(ShapeRenderer.ShapeType.Circle);
+							drawer.begin(ShapeRenderer.ShapeType.Line);
 							drawer.setColor(SHAPE_COLOR);
 							drawer.circle(center.x, center.y, radius, 20);
 							drawer.end();
 						}
 					} else {
 						Vector2 center = shape.getVertices().get(0);
-						float radius = nextPoint.tmp().sub(center).len();
+                        float radius = nextPoint.cpy().sub(center).len();
+
 						if (radius > 0.0001f) {
-							drawer.begin(ShapeRenderer.ShapeType.Circle);
+							drawer.begin(ShapeRenderer.ShapeType.Line);
 							drawer.setColor(SHAPE_LASTLINE_COLOR);
 							drawer.circle(center.x, center.y, radius, 20);
 							drawer.end();
@@ -249,12 +250,12 @@ public class CanvasDrawer {
 		for (ShapeModel shape : shapes) {
 			for (Vector2 p : shape.getVertices()) {
 				if (p == nearestPoint || (selectedPoints != null && selectedPoints.contains(p))) {
-					drawer.begin(ShapeRenderer.ShapeType.FilledRectangle);
+					drawer.begin(ShapeRenderer.ShapeType.Filled);
 					drawer.setColor(SHAPE_COLOR);
-					drawer.filledRect(p.cpy().sub(w/2, w/2).x, p.cpy().sub(w/2, w/2).y, w, w);
+					drawer.rect(p.cpy().sub(w / 2, w / 2).x, p.cpy().sub(w / 2, w / 2).y, w, w);
 					drawer.end();
 				} else {
-					drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+					drawer.begin(ShapeRenderer.ShapeType.Line);
 					drawer.setColor(SHAPE_COLOR);
 					drawer.rect(p.cpy().sub(w/2, w/2).x, p.cpy().sub(w/2, w/2).y, w, w);
 					drawer.end();
@@ -263,7 +264,7 @@ public class CanvasDrawer {
 		}
 
 		if (nextPoint != null) {
-			drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+			drawer.begin(ShapeRenderer.ShapeType.Line);
 			drawer.setColor(SHAPE_LASTLINE_COLOR);
 			drawer.rect(nextPoint.cpy().sub(w/2, w/2).x, nextPoint.cpy().sub(w/2, w/2).y, w, w);
 			drawer.end();
@@ -302,14 +303,14 @@ public class CanvasDrawer {
 		drawer.end();
 
 		if (nearestPoint != o) {
-			drawer.begin(ShapeRenderer.ShapeType.Circle);
+			drawer.begin(ShapeRenderer.ShapeType.Line);
 			drawer.setColor(ORIGIN_COLOR);
 			drawer.circle(o.x, o.y, radius, 20);
 			drawer.end();
 		} else {
-			drawer.begin(ShapeRenderer.ShapeType.FilledCircle);
+			drawer.begin(ShapeRenderer.ShapeType.Filled);
 			drawer.setColor(ORIGIN_COLOR);
-			drawer.filledCircle(o.x, o.y, radius, 20);
+			drawer.circle(o.x, o.y, radius, 20);
 			drawer.end();
 		}
 	}
@@ -324,12 +325,12 @@ public class CanvasDrawer {
 			Math.abs(x2 - x1), Math.abs(y2 - y1)
 		);
 
-		drawer.begin(ShapeRenderer.ShapeType.FilledRectangle);
+		drawer.begin(ShapeRenderer.ShapeType.Filled);
 		drawer.setColor(MOUSESELECTION_FILL_COLOR);
-		drawer.filledRect(rect.x, rect.y, rect.width, rect.height);
+		drawer.rect(rect.x, rect.y, rect.width, rect.height);
 		drawer.end();
 
-		drawer.begin(ShapeRenderer.ShapeType.Rectangle);
+		drawer.begin(ShapeRenderer.ShapeType.Line);
 		drawer.setColor(MOUSESELECTION_STROKE_COLOR);
 		drawer.rect(rect.x, rect.y, rect.width, rect.height);
 		drawer.end();

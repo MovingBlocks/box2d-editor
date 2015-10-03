@@ -42,6 +42,8 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -166,7 +168,7 @@ public class RigidBodiesScreen {
 			return false;
 		}
 
-		@Override
+		//@Override //TODO possibly mouseMoved? replace elsewhere as well
 		public boolean touchMoved(int x, int y) {
 			for (Label label : labels) label.touchMoved(x, y);
 			return false;
@@ -572,7 +574,8 @@ public class RigidBodiesScreen {
 	private void clearWorld() {
 		ballsBodies.clear();
 		ballsSprites.clear();
-		Iterator<Body> bodies = world.getBodies();
+		Iterator<Body> bodies = null;
+		world.getBodies((Array<Body>) bodies);
 		while (bodies.hasNext()) world.destroyBody(bodies.next());
 	}
 
@@ -649,7 +652,7 @@ public class RigidBodiesScreen {
 		bd.angle = rand.nextFloat() * MathUtils.PI;
 
 		Body b = world.createBody(bd);
-		b.applyLinearImpulse(force, orig);
+		b.applyLinearImpulse(force, orig, true);//TODO probably a bug
 
 		ballsBodies.add(b);
 

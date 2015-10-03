@@ -12,7 +12,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -114,9 +113,8 @@ public class Canvas extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
-		GL10 gl = Gdx.gl10;
-		gl.glClearColor(1, 1, 1, 1);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl30.glClearColor(1, 1, 1, 1);
+		Gdx.gl30.glClear(Gdx.gl30.GL_COLOR_BUFFER_BIT);
 
 		batch.setProjectionMatrix(screenCamera.combined);
 		batch.begin();
@@ -141,8 +139,7 @@ public class Canvas extends ApplicationAdapter {
 
 	@Override
 	public void resize(int width, int height) {
-		GL10 gl = Gdx.gl10;
-		gl.glViewport(0, 0, width, height);
+		Gdx.gl30.glViewport(0, 0, width, height);
 		resetCameras();
 	}
 

@@ -9,10 +9,7 @@ import aurelienribon.utils.gdx.SpriteUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -51,11 +48,12 @@ public class BodiesListItem {
 		} else {
 			image = null;
 		}
-
-		if (font.getBounds(text).width > w-p*2) {
+        GlyphLayout glyph = new GlyphLayout();
+        glyph.setText(font, text);
+		if (glyph.width > w-p*2) {
 			for (int i=1; i<=model.getName().length(); i++) {
 				text = model.getName().substring(0, i) + "...";
-				if (font.getBounds(text).width > w-p*2) {
+				if (glyph.width > w-p*2) {
 					text = model.getName().substring(0, i-1) + "...";
 					break;
 				}
