@@ -8,7 +8,7 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
-
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 
     compile "net.java.balloontip:balloontip:1.2.1"
     compile "commons-io:commons-io:2.1"

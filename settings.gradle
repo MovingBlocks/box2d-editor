@@ -1,4 +1,4 @@
-include 'editor', 'loader-libgdx', 'loader-libgdx-demo'
+include 'editor'//, 'loader-libgdx', 'loader-libgdx-demo'
 
 //File androidGradle = new File(rootDir, 'android/build.gradle')
 //if (androidGradle.exists()) {

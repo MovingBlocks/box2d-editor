@@ -128,14 +128,14 @@ public class ProjectPanel extends javax.swing.JPanel {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        newBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_new.png"))); // NOI18N
+        newBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("res/gfx/ic_open.png"))); // NOI18N
         newBtn.setText("New project");
         newBtn.setFocusable(false);
         newBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         newBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(newBtn);
 
-        loadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_open.png"))); // NOI18N
+        loadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("res/gfx/ic_open.png"))); // NOI18N
         loadBtn.setText("Load project");
         loadBtn.setFocusable(false);
         loadBtn.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
