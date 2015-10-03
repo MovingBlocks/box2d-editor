@@ -36,4 +36,4 @@ The application uses the following technologies:
 
 Getting Started
 --------
-[Wiki](/)
+[Wiki](https://github.com/MovingBlocks/box2d-editor/wiki)
