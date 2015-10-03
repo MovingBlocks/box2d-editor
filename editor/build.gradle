@@ -22,7 +22,11 @@ dependencies {
 
 sourceSets {
 	main {
-        java.srcDirs = ["src/main/java"]
+        java
+            {
+                srcDirs = ["src/main/java"]
+                output.classesDir 'build/classes'
+            }
 		resources.srcDirs = ["src/main/resources"]
 		output.resourcesDir 'build/classes'
     }
