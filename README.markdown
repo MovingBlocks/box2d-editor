@@ -31,9 +31,10 @@ Technologies
 The application uses the following technologies:
 
 * [LibGDX](https://github.com/libgdx/libgdx), the most awesome game dev library, for the rendering of the canvas area,
-*  [Box2d](http://box2d.org/), as the embedded physics engine (available in Java thanks to libGDX),
-*  [Farseer engine](http://farseerphysics.codeplex.com/), for its auto-trace and polygon decomposition algorithms.
+* [Box2d](http://box2d.org/), as the embedded physics engine (available in Java thanks to libGDX),
+* [Farseer engine](http://farseerphysics.codeplex.com/), for its auto-trace and polygon decomposition algorithms.
 
 Getting Started
 --------
-[Wiki](https://github.com/MovingBlocks/box2d-editor/wiki)
+* [Wiki](https://github.com/MovingBlocks/box2d-editor/wiki)
+* [YouTube](https://youtu.be/KASY91EiTXQ)
