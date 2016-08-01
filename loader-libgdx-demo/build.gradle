@@ -6,29 +6,26 @@ sourceCompatibility = 1.8
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 
     compile files('./libs/tween-engine-api.jar')
+
+    compile project(':loader-libgdx')
 
 }
 
 sourceSets {
     main {
-        java.srcDirs = ["src"]
-    }
-    res {
-        resources.srcDirs = ["res"]
+        java.srcDirs = ["src/main/java"]
+        resources.srcDirs = ["src/main/resources"]
     }
 }
 
 jar {
     archiveName = "loader-libgdx-demo.jar"
-
-//    doFirst {
-//        copy {
-//            from 'src/SolAppListener.gwt.xml'
-//            into 'build/classes/main'
-//        }
-//    }
 }
 
 eclipse.project {
