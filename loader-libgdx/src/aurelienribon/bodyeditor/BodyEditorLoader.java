@@ -1,6 +1,7 @@
 package aurelienribon.bodyeditor;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.OrderedMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,14 +80,16 @@ public class BodyEditorLoader {
 		RigidBodyModel rbModel = model.rigidBodies.get(name);
 		if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
-		Vector2 origin = vec.set(rbModel.origin).mul(scale);
+		// TODO: Verify correct, updated method from mul to scl
+		Vector2 origin = vec.set(rbModel.origin).scl(scale);
+
 
 		for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
 			PolygonModel polygon = rbModel.polygons.get(i);
 			Vector2[] vertices = polygon.buffer;
 
 			for (int ii=0, nn=vertices.length; ii<nn; ii++) {
-				vertices[ii] = newVec().set(polygon.vertices.get(ii)).mul(scale);
+				vertices[ii] = newVec().set(polygon.vertices.get(ii)).scl(scale);
 				vertices[ii].sub(origin);
 			}
 
@@ -100,7 +104,7 @@ public class BodyEditorLoader {
 
 		for (int i=0, n=rbModel.circles.size(); i<n; i++) {
 			CircleModel circle = rbModel.circles.get(i);
-			Vector2 center = newVec().set(circle.center).mul(scale);
+			Vector2 center = newVec().set(circle.center).scl(scale);
 			float radius = circle.radius * scale;
 
 			circleShape.setPosition(center);
@@ -132,7 +136,7 @@ public class BodyEditorLoader {
 		RigidBodyModel rbModel = model.rigidBodies.get(name);
 		if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
-		return vec.set(rbModel.origin).mul(scale);
+		return vec.set(rbModel.origin).scl(scale);
 	}
 
 	/**
@@ -175,6 +179,8 @@ public class BodyEditorLoader {
 	// -------------------------------------------------------------------------
 
 	private Model readJson(String str) {
+
+		/* OUTDATED VERSION FOR AN OLDER LIBGDX
 		Model m = new Model();
 		OrderedMap<String,?> rootElem = (OrderedMap<String,?>) new JsonReader().parse(str);
 
@@ -187,19 +193,46 @@ public class BodyEditorLoader {
 		}
 
 		return m;
+*/
+
+		Model m = new Model();
+
+		JsonValue map = new JsonReader().parse(str);
+
+		JsonValue bodyElem = map.getChild("rigidBodies");
+		for (; bodyElem != null; bodyElem = bodyElem.next()) {
+			System.out.println(bodyElem.name + " = " + bodyElem.asString());
+			// TODO: Hacked for now just to get started, need to switch to only using JsonValue
+			RigidBodyModel rbModel = readRigidBody(null, bodyElem);
+			m.rigidBodies.put(rbModel.name, rbModel);
+		}
+
+		return m;
 	}
 
-	private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
+	private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem, JsonValue newBodyElem) {
 		RigidBodyModel rbModel = new RigidBodyModel();
-		rbModel.name = (String) bodyElem.get("name");
-		rbModel.imagePath = (String) bodyElem.get("imagePath");
+		//rbModel.name = (String) bodyElem.get("name");
+		rbModel.name = newBodyElem.get("name").asString();
+		System.out.println("Name was: " + rbModel.name);
 
-		OrderedMap<String,?> originElem = (OrderedMap<String,?>) bodyElem.get("origin");
-		rbModel.origin.x = (Float) originElem.get("x");
-		rbModel.origin.y = (Float) originElem.get("y");
+		//rbModel.imagePath = (String) bodyElem.get("imagePath");
+		rbModel.imagePath = newBodyElem.get("imagePath").asString();
+		System.out.println("imagePath was: " + rbModel.imagePath);
+
+		//OrderedMap<String,?> originElem = (OrderedMap<String,?>) bodyElem.get("origin");
+		JsonValue newOriginElem = newBodyElem.get("origin");
+
+		//rbModel.origin.x = (Float) originElem.get("x");
+		rbModel.origin.x = newOriginElem.get("x").asFloat();
+		System.out.println("x was: " + rbModel.origin.x);
+
+		//rbModel.origin.y = (Float) originElem.get("y");
+		rbModel.origin.y = newOriginElem.get("y").asFloat();
+		System.out.println("y was: " + rbModel.origin.y);
 
 		// polygons
-
+		// TODO: Will NPE here, need to convert fully to new JsonValue approach
 		Array<?> polygonsElem = (Array<?>) bodyElem.get("polygons");
 
 		for (int i=0; i<polygonsElem.size; i++) {
