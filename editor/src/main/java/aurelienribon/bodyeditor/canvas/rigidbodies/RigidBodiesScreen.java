@@ -574,9 +574,9 @@ public class RigidBodiesScreen {
 	private void clearWorld() {
 		ballsBodies.clear();
 		ballsSprites.clear();
-		Iterator<Body> bodies = null;
-		world.getBodies((Array<Body>) bodies);
-		while (bodies.hasNext()) world.destroyBody(bodies.next());
+		Array<Body> bodies = new Array<>();
+		world.getBodies(bodies);
+		for(Body b : bodies) world.destroyBody(b);
 	}
 
 	private void createBody() {
