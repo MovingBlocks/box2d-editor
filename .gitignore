@@ -8,6 +8,7 @@ hs_err_pid*
 *.iws
 *.iml
 out/
+local.properties
 
 ## Eclipse
 .classpath
@@ -69,3 +70,4 @@ loader-libgdx-demo/bin/*
 loader-libgdx-demo/.classpath
 loader-libgdx-demo/.project
 loader-libgdx-demo/*.jar
+
