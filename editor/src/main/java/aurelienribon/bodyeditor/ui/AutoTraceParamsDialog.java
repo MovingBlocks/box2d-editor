@@ -21,7 +21,7 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
 
 		Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
 		Style.registerCssClasses(commentLabel, ".brightcomment");
-		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		Style.apply(getContentPane(), new Style(Res.getUrl("/css/style.css")));
 
 		hullToleranceSlider.setValue((int) (Settings.autoTraceHullTolerance * 100));
 		alphaToleranceSlider.setValue(Settings.autoTraceAlphaTolerance);
