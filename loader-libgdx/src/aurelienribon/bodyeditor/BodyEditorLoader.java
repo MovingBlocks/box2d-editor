@@ -1,42 +1,29 @@
 package aurelienribon.bodyeditor;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.OrderedMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Loads the collision fixtures defined with the Physics Body Editor
- * application. You only need to give it a body and the corresponding fixture
- * name, and it will attach these fixtures to your body.
- *
- * @author Aurelien Ribon | http://www.aurelienribon.com
+ * Loads the collision fixtures defined with the Physics Body Editor application.
+ * You only need to give it a body and the corresponding fixture name, and it will attach these fixtures to your body.
  */
 public class BodyEditorLoader {
-
-	// Model
-	private final Model model;
-
 	// Reusable stuff
+	private final Model model;
 	private final List<Vector2> vectorPool = new ArrayList<Vector2>();
 	private final PolygonShape polygonShape = new PolygonShape();
 	private final CircleShape circleShape = new CircleShape();
 	private final Vector2 vec = new Vector2();
-
-	// -------------------------------------------------------------------------
-	// Ctors
-	// -------------------------------------------------------------------------
 
 	public BodyEditorLoader(FileHandle file) {
 		if (file == null) throw new NullPointerException("file is null");
@@ -47,10 +34,6 @@ public class BodyEditorLoader {
 		if (str == null) throw new NullPointerException("str is null");
 		model = readJson(str);
 	}
-
-	// -------------------------------------------------------------------------
-	// Public API
-	// -------------------------------------------------------------------------
 
 	/**
 	 * Creates and applies the fixtures defined in the editor. The name
@@ -148,10 +131,6 @@ public class BodyEditorLoader {
 		return model;
 	}
 
-	// -------------------------------------------------------------------------
-	// Json Models
-	// -------------------------------------------------------------------------
-
 	public static class Model {
 		public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
 	}
@@ -174,102 +153,59 @@ public class BodyEditorLoader {
 		public float radius;
 	}
 
-	// -------------------------------------------------------------------------
-	// Json reading process
-	// -------------------------------------------------------------------------
-
 	private Model readJson(String str) {
-
-		/* OUTDATED VERSION FOR AN OLDER LIBGDX
-		Model m = new Model();
-		OrderedMap<String,?> rootElem = (OrderedMap<String,?>) new JsonReader().parse(str);
-
-		Array<?> bodiesElems = (Array<?>) rootElem.get("rigidBodies");
-
-		for (int i=0; i<bodiesElems.size; i++) {
-			OrderedMap<String,?> bodyElem = (OrderedMap<String,?>) bodiesElems.get(i);
-			RigidBodyModel rbModel = readRigidBody(bodyElem);
-			m.rigidBodies.put(rbModel.name, rbModel);
-		}
-
-		return m;
-*/
-
-		Model m = new Model();
+		Model model = new Model();
 
 		JsonValue map = new JsonReader().parse(str);
 
-		JsonValue bodyElem = map.getChild("rigidBodies");
-		for (; bodyElem != null; bodyElem = bodyElem.next()) {
-			System.out.println(bodyElem.name + " = " + bodyElem.asString());
-			// TODO: Hacked for now just to get started, need to switch to only using JsonValue
-			RigidBodyModel rbModel = readRigidBody(null, bodyElem);
-			m.rigidBodies.put(rbModel.name, rbModel);
+		for (JsonValue rbJson = map.getChild("rigidBodies"); rbJson != null; rbJson = rbJson.next()) {
+			RigidBodyModel rbModel = readRigidBody(rbJson);
+			model.rigidBodies.put(rbModel.name, rbModel);
 		}
 
-		return m;
+		return model;
 	}
 
-	private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem, JsonValue newBodyElem) {
+	private RigidBodyModel readRigidBody(JsonValue rbJson) {
 		RigidBodyModel rbModel = new RigidBodyModel();
-		//rbModel.name = (String) bodyElem.get("name");
-		rbModel.name = newBodyElem.get("name").asString();
-		System.out.println("Name was: " + rbModel.name);
+		rbModel.name = rbJson.get("name").asString();
+		rbModel.imagePath = rbJson.get("imagePath").asString();
 
-		//rbModel.imagePath = (String) bodyElem.get("imagePath");
-		rbModel.imagePath = newBodyElem.get("imagePath").asString();
-		System.out.println("imagePath was: " + rbModel.imagePath);
-
-		//OrderedMap<String,?> originElem = (OrderedMap<String,?>) bodyElem.get("origin");
-		JsonValue newOriginElem = newBodyElem.get("origin");
-
-		//rbModel.origin.x = (Float) originElem.get("x");
+		JsonValue newOriginElem = rbJson.get("origin");
 		rbModel.origin.x = newOriginElem.get("x").asFloat();
-		System.out.println("x was: " + rbModel.origin.x);
-
-		//rbModel.origin.y = (Float) originElem.get("y");
 		rbModel.origin.y = newOriginElem.get("y").asFloat();
-		System.out.println("y was: " + rbModel.origin.y);
 
-		// polygons
-		// TODO: Will NPE here, need to convert fully to new JsonValue approach
-		Array<?> polygonsElem = (Array<?>) bodyElem.get("polygons");
+		// Polygons
+		JsonValue polygonsJson = rbJson.get("polygons");
+		for (JsonValue polygonJson = polygonsJson.child(); polygonJson != null; polygonJson = polygonJson.next()) { // Can I use next instead of next() ?
+			PolygonModel polygonModel = new PolygonModel();
+			rbModel.polygons.add(polygonModel);
 
-		for (int i=0; i<polygonsElem.size; i++) {
-			PolygonModel polygon = new PolygonModel();
-			rbModel.polygons.add(polygon);
-
-			Array<?> verticesElem = (Array<?>) polygonsElem.get(i);
-			for (int ii=0; ii<verticesElem.size; ii++) {
-				OrderedMap<String,?> vertexElem = (OrderedMap<String,?>) verticesElem.get(ii);
-				float x = (Float) vertexElem.get("x");
-				float y = (Float) vertexElem.get("y");
-				polygon.vertices.add(new Vector2(x, y));
+			for (JsonValue vertexJson = polygonJson.child(); vertexJson != null; vertexJson = vertexJson.next()) {
+				float x = vertexJson.get("x").asFloat();
+				float y = vertexJson.get("y").asFloat();
+				polygonModel.vertices.add(new Vector2(x, y));
 			}
 
-			polygon.buffer = new Vector2[polygon.vertices.size()];
+			// Why do we need this? Investigate.
+			polygonModel.buffer = new Vector2[polygonModel.vertices.size()];
 		}
 
-		// circles
+		// Circles
+		JsonValue circlesJson = rbJson.get("circles");
+		for (JsonValue circleJson = circlesJson.child(); circleJson != null; circleJson = circleJson.next()) { // Can I use next instead of next() ?
+			CircleModel circleModel = new CircleModel();
+			rbModel.circles.add(circleModel);
 
-		Array<?> circlesElem = (Array<?>) bodyElem.get("circles");
-
-		for (int i=0; i<circlesElem.size; i++) {
-			CircleModel circle = new CircleModel();
-			rbModel.circles.add(circle);
-
-			OrderedMap<String,?> circleElem = (OrderedMap<String,?>) circlesElem.get(i);
-			circle.center.x = (Float) circleElem.get("cx");
-			circle.center.y = (Float) circleElem.get("cy");
-			circle.radius = (Float) circleElem.get("r");
+			circleModel.center.x = circleJson.get("cx").asFloat();
+			circleModel.center.y = circleJson.get("cy").asFloat();
+			circleModel.radius = circleJson.get("r").asFloat();
 		}
+
+		// Why are shapes not loaded? Investigate.
 
 		return rbModel;
 	}
-
-	// -------------------------------------------------------------------------
-	// Helpers
-	// -------------------------------------------------------------------------
 
 	private Vector2 newVec() {
 		return vectorPool.isEmpty() ? new Vector2() : vectorPool.remove(0);
