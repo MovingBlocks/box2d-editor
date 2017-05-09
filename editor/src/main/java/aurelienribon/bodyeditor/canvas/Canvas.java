@@ -34,7 +34,7 @@ public class Canvas extends ApplicationAdapter {
 	public CanvasDrawer drawer;
 	public InputMultiplexer input;
 
-	public static enum Mode {BODIES, OBJECTS}
+	public enum Mode {BODIES, OBJECTS}
 	private Mode mode = Mode.BODIES;
 
 	private RigidBodiesScreen rigidBodiesScreen;

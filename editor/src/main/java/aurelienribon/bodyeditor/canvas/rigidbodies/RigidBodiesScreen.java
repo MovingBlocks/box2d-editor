@@ -47,15 +47,11 @@ import com.badlogic.gdx.utils.Array;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
 public class RigidBodiesScreen {
 	private final Canvas canvas;
 	private final RigidBodiesScreenDrawer drawer;
@@ -83,7 +79,7 @@ public class RigidBodiesScreen {
 	private final Label lblInsertVertices;
 	private final Label lblRemoveVertices;
 
-	private static enum Mode {CREATION, EDITION, TEST}
+	private enum Mode {CREATION, EDITION, TEST}
 	private Mode mode = null;
 
 	public final ObservableList<Vector2> selectedPoints = new ObservableList<Vector2>();
@@ -503,8 +499,8 @@ public class RigidBodiesScreen {
 
 	private void setNextMode() {
 		Mode m = mode == Mode.CREATION
-			? Mode.EDITION : mode == Mode.EDITION
-			? Mode.TEST : Mode.CREATION;
+				? Mode.EDITION : mode == Mode.EDITION
+				? Mode.TEST : Mode.CREATION;
 		setMode(m);
 	}
 
@@ -546,10 +542,10 @@ public class RigidBodiesScreen {
 		RigidBodyModel model = Ctx.bodies.getSelectedModel();
 		File file = Ctx.io.getImageFile(model.getImagePath());
 		Vector2[][] polygons = Tracer.trace(file.getPath(),
-			Settings.autoTraceHullTolerance,
-			Settings.autoTraceAlphaTolerance,
-			Settings.autoTraceMultiPartDetection,
-			Settings.autoTraceHoleDetection);
+				Settings.autoTraceHullTolerance,
+				Settings.autoTraceAlphaTolerance,
+				Settings.autoTraceMultiPartDetection,
+				Settings.autoTraceHoleDetection);
 
 		if (polygons == null) return;
 
@@ -561,7 +557,7 @@ public class RigidBodiesScreen {
 			model.getShapes().add(shape);
 		}
 
-		model.computePhysics();
+		// model.computePhysics();
 		buildBody();
 	}
 
@@ -574,7 +570,7 @@ public class RigidBodiesScreen {
 	private void clearWorld() {
 		ballsBodies.clear();
 		ballsSprites.clear();
-		Array<Body> bodies = new Array<>();
+		Array<Body> bodies = new Array<Body>();
 		world.getBodies(bodies);
 		for(Body b : bodies) world.destroyBody(b);
 	}

@@ -1,12 +1,24 @@
+/*
+ * Copyright 2017 MovingBlocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package aurelienribon.accessors;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com
- */
 public class SpriteAccessor implements TweenAccessor<Sprite> {
 	public static final int POS_XY = 1;
 	public static final int POS_X = 10;
@@ -25,8 +37,13 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				returnValues[1] = target.getY();
 				return 2;
 
-			case POS_X: returnValues[0] = target.getX(); return 1;
-			case POS_Y: returnValues[0] = target.getY(); return 1;
+			case POS_X:
+				returnValues[0] = target.getX();
+				return 1;
+
+			case POS_Y:
+				returnValues[0] = target.getY();
+				return 1;
 
 			case CPOS_XY:
 				returnValues[0] = target.getX() + target.getWidth()/2;
@@ -38,8 +55,13 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				returnValues[1] = target.getScaleY();
 				return 2;
 
-			case ROTATION: returnValues[0] = target.getRotation(); return 1;
-			case OPACITY: returnValues[0] = target.getColor().a; return 1;
+			case ROTATION:
+				returnValues[0] = target.getRotation();
+				return 1;
+
+			case OPACITY:
+				returnValues[0] = target.getColor().a;
+				return 1;
 
 			case TINT:
 				returnValues[0] = target.getColor().r;
@@ -47,19 +69,38 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				returnValues[2] = target.getColor().b;
 				return 3;
 
-			default: assert false; return -1;
+			default:
+				assert false;
+				return -1;
 		}
 	}
 
 	@Override
 	public void setValues(Sprite target, int tweenType, float[] newValues) {
 		switch (tweenType) {
-			case POS_XY: target.setPosition(newValues[0], newValues[1]); break;
-			case POS_X: target.setPosition(newValues[0], target.getY()); break;
-			case POS_Y: target.setPosition(target.getX(), newValues[0]); break;
-			case CPOS_XY: target.setPosition(newValues[0] - target.getWidth()/2, newValues[1] - target.getHeight()/2); break;
-			case SCALE_XY: target.setScale(newValues[0], newValues[1]); break;
-			case ROTATION: target.setRotation(newValues[0]); break;
+			case POS_XY:
+				target.setPosition(newValues[0], newValues[1]);
+				break;
+
+			case POS_X:
+				target.setPosition(newValues[0], target.getY());
+				break;
+
+			case POS_Y:
+				target.setPosition(target.getX(), newValues[0]);
+				break;
+
+			case CPOS_XY:
+				target.setPosition(newValues[0] - target.getWidth()/2, newValues[1] - target.getHeight()/2);
+				break;
+
+			case SCALE_XY:
+				target.setScale(newValues[0], newValues[1]);
+				break;
+
+			case ROTATION:
+				target.setRotation(newValues[0]);
+				break;
 
 			case OPACITY:
 				Color c = target.getColor();
@@ -73,7 +114,8 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				target.setColor(c);
 				break;
 
-			default: assert false;
+			default:
+				assert false;
 		}
 	}
 }
