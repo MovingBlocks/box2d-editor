@@ -15,12 +15,13 @@
  */
 package aurelienribon.bodyeditor.ui;
 
+import aurelienribon.Res;
 import aurelienribon.bodyeditor.Settings;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import aurelienribon.Res;
 
 public class AutoTraceParamsDialog extends javax.swing.JDialog {
     private boolean result = false;
@@ -41,7 +42,8 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
         holeDetectionChk.setSelected(Settings.autoTraceHoleDetection);
 
         okBtn.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 Settings.autoTraceHullTolerance = hullToleranceSlider.getValue() / 100f;
                 Settings.autoTraceAlphaTolerance = alphaToleranceSlider.getValue();
                 Settings.autoTraceMultiPartDetection = multiPartDetectionChk.isSelected();
@@ -52,7 +54,8 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
         });
 
         cancelBtn.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
@@ -141,9 +144,9 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
                                 .addContainerGap())
         );
 
-        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2});
+        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[]{jLabel1, jLabel2});
 
-        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelBtn, okBtn});
+        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[]{cancelBtn, okBtn});
 
         paintedPanel1Layout.setVerticalGroup(
                 paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,7 +169,7 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
                                 .addContainerGap())
         );
 
-        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {alphaToleranceSlider, hullToleranceSlider, jLabel1, jLabel2});
+        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{alphaToleranceSlider, hullToleranceSlider, jLabel1, jLabel2});
 
         commentLabel.setText("<html>\nOnly check multi-part detection or hole detection if your image needs it.<br/>\nRemember that auto-trace is less precise than manually placed points.");
         commentLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -198,6 +201,7 @@ public class AutoTraceParamsDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider alphaToleranceSlider;
     private javax.swing.JButton cancelBtn;

@@ -1,4 +1,4 @@
 <?xml version="1.0" ?>
 <module rename-to="aurelienribon.bodyeditorloader">
-	<source path="bodyeditor" />
+    <source path="bodyeditor"/>
 </module>

@@ -1,10 +1,11 @@
 package aurelienribon.bodyeditor.ui;
 
 import aurelienribon.bodyeditor.Settings;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -13,28 +14,63 @@ public class RigidBodiesOptionsPanel extends javax.swing.JPanel {
     public RigidBodiesOptionsPanel() {
         initComponents();
 
-		drawImageChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		drawShapeChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		drawPolysChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		debugPhysicsChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		drawGridChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		enableSnapToGridChk.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {updateOptions();}});
-		gridGapSpinner.addChangeListener(new ChangeListener() {@Override public void stateChanged(ChangeEvent e) {updateOptions();}});
+        drawImageChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        drawShapeChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        drawPolysChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        debugPhysicsChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        drawGridChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        enableSnapToGridChk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateOptions();
+            }
+        });
+        gridGapSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateOptions();
+            }
+        });
     }
 
-	private void updateOptions() {
-		Settings.isImageDrawn = drawImageChk.isSelected();
-		Settings.isShapeDrawn = drawShapeChk.isSelected();
-		Settings.isPolygonDrawn = drawPolysChk.isSelected();
-		Settings.isPhysicsDebugEnabled = debugPhysicsChk.isSelected();
-		Settings.isGridShown = drawGridChk.isSelected();
-		Settings.isSnapToGridEnabled = enableSnapToGridChk.isSelected();
-		Settings.gridGap = (Float) gridGapSpinner.getValue();
-	}
+    private void updateOptions() {
+        Settings.isImageDrawn = drawImageChk.isSelected();
+        Settings.isShapeDrawn = drawShapeChk.isSelected();
+        Settings.isPolygonDrawn = drawPolysChk.isSelected();
+        Settings.isPhysicsDebugEnabled = debugPhysicsChk.isSelected();
+        Settings.isGridShown = drawGridChk.isSelected();
+        Settings.isSnapToGridEnabled = enableSnapToGridChk.isSelected();
+        Settings.gridGap = (Float) gridGapSpinner.getValue();
+    }
 
-	// -------------------------------------------------------------------------
-	// Generated Stuff
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Generated Stuff
+    // -------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -89,45 +125,45 @@ public class RigidBodiesOptionsPanel extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(drawImageChk)
-                    .addComponent(drawShapeChk))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(debugPhysicsChk)
-                    .addComponent(drawPolysChk))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(enableSnapToGridChk)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(drawGridChk)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(drawImageChk)
+                                        .addComponent(drawShapeChk))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(debugPhysicsChk)
+                                        .addComponent(drawPolysChk))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(enableSnapToGridChk)
+                                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addComponent(drawGridChk)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(drawGridChk)
-                            .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(enableSnapToGridChk))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(drawImageChk)
-                            .addComponent(drawPolysChk))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(drawShapeChk)
-                            .addComponent(debugPhysicsChk))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(drawGridChk)
+                                                        .addComponent(gridGapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(enableSnapToGridChk))
+                                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(drawImageChk)
+                                                        .addComponent(drawPolysChk))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(drawShapeChk)
+                                                        .addComponent(debugPhysicsChk))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel6);

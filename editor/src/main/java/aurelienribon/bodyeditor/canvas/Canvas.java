@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,176 +28,179 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Canvas extends ApplicationAdapter {
-	public OrthographicCamera worldCamera;
-	public OrthographicCamera screenCamera;
-	public SpriteBatch batch;
-	public BitmapFont font;
-	public CanvasDrawer drawer;
-	public InputMultiplexer input;
+    public OrthographicCamera worldCamera;
+    public OrthographicCamera screenCamera;
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public CanvasDrawer drawer;
+    public InputMultiplexer input;
 
-	public enum Mode {BODIES, OBJECTS}
-	private Mode mode = Mode.BODIES;
+    public enum Mode {BODIES, OBJECTS}
 
-	private RigidBodiesScreen rigidBodiesScreen;
-	private DynamicObjectsScreen dynamicObjectsScreen;
+    private Mode mode = Mode.BODIES;
 
-	private Sprite infoLabel;
-	private Texture backgroundTexture;
+    private RigidBodiesScreen rigidBodiesScreen;
+    private DynamicObjectsScreen dynamicObjectsScreen;
 
-	@Override
-	public void create() {
-		Assets.inst().initialize();
-		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+    private Sprite infoLabel;
+    private Texture backgroundTexture;
 
-		worldCamera = new OrthographicCamera();
-		screenCamera = new OrthographicCamera();
-		resetCameras();
+    @Override
+    public void create() {
+        Assets.inst().initialize();
+        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
-		batch = new SpriteBatch();
-		font = new BitmapFont();
-		drawer = new CanvasDrawer(batch, worldCamera);
+        worldCamera = new OrthographicCamera();
+        screenCamera = new OrthographicCamera();
+        resetCameras();
 
-		backgroundTexture = Assets.inst().get("data/transparent-light.png", Texture.class);
-		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        drawer = new CanvasDrawer(batch, worldCamera);
 
-		infoLabel = new Sprite(Assets.inst().get("data/white.png", Texture.class));
-		infoLabel.setPosition(0, 0);
-		infoLabel.setSize(120, 60);
-		infoLabel.setColor(new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f));
+        backgroundTexture = Assets.inst().get("data/transparent-light.png", Texture.class);
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-		input = new InputMultiplexer();
-		input.addProcessor(new PanZoomInputProcessor(this));
-		Gdx.input.setInputProcessor(input);
+        infoLabel = new Sprite(Assets.inst().get("data/white.png", Texture.class));
+        infoLabel.setPosition(0, 0);
+        infoLabel.setSize(120, 60);
+        infoLabel.setColor(new Color(0x2A / 255f, 0x3B / 255f, 0x56 / 255f, 180 / 255f));
 
-		rigidBodiesScreen = new RigidBodiesScreen(this);
-		dynamicObjectsScreen = new DynamicObjectsScreen(this);
+        input = new InputMultiplexer();
+        input.addProcessor(new PanZoomInputProcessor(this));
+        Gdx.input.setInputProcessor(input);
 
-		initializeSelectionListeners();
-	}
+        rigidBodiesScreen = new RigidBodiesScreen(this);
+        dynamicObjectsScreen = new DynamicObjectsScreen(this);
 
-	// -------------------------------------------------------------------------
-	// Init
-	// -------------------------------------------------------------------------
+        initializeSelectionListeners();
+    }
 
-	private void initializeSelectionListeners() {
-		Ctx.bodies.addChangeListener(new ChangeListener() {
-			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
-					if (Ctx.bodies.getSelectedModel() != null) {
-						Mode oldMode = mode;
-						mode = Mode.BODIES;
-						if (mode != oldMode) fireModeChanged(mode);
-					}
-				}
-			}
-		});
+    // -------------------------------------------------------------------------
+    // Init
+    // -------------------------------------------------------------------------
 
-		Ctx.objects.addChangeListener(new ChangeListener() {
-			@Override public void propertyChanged(Object source, String propertyName) {
-				if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
-					if (Ctx.objects.getSelectedModel() != null) {
-						Mode oldMode = mode;
-						mode = Mode.OBJECTS;
-						if (mode != oldMode) fireModeChanged(mode);
-					}
-				}
-			}
-		});
-	}
+    private void initializeSelectionListeners() {
+        Ctx.bodies.addChangeListener(new ChangeListener() {
+            @Override
+            public void propertyChanged(Object source, String propertyName) {
+                if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
+                    if (Ctx.bodies.getSelectedModel() != null) {
+                        Mode oldMode = mode;
+                        mode = Mode.BODIES;
+                        if (mode != oldMode) fireModeChanged(mode);
+                    }
+                }
+            }
+        });
 
-	// -------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------
+        Ctx.objects.addChangeListener(new ChangeListener() {
+            @Override
+            public void propertyChanged(Object source, String propertyName) {
+                if (propertyName.equals(RigidBodiesManager.PROP_SELECTION)) {
+                    if (Ctx.objects.getSelectedModel() != null) {
+                        Mode oldMode = mode;
+                        mode = Mode.OBJECTS;
+                        if (mode != oldMode) fireModeChanged(mode);
+                    }
+                }
+            }
+        });
+    }
 
-	@Override
-	public void render() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+    // -------------------------------------------------------------------------
+    // Render
+    // -------------------------------------------------------------------------
 
-		Gdx.gl30.glClearColor(1, 1, 1, 1);
-		Gdx.gl30.glClear(Gdx.gl30.GL_COLOR_BUFFER_BIT);
+    @Override
+    public void render() {
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-		batch.setProjectionMatrix(screenCamera.combined);
-		batch.begin();
-		batch.disableBlending();
-		float tw = backgroundTexture.getWidth();
-		float th = backgroundTexture.getHeight();
-		batch.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
-		batch.enableBlending();
-		batch.end();
+        Gdx.gl30.glClearColor(1, 1, 1, 1);
+        Gdx.gl30.glClear(Gdx.gl30.GL_COLOR_BUFFER_BIT);
 
-		rigidBodiesScreen.render();
-		dynamicObjectsScreen.render();
+        batch.setProjectionMatrix(screenCamera.combined);
+        batch.begin();
+        batch.disableBlending();
+        float tw = backgroundTexture.getWidth();
+        float th = backgroundTexture.getHeight();
+        batch.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w / tw, h / th);
+        batch.enableBlending();
+        batch.end();
 
-		batch.setProjectionMatrix(screenCamera.combined);
-		batch.begin();
-		infoLabel.draw(batch);
-		font.setColor(Color.WHITE);
-		font.draw(batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 10, 45);
-		font.draw(batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
-		batch.end();
-	}
+        rigidBodiesScreen.render();
+        dynamicObjectsScreen.render();
 
-	@Override
-	public void resize(int width, int height) {
-		Gdx.gl30.glViewport(0, 0, width, height);
-		resetCameras();
-	}
+        batch.setProjectionMatrix(screenCamera.combined);
+        batch.begin();
+        infoLabel.draw(batch);
+        font.setColor(Color.WHITE);
+        font.draw(batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / worldCamera.zoom), 10, 45);
+        font.draw(batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
+        batch.end();
+    }
 
-	// -------------------------------------------------------------------------
-	// Public API
-	// -------------------------------------------------------------------------
+    @Override
+    public void resize(int width, int height) {
+        Gdx.gl30.glViewport(0, 0, width, height);
+        resetCameras();
+    }
 
-	public Vector2 screenToWorld(int x, int y) {
-		Vector3 v3 = new Vector3(x, y, 0);
-		worldCamera.unproject(v3);
-		return new Vector2(v3.x, v3.y);
-	}
+    // -------------------------------------------------------------------------
+    // Public API
+    // -------------------------------------------------------------------------
 
-	public Vector2 alignedScreenToWorld(int x, int y) {
-		Vector2 p = screenToWorld(x, y);
-		if (Settings.isSnapToGridEnabled) {
-			float gap = Settings.gridGap;
-			p.x = Math.round(p.x / gap) * gap;
-			p.y = Math.round(p.y / gap) * gap;
-		}
-		return p;
-	}
+    public Vector2 screenToWorld(int x, int y) {
+        Vector3 v3 = new Vector3(x, y, 0);
+        worldCamera.unproject(v3);
+        return new Vector2(v3.x, v3.y);
+    }
 
-	// -------------------------------------------------------------------------
-	// Events
-	// -------------------------------------------------------------------------
+    public Vector2 alignedScreenToWorld(int x, int y) {
+        Vector2 p = screenToWorld(x, y);
+        if (Settings.isSnapToGridEnabled) {
+            float gap = Settings.gridGap;
+            p.x = Math.round(p.x / gap) * gap;
+            p.y = Math.round(p.y / gap) * gap;
+        }
+        return p;
+    }
 
-	private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    // -------------------------------------------------------------------------
+    // Events
+    // -------------------------------------------------------------------------
 
-	public static interface Listener {
-		public void modeChanged(Mode mode);
-	}
+    private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
 
-	public void addListener(Listener listener) {
-		listeners.add(listener);
-	}
+    public static interface Listener {
+        public void modeChanged(Mode mode);
+    }
 
-	private void fireModeChanged(Mode mode) {
-		for (Listener listener : listeners) listener.modeChanged(mode);
-	}
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
 
-	// -------------------------------------------------------------------------
-	// Internals
-	// -------------------------------------------------------------------------
+    private void fireModeChanged(Mode mode) {
+        for (Listener listener : listeners) listener.modeChanged(mode);
+    }
 
-	private void resetCameras() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+    // -------------------------------------------------------------------------
+    // Internals
+    // -------------------------------------------------------------------------
 
-		worldCamera.viewportWidth = w/400;
-		worldCamera.viewportHeight = w/400*h/w;
-		worldCamera.position.set(0.5f, 0.5f, 0);
-		worldCamera.update();
+    private void resetCameras() {
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-		screenCamera.viewportWidth = w;
-		screenCamera.viewportHeight = h;
-		screenCamera.position.set(w/2, h/2, 0);
-		screenCamera.update();
-	}
+        worldCamera.viewportWidth = w / 400;
+        worldCamera.viewportHeight = w / 400 * h / w;
+        worldCamera.position.set(0.5f, 0.5f, 0);
+        worldCamera.update();
+
+        screenCamera.viewportWidth = w;
+        screenCamera.viewportHeight = h;
+        screenCamera.position.set(w / 2, h / 2, 0);
+        screenCamera.update();
+    }
 }

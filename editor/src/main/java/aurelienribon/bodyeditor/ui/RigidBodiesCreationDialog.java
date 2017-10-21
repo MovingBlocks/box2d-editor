@@ -1,9 +1,14 @@
 package aurelienribon.bodyeditor.ui;
 
+import aurelienribon.Res;
 import aurelienribon.bodyeditor.Ctx;
 import aurelienribon.bodyeditor.models.RigidBodyModel;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
+import net.java.balloontip.BalloonTip;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -16,160 +21,173 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import net.java.balloontip.BalloonTip;
-import aurelienribon.Res;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class RigidBodiesCreationDialog extends javax.swing.JDialog {
-	private BalloonTip tip;
+    private BalloonTip tip;
 
     public RigidBodiesCreationDialog(java.awt.Frame parent) {
         super(parent, true);
 
-		setContentPane(new PaintedPanel());
+        setContentPane(new PaintedPanel());
         initComponents();
 
-		Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
-		Style.registerCssClasses(orLbl1, ".bigLabel");
-		Style.registerCssClasses(orLbl2, ".bigLabel");
-		Style.apply(getContentPane(), new Style(Res.getUrl("/css/style.css")));
+        Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
+        Style.registerCssClasses(orLbl1, ".bigLabel");
+        Style.registerCssClasses(orLbl2, ".bigLabel");
+        Style.apply(getContentPane(), new Style(Res.getUrl("/css/style.css")));
 
-		b1CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createEmpty();}});
-		b2CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createFromImage();}});
-		b3CreateBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {createFromImages();}});
+        b1CreateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createEmpty();
+            }
+        });
+        b2CreateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createFromImage();
+            }
+        });
+        b3CreateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createFromImages();
+            }
+        });
 
-		b1NameField.addMouseListener(selectOnFocusMouseListener);
-		b1NameField.addKeyListener(updateOnTypeKeyListener);
-		b1NameField.addFocusListener(updateOnSelectFocusListener);
-		b2NameField.addMouseListener(selectOnFocusMouseListener);
-		b2NameField.addKeyListener(updateOnTypeKeyListener);
-		b2NameField.addFocusListener(updateOnSelectFocusListener);
+        b1NameField.addMouseListener(selectOnFocusMouseListener);
+        b1NameField.addKeyListener(updateOnTypeKeyListener);
+        b1NameField.addFocusListener(updateOnSelectFocusListener);
+        b2NameField.addMouseListener(selectOnFocusMouseListener);
+        b2NameField.addKeyListener(updateOnTypeKeyListener);
+        b2NameField.addFocusListener(updateOnSelectFocusListener);
 
-		b2NameField.requestFocusInWindow();
-		b2NameField.selectAll();
+        b2NameField.requestFocusInWindow();
+        b2NameField.selectAll();
 
-		update();
+        update();
     }
 
-	private void update() {
-		if (tip != null) {tip.closeBalloon(); tip = null;}
+    private void update() {
+        if (tip != null) {
+            tip.closeBalloon();
+            tip = null;
+        }
 
-		if (b1NameField.isFocusOwner()) {
-			String name = b1NameField.getText().trim();
-			b2NameField.setText(name);
-			b1CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
-			b2CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
+        if (b1NameField.isFocusOwner()) {
+            String name = b1NameField.getText().trim();
+            b2NameField.setText(name);
+            b1CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
+            b2CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
 
-			if (name.equals("")) {
-				tip = new BalloonTip(b1NameField, "You need to set a name");
-				tip.setCloseButton(null);
-				tip.setVisible(true);
-			} else if (Ctx.bodies.getModel(name) != null) {
-				tip = new BalloonTip(b1NameField, "Name already in use");
-				tip.setCloseButton(null);
-				tip.setVisible(true);
-			}
+            if (name.equals("")) {
+                tip = new BalloonTip(b1NameField, "You need to set a name");
+                tip.setCloseButton(null);
+                tip.setVisible(true);
+            } else if (Ctx.bodies.getModel(name) != null) {
+                tip = new BalloonTip(b1NameField, "Name already in use");
+                tip.setCloseButton(null);
+                tip.setVisible(true);
+            }
 
-		} else if (b2NameField.isFocusOwner()) {
-			String name = b2NameField.getText().trim();
-			b1NameField.setText(name);
-			b1CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
-			b2CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
+        } else if (b2NameField.isFocusOwner()) {
+            String name = b2NameField.getText().trim();
+            b1NameField.setText(name);
+            b1CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
+            b2CreateBtn.setEnabled(!name.equals("") && Ctx.bodies.getModel(name) == null);
 
-			if (name.equals("")) {
-				tip = new BalloonTip(b2NameField, "You need to set a name");
-				tip.setCloseButton(null);
-				tip.setVisible(true);
-			} else if (Ctx.bodies.getModel(name) != null) {
-				tip = new BalloonTip(b2NameField, "Name already in use");
-				tip.setCloseButton(null);
-				tip.setVisible(true);
-			}
-		}
-	}
+            if (name.equals("")) {
+                tip = new BalloonTip(b2NameField, "You need to set a name");
+                tip.setCloseButton(null);
+                tip.setVisible(true);
+            } else if (Ctx.bodies.getModel(name) != null) {
+                tip = new BalloonTip(b2NameField, "Name already in use");
+                tip.setCloseButton(null);
+                tip.setVisible(true);
+            }
+        }
+    }
 
-	private void createEmpty() {
-		RigidBodyModel model = new RigidBodyModel();
-		model.setName(b1NameField.getText());
-		Ctx.bodies.getModels().add(model);
-		Ctx.bodies.select(model);
-		dispose();
-	}
+    private void createEmpty() {
+        RigidBodyModel model = new RigidBodyModel();
+        model.setName(b1NameField.getText());
+        Ctx.bodies.getModels().add(model);
+        Ctx.bodies.select(model);
+        dispose();
+    }
 
-	private void createFromImage() {
-		JFileChooser chooser = new JFileChooser(Ctx.io.getProjectDir());
-		chooser.setDialogTitle("Select the image associated to the new model");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
-		chooser.setMultiSelectionEnabled(false);
+    private void createFromImage() {
+        JFileChooser chooser = new JFileChooser(Ctx.io.getProjectDir());
+        chooser.setDialogTitle("Select the image associated to the new model");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
+        chooser.setMultiSelectionEnabled(false);
 
-		if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			RigidBodyModel model = new RigidBodyModel();
-			model.setName(b2NameField.getText());
-			model.setImagePath(Ctx.io.buildImagePath(chooser.getSelectedFile()));
-			Ctx.bodies.getModels().add(model);
-			Ctx.bodies.select(model);
-			dispose();
-		}
-	}
+        if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
+            RigidBodyModel model = new RigidBodyModel();
+            model.setName(b2NameField.getText());
+            model.setImagePath(Ctx.io.buildImagePath(chooser.getSelectedFile()));
+            Ctx.bodies.getModels().add(model);
+            Ctx.bodies.select(model);
+            dispose();
+        }
+    }
 
-	private void createFromImages() {
-		JFileChooser chooser = new JFileChooser(Ctx.io.getProjectDir());
-		chooser.setDialogTitle("Select the images for the new models");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
-		chooser.setMultiSelectionEnabled(true);
+    private void createFromImages() {
+        JFileChooser chooser = new JFileChooser(Ctx.io.getProjectDir());
+        chooser.setDialogTitle("Select the images for the new models");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Image files", "png", "jpg", "jpeg"));
+        chooser.setMultiSelectionEnabled(true);
 
-		if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
-			for (File file : chooser.getSelectedFiles()) {
-				String name = file.getName();
-				String origName = name;
-				int i = 0;
-				while(Ctx.bodies.getModel(name) != null) {
-					name = origName + "-" + (++i);
-				}
+        if (chooser.showSaveDialog(Ctx.window) == JFileChooser.APPROVE_OPTION) {
+            for (File file : chooser.getSelectedFiles()) {
+                String name = file.getName();
+                String origName = name;
+                int i = 0;
+                while (Ctx.bodies.getModel(name) != null) {
+                    name = origName + "-" + (++i);
+                }
 
-				RigidBodyModel model = new RigidBodyModel();
-				model.setName(name);
-				model.setImagePath(Ctx.io.buildImagePath(file));
-				Ctx.bodies.getModels().add(model);
-				Ctx.bodies.select(model);
-			}
+                RigidBodyModel model = new RigidBodyModel();
+                model.setName(name);
+                model.setImagePath(Ctx.io.buildImagePath(file));
+                Ctx.bodies.getModels().add(model);
+                Ctx.bodies.select(model);
+            }
 
-			dispose();
-		}
-	}
+            dispose();
+        }
+    }
 
-	private final MouseListener selectOnFocusMouseListener = new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e) {
-			JTextField field = (JTextField) e.getSource();
-			if (!field.isFocusOwner()) field.selectAll();
-		}
-	};
+    private final MouseListener selectOnFocusMouseListener = new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            JTextField field = (JTextField) e.getSource();
+            if (!field.isFocusOwner()) field.selectAll();
+        }
+    };
 
-	private final KeyListener updateOnTypeKeyListener = new KeyAdapter() {
-		@Override
-		public void keyReleased(KeyEvent e) {
-			update();
-		}
-	};
+    private final KeyListener updateOnTypeKeyListener = new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            update();
+        }
+    };
 
-	private final FocusListener updateOnSelectFocusListener = new FocusAdapter() {
-		@Override
-		public void focusGained(FocusEvent e) {
-			update();
-		}
-	};
+    private final FocusListener updateOnSelectFocusListener = new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            update();
+        }
+    };
 
-	// -------------------------------------------------------------------------
-	// Generated stuff
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Generated stuff
+    // -------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -210,27 +228,27 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         javax.swing.GroupLayout paintedPanel3Layout = new javax.swing.GroupLayout(paintedPanel3);
         paintedPanel3.setLayout(paintedPanel3Layout);
         paintedPanel3Layout.setHorizontalGroup(
-            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paintedPanel3Layout.createSequentialGroup()
-                        .addComponent(b2NameField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b2CreateBtn))
-                    .addComponent(jLabel3))
-                .addContainerGap())
+                paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(paintedPanel3Layout.createSequentialGroup()
+                                                .addComponent(b2NameField)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(b2CreateBtn))
+                                        .addComponent(jLabel3))
+                                .addContainerGap())
         );
         paintedPanel3Layout.setVerticalGroup(
-            paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(b2NameField, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                    .addComponent(b2CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addContainerGap())
+                paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paintedPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(b2NameField, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                                        .addComponent(b2CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel3)
+                                .addContainerGap())
         );
 
         orLbl1.setText("- OR -");
@@ -245,30 +263,30 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         javax.swing.GroupLayout paintedPanel1Layout = new javax.swing.GroupLayout(paintedPanel1);
         paintedPanel1.setLayout(paintedPanel1Layout);
         paintedPanel1Layout.setHorizontalGroup(
-            paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paintedPanel1Layout.createSequentialGroup()
-                        .addComponent(b1NameField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b1CreateBtn))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(paintedPanel1Layout.createSequentialGroup()
+                                                .addComponent(b1NameField)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(b1CreateBtn))
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         paintedPanel1Layout.setVerticalGroup(
-            paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b1NameField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(b1CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addContainerGap())
+                paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paintedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(b1NameField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(b1CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel1)
+                                .addContainerGap())
         );
 
-        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {b1CreateBtn, b1NameField});
+        paintedPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{b1CreateBtn, b1NameField});
 
         orLbl2.setText("- OR -");
 
@@ -280,58 +298,59 @@ public class RigidBodiesCreationDialog extends javax.swing.JDialog {
         javax.swing.GroupLayout paintedPanel2Layout = new javax.swing.GroupLayout(paintedPanel2);
         paintedPanel2.setLayout(paintedPanel2Layout);
         paintedPanel2Layout.setHorizontalGroup(
-            paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
-                    .addComponent(b3CreateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                                        .addComponent(b3CreateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         paintedPanel2Layout.setVerticalGroup(
-            paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paintedPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(b3CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addContainerGap())
+                paintedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(paintedPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(b3CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)
+                                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paintedPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(paintedPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(orLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(orLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                    .addComponent(paintedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(paintedPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(paintedPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(orLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(orLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                                        .addComponent(paintedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(paintedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(orLbl1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paintedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(orLbl2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paintedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(paintedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(orLbl1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(paintedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(orLbl2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(paintedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton b1CreateBtn;
     private javax.swing.JTextField b1NameField;

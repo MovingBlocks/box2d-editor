@@ -11,93 +11,104 @@ import java.net.URL;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class HttpUtils {
-	public static DownloadTask downloadAsync(URL input, OutputStream output, Callback callback) {
-		final DownloadTask task = new DownloadTask(input, output, callback);
+    public static DownloadTask downloadAsync(URL input, OutputStream output, Callback callback) {
+        final DownloadTask task = new DownloadTask(input, output, callback);
 
-		new Thread(new Runnable() {
-			@Override public void run() {
-				task.download();
-			}
-		}).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                task.download();
+            }
+        }).start();
 
-		return task;
-	}
+        return task;
+    }
 
-	public static interface Callback {
-		public void completed();
-		public void canceled();
-		public void error(IOException ex);
-		public void updated(int length, int totalLength);
-	}
+    public static interface Callback {
+        public void completed();
 
-	public static class DownloadTask {
-		private final URL input;
-		private final OutputStream output;
-		private final Callback callback;
-		private boolean run = true;
+        public void canceled();
 
-		public DownloadTask(URL input, OutputStream output, Callback callback) {
-			this.input = input;
-			this.output = output;
-			this.callback = callback;
-		}
+        public void error(IOException ex);
 
-		public void stop() {
-			run = false;
-		}
+        public void updated(int length, int totalLength);
+    }
 
-		public URL getInput() {
-			return input;
-		}
+    public static class DownloadTask {
+        private final URL input;
+        private final OutputStream output;
+        private final Callback callback;
+        private boolean run = true;
 
-		public OutputStream getOutput() {
-			return output;
-		}
+        public DownloadTask(URL input, OutputStream output, Callback callback) {
+            this.input = input;
+            this.output = output;
+            this.callback = callback;
+        }
 
-		public Callback getCallback() {
-			return callback;
-		}
+        public void stop() {
+            run = false;
+        }
 
-		private void download() {
-			OutputStream os = null;
-			InputStream is = null;
-			IOException ex = null;
+        public URL getInput() {
+            return input;
+        }
 
-			try {
-				HttpURLConnection connection = (HttpURLConnection) input.openConnection();
-				connection.setDoInput(true);
-				connection.setDoOutput(false);
-				connection.setUseCaches(true);
-				connection.setConnectTimeout(3000);
-				connection.connect();
+        public OutputStream getOutput() {
+            return output;
+        }
 
-				is = new BufferedInputStream(connection.getInputStream(), 4096);
-				os = output;
+        public Callback getCallback() {
+            return callback;
+        }
 
-				byte[] data = new byte[4096];
-				int length = connection.getContentLength();
-				int total = 0;
+        private void download() {
+            OutputStream os = null;
+            InputStream is = null;
+            IOException ex = null;
 
-				int count;
-				while (run && (count = is.read(data)) != -1) {
-					total += count;
-					os.write(data, 0, count);
-					if (callback != null) callback.updated(total, length);
-				}
+            try {
+                HttpURLConnection connection = (HttpURLConnection) input.openConnection();
+                connection.setDoInput(true);
+                connection.setDoOutput(false);
+                connection.setUseCaches(true);
+                connection.setConnectTimeout(3000);
+                connection.connect();
 
-			} catch (IOException ex1) {
-				ex = ex1;
+                is = new BufferedInputStream(connection.getInputStream(), 4096);
+                os = output;
 
-			} finally {
-				if (os != null) try {os.flush(); os.close();} catch (IOException ex1) {}
-				if (is != null) try {is.close();} catch (IOException ex1) {}
+                byte[] data = new byte[4096];
+                int length = connection.getContentLength();
+                int total = 0;
 
-				if (callback != null) {
-					if (ex != null) callback.error(ex);
-					else if (run == true) callback.completed();
-					else callback.canceled();
-				}
-			}
-		}
-	}
+                int count;
+                while (run && (count = is.read(data)) != -1) {
+                    total += count;
+                    os.write(data, 0, count);
+                    if (callback != null) callback.updated(total, length);
+                }
+
+            } catch (IOException ex1) {
+                ex = ex1;
+
+            } finally {
+                if (os != null) try {
+                    os.flush();
+                    os.close();
+                } catch (IOException ex1) {
+                }
+                if (is != null) try {
+                    is.close();
+                } catch (IOException ex1) {
+                }
+
+                if (callback != null) {
+                    if (ex != null) callback.error(ex);
+                    else if (run == true) callback.completed();
+                    else callback.canceled();
+                }
+            }
+        }
+    }
 }
