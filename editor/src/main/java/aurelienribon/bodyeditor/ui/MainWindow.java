@@ -1,17 +1,8 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.Res;
-import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.ui.components.ArStyle;
-import aurelienribon.ui.components.PaintedPanel;
-import aurelienribon.ui.components.TabPanel;
-import aurelienribon.ui.css.Style;
-import aurelienribon.ui.css.swing.SwingStyle;
-import aurelienribon.utils.io.HttpUtils;
-import aurelienribon.utils.ui.SwingHelper;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,6 +17,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.Timer;
+
+import aurelienribon.Res;
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.ui.components.ArStyle;
+import aurelienribon.ui.components.PaintedPanel;
+import aurelienribon.ui.components.TabPanel;
+import aurelienribon.ui.css.Style;
+import aurelienribon.ui.css.swing.SwingStyle;
+import aurelienribon.utils.io.HttpUtils;
+import aurelienribon.utils.ui.SwingHelper;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -75,7 +78,11 @@ public class MainWindow extends javax.swing.JFrame {
         checkUpdates();
     }
 
-    public void setCanvas(Component canvas) {
+    public void setCanvas(Canvas canvas) {
+        javax.swing.JLabel label;
+        label = new javax.swing.JLabel();
+     //   label.setText("Test");
+     //   renderPanel.add(label);
         renderPanel.add(canvas, BorderLayout.CENTER);
         canvas.requestFocusInWindow();
     }
@@ -176,7 +183,7 @@ public class MainWindow extends javax.swing.JFrame {
         objectsPanel = new aurelienribon.ui.components.TabPanel();
         versionPanel = new javax.swing.JPanel();
         versionLabel = new javax.swing.JLabel();
-        renderPanel = new javax.swing.JPanel();
+        renderPanel = new Container();
         optionsPanel = new javax.swing.JPanel();
         rigidBodiesOptionsPanel1 = new aurelienribon.bodyeditor.ui.RigidBodiesOptionsPanel();
 
@@ -215,7 +222,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(jLabel10)
         );
 
-        jPanel1.setOpaque(false);
+        //jPanel1.set.setOpaque(false);
         jPanel1.setLayout(new java.awt.BorderLayout());
         jPanel1.add(objectsPanel, java.awt.BorderLayout.CENTER);
 
@@ -256,10 +263,13 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+
+
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
                                         .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -287,7 +297,7 @@ public class MainWindow extends javax.swing.JFrame {
     private aurelienribon.ui.components.TabPanel objectsPanel;
     private javax.swing.JPanel optionsPanel;
     private aurelienribon.bodyeditor.ui.ProjectPanel projectPanel;
-    private javax.swing.JPanel renderPanel;
+    private Container renderPanel;
     private aurelienribon.bodyeditor.ui.RigidBodiesOptionsPanel rigidBodiesOptionsPanel1;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JLabel versionLabel;
