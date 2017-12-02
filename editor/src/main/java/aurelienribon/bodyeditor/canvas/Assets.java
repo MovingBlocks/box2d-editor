@@ -1,9 +1,6 @@
 package aurelienribon.bodyeditor.canvas;
 
-import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.bodyeditor.models.RigidBodyModel;
-import aurelienribon.utils.gdx.TextureUtils;
-import aurelienribon.utils.notifications.ObservableList;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +9,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
+import aurelienribon.utils.gdx.TextureUtils;
+import aurelienribon.utils.notifications.ObservableList;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -80,7 +82,15 @@ public class Assets extends AssetManager {
         if (body.getImagePath() == null) return;
 
         File file = Ctx.io.getImageFile(body.getImagePath());
-        TextureRegion region = TextureUtils.getPOTTexture(file.getPath());
-        rigidBodiesRegions.put(body, region);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                // process the result, e.g. add it to an Array<Result> field of the ApplicationListener.
+                TextureRegion region = TextureUtils.getPOTTexture(file.getPath());
+                rigidBodiesRegions.put(body, region);
+
+            }
+        });
+
     }
 }

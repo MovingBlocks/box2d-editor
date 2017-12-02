@@ -1,10 +1,5 @@
 package aurelienribon.bodyeditor.canvas;
 
-import aurelienribon.bodyeditor.Settings;
-import aurelienribon.bodyeditor.models.DynamicObjectModel;
-import aurelienribon.bodyeditor.models.PolygonModel;
-import aurelienribon.bodyeditor.models.RigidBodyModel;
-import aurelienribon.bodyeditor.models.ShapeModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,6 +12,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
+
+import aurelienribon.bodyeditor.Settings;
+import aurelienribon.bodyeditor.models.DynamicObjectModel;
+import aurelienribon.bodyeditor.models.PolygonModel;
+import aurelienribon.bodyeditor.models.RigidBodyModel;
+import aurelienribon.bodyeditor.models.ShapeModel;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -124,9 +125,11 @@ public class CanvasDrawer {
     // -------------------------------------------------------------------------
 
     private void drawBoundingBox(float w, float h) {
-        Gdx.gl30.glLineWidth(1);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(1);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
+
+
 
         drawer.begin(ShapeRenderer.ShapeType.Line);
         drawer.setColor(AXIS_COLOR);
@@ -135,9 +138,10 @@ public class CanvasDrawer {
     }
 
     private void drawAxisImpl() {
-        Gdx.gl30.glLineWidth(3);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(3);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
+
 
         float len = 0.03f * camera.zoom;
 
@@ -168,9 +172,9 @@ public class CanvasDrawer {
     }
 
     private void drawGrid(float gap) {
-        Gdx.gl30.glLineWidth(1);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(1);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         if (gap <= 0) gap = 0.001f;
         float x = camera.position.x;
@@ -189,9 +193,9 @@ public class CanvasDrawer {
     }
 
     private void drawShapes(List<ShapeModel> shapes, Vector2 nextPoint) {
-        Gdx.gl30.glLineWidth(2);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(2);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         for (ShapeModel shape : shapes) {
             List<Vector2> vs = shape.getVertices();
@@ -243,9 +247,9 @@ public class CanvasDrawer {
     }
 
     private void drawPoints(List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint) {
-        Gdx.gl30.glLineWidth(2);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(2);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         float w = 0.025f * camera.zoom;
 
@@ -274,9 +278,9 @@ public class CanvasDrawer {
     }
 
     private void drawPolygons(List<PolygonModel> polygons) {
-        Gdx.gl30.glLineWidth(2);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(2);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         drawer.begin(ShapeRenderer.ShapeType.Line);
         drawer.setColor(POLYGON_COLOR);
@@ -292,9 +296,9 @@ public class CanvasDrawer {
     }
 
     private void drawOrigin(Vector2 o, Vector2 nearestPoint) {
-        Gdx.gl30.glLineWidth(2);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(2);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         float len = 0.03f * camera.zoom;
         float radius = 0.02f * camera.zoom;
@@ -319,9 +323,9 @@ public class CanvasDrawer {
     }
 
     private void drawMouseSelection(float x1, float y1, float x2, float y2) {
-        Gdx.gl30.glLineWidth(3);
-        Gdx.gl30.glEnable(Gdx.gl30.GL_BLEND);
-        Gdx.gl30.glBlendFunc(Gdx.gl30.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(3);
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 
         Rectangle rect = new Rectangle(
                 Math.min(x1, x2), Math.min(y1, y2),
