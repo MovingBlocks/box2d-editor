@@ -1,13 +1,5 @@
 package aurelienribon.bodyeditor.canvas;
 
-import aurelienribon.accessors.SpriteAccessor;
-import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.bodyeditor.RigidBodiesManager;
-import aurelienribon.bodyeditor.Settings;
-import aurelienribon.bodyeditor.canvas.dynamicobjects.DynamicObjectsScreen;
-import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.utils.notifications.ChangeListener;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -23,6 +15,15 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import aurelienribon.accessors.SpriteAccessor;
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.RigidBodiesManager;
+import aurelienribon.bodyeditor.Settings;
+import aurelienribon.bodyeditor.canvas.dynamicobjects.DynamicObjectsScreen;
+import aurelienribon.bodyeditor.canvas.rigidbodies.RigidBodiesScreen;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.utils.notifications.ChangeListener;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -117,8 +118,10 @@ public class Canvas extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        Gdx.gl30.glClearColor(1, 1, 1, 1);
-        Gdx.gl30.glClear(Gdx.gl30.GL_COLOR_BUFFER_BIT);
+
+
+        Gdx.gl.glClearColor(1,1,1, 1);
+        Gdx.gl.glClear(Gdx.gl30.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(screenCamera.combined);
         batch.begin();
@@ -127,11 +130,9 @@ public class Canvas extends ApplicationAdapter {
         float th = backgroundTexture.getHeight();
         batch.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w / tw, h / th);
         batch.enableBlending();
-        batch.end();
-
-        rigidBodiesScreen.render();
+       batch.end();
+       rigidBodiesScreen.render();
         dynamicObjectsScreen.render();
-
         batch.setProjectionMatrix(screenCamera.combined);
         batch.begin();
         infoLabel.draw(batch);
@@ -143,7 +144,7 @@ public class Canvas extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        Gdx.gl30.glViewport(0, 0, width, height);
+        Gdx.gl.glViewport(0,0,width,height);
         resetCameras();
     }
 
