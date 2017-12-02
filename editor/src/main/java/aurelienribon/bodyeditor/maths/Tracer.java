@@ -1,21 +1,23 @@
 package aurelienribon.bodyeditor.maths;
 
-import aurelienribon.bodyeditor.maths.trace.TextureConverter;
-import aurelienribon.utils.gdx.TextureUtils;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import aurelienribon.bodyeditor.maths.trace.TextureConverter;
+import aurelienribon.utils.gdx.TextureUtils;
+
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Tracer {
     public static Vector2[][] trace(String path, float hullTolerance, int alphaTolerance, boolean multiPartDetection, boolean holeDetection) {
-        Blending blending = Pixmap.getBlending();
-        Pixmap.setBlending(Blending.None);
+
         Pixmap pixmap = TextureUtils.getPOTPixmap(path);
+        Blending blending = pixmap.getBlending();
+        pixmap.setBlending(Blending.None);
 
         int w = pixmap.getWidth();
         int h = pixmap.getHeight();
@@ -31,7 +33,7 @@ public class Tracer {
         }
 
         pixmap.dispose();
-        Pixmap.setBlending(blending);
+        pixmap.setBlending(blending);
 
         Array<Array<Vector2>> outlines;
         try {

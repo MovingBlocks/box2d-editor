@@ -1,15 +1,21 @@
 package aurelienribon.bodyeditor.ui;
 
-import aurelienribon.bodyeditor.Ctx;
-import aurelienribon.bodyeditor.canvas.Canvas;
+import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+
 import org.json.JSONException;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import aurelienribon.bodyeditor.Ctx;
+import aurelienribon.bodyeditor.canvas.Canvas;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -28,8 +34,15 @@ public class Main {
                 }
 
                 LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-                config.useGL30 = true;
-                LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), config);
+                config.useGL30 = false;
+                config.useHDPI = true;
+             //
+                //
+              //   ShaderProgram.prependVertexCode = "#version 140\n#define varying out\n#define attribute in\n";
+              //  ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
+
+                LwjglAWTCanvas glCanvas = new LwjglAWTCanvas(new Canvas());
+               // LwjglCanvas glCanvas = new LwjglCanvas(new Canvas(), config);
                 MainWindow mw = Ctx.window;
 
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -37,7 +50,6 @@ public class Main {
                         Math.min(1150, screenSize.width - 100),
                         Math.min(800, screenSize.height - 100)
                 );
-
                 mw.setCanvas(glCanvas.getCanvas());
                 mw.setLocationRelativeTo(null);
                 mw.setVisible(true);
