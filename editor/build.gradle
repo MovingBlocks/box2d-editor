@@ -1,22 +1,24 @@
-apply plugin: "java"
+plugins {
+    id 'application'
+}
 
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 project.ext.mainClassName = "aurelienribon.bodyeditor.ui.Main"
 dependencies {
-    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 
-    compile "net.java.balloontip:balloontip:1.2.1"
-    compile "commons-io:commons-io:2.1"
-    compile "org.json:json:20090211"
+    implementation "net.java.balloontip:balloontip:1.2.1"
+    implementation "commons-io:commons-io:2.1"
+    implementation "org.json:json:20090211"
 
-    compile files('./libs/css-engine-swing-api.jar')
-    compile files('./libs/tween-engine-api.jar')
+    implementation files('./libs/css-engine-swing-api.jar')
+    implementation files('./libs/tween-engine-api.jar')
 
 }
 
@@ -25,15 +27,19 @@ sourceSets {
         java
                 {
                     srcDirs = ["src/main/java"]
-                    output.classesDir 'build/classes'
+                    destinationDirectory.set(new File("$buildDir/classes"))
                 }
         resources.srcDirs = ["src/main/resources"]
         output.resourcesDir 'build/classes'
     }
 }
 
+application {
+    mainClass = 'aurelienribon.bodyeditor.ui.Main'
+}
+
 jar {
-    archiveName = "PhysicsBodyEditor.jar"
+    archiveFileName = "PhysicsBodyEditor.jar"
 
 //    doFirst {
 //        copy {
@@ -43,18 +49,19 @@ jar {
 //    }
 }
 
-eclipse.project {
-    name = appName + "-editor"
+
+distributions {
+    main {
+        contents {
+            from('test-me!') {
+                into 'test-me!'
+            }
+        }
+    }
 }
 
-task run(type: JavaExec) {
-    dependsOn classes
-
-    main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = project(':editor').projectDir
-    ignoreExitValue = true
+eclipse.project {
+    name = appName + "-editor"
 }
 
 idea {
