@@ -40,7 +40,8 @@ public class PanZoomInputProcessor extends InputAdapter {
     }
 
     @Override
-    public boolean scrolled(int amount) {
+    public boolean scrolled(float amountX, float amountY) {
+        int amount = (int) amountY;
         if (zoomLevel == zoomLevels[0] && amount < 0) {
             zoomLevel = zoomLevels[1];
         } else if (zoomLevel == zoomLevels[zoomLevels.length - 1] && amount > 0) {

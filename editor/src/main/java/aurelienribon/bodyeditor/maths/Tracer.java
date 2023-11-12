@@ -13,9 +13,9 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Tracer {
     public static Vector2[][] trace(String path, float hullTolerance, int alphaTolerance, boolean multiPartDetection, boolean holeDetection) {
-        Blending blending = Pixmap.getBlending();
-        Pixmap.setBlending(Blending.None);
         Pixmap pixmap = TextureUtils.getPOTPixmap(path);
+        Blending blending = pixmap.getBlending();
+        pixmap.setBlending(Blending.None);
 
         int w = pixmap.getWidth();
         int h = pixmap.getHeight();
@@ -30,8 +30,8 @@ public class Tracer {
             }
         }
 
+        pixmap.setBlending(blending);
         pixmap.dispose();
-        Pixmap.setBlending(blending);
 
         Array<Array<Vector2>> outlines;
         try {
